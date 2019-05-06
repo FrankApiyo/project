@@ -158,7 +158,30 @@ class Driver(ServiceEmployee, db.Model):
         self.id = id
         self.age = age
         self.matatu_service = matatu_service
+
     def __repr__(self):
         return "\nDriver name'{}'\nid '{}'\nage '{}'\nmatatu_service: '{}'\n".format(self.name, self.id, self.age, self.matatu_service)
 
-#create the ui and view functions
+
+class Log(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    time = db.Column(db.DateTime(), nullable=False)
+    ticket = db.Column(db.Integer(), db.ForeignKey("ticket.id"), unique=True, nullable=False)
+    event = db.Column(db.Text(), nullable=False, index=True)
+
+    def __init__(self, id):
+        self.id=id
+
+    def __repr__(self):
+        return "\n{} at {}\n".format(self.event, self.time)
+
+
+class Event(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.Text(), index=True, nullable=False, unique=True)
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return "\nEvent: {}\nid: {}\n".format(self.name, self.id)
