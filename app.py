@@ -25,9 +25,9 @@ routes = db.Table('service_route',
 
 class Location(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.Text())
-    lat = db.Column(db.Float())
-    lng = db.Column(db.Float())
+    name = db.Column(db.Text(), db.CheckConstraint("lng >= 0 and lng <= 180"), nullable=False)
+    lat = db.Column(db.Float(), db.CheckConstraint("lat >= -90 and lat <= 90"), nullable=False)
+    lng = db.Column(db.Float(), nullable=False)
 
     def __init__(self, name, lat, lng):
         self.name = name
@@ -40,8 +40,8 @@ class Location(db.Model):
 
 class Route(db.Model):
     number = db.Column(db.Integer(), primary_key=True)
-    from_location = db.Column(db.Integer(), db.ForeignKey("location.id"))
-    to_location = db.Column(db.Integer(), db.ForeignKey("location.id"))
+    from_location = db.Column(db.Integer(), db.ForeignKey("location.id"), nullable=False)
+    to_location = db.Column(db.Integer(), db.ForeignKey("location.id"), nullable=False)
 
     def __init__(self, number, to_location, from_location):
         self.number = number
@@ -82,7 +82,7 @@ class Service(db.Model):
 
 class Matatu(db.Model):
     registration = db.Column(db.Text(), primary_key=True)
-    matatu_service = db.Column(db.Text(), db.ForeignKey('service.name'))
+    matatu_service = db.Column(db.Text(), db.ForeignKey('service.name'), nullable=False)
 
     def __init___(self, registration, matatu_service):
         self.registration = registration
@@ -94,14 +94,14 @@ class Matatu(db.Model):
 
 class Ticket(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    traveller = db.Column(db.Text(), db.ForeignKey("traveller.id"))
-    matatu = db.Column(db.Text(), db.ForeignKey("matatu.registration"))
-    pick_up_lat = db.Column(db.Float())
-    pick_up_lng = db.Column(db.Float())
-    driver = db.Column(db.Text(), db.ForeignKey("driver.id"))
-    cost = db.Column(db.Float())
-    pick_up_time = db.Column(db.DateTime())
-    route = db.Column(db.Integer(), db.ForeignKey("route.number"))
+    traveller = db.Column(db.Text(), db.ForeignKey("traveller.id"), nullable=False)
+    matatu = db.Column(db.Text(), db.ForeignKey("matatu.registration"), nullable=False)
+    pick_up_lat = db.Column(db.Float(), db.CheckConstraint("pick_up_lat >= -90 and pick_up_lat <= 90"), nullable=False)
+    pick_up_lng = db.Column(db.Float(), db.CheckConstraint("pick_up_lng >= 0 and pick_up_lng <= 180"), nullable=False)
+    driver = db.Column(db.Text(), db.ForeignKey("driver.id"), nullable=False)
+    cost = db.Column(db.Float(), nullable=False)
+    pick_up_time = db.Column(db.DateTime(), nullable=False)
+    route = db.Column(db.Integer(), db.ForeignKey("route.number"), nullable=False)
 
     def __init__(self, traveller, matatu, pick_up_lat, pick_up_lng, driver, cost, pick_up_time, route):
         self.traveller = traveller
@@ -118,18 +118,19 @@ class Ticket(db.Model):
 
 
 class Person():
-    name = db.Column(db.Text())
+    name = db.Column(db.Text(), nullable=False)
     id = db.Column(db.Text(), primary_key=True)
-    age = db.Integer()
+    age = db.Column(db.Integer(), default=18)
 
 
 class ServiceEmployee(Person):
-    matatu_service = db.Column(db.Text())
+    #why this is nullable is beause an employee can leave a service but we still would like to retain data about them
+    matatu_service = db.Column(db.Text(), nullable=True)
 
 
 class Exec(ServiceEmployee, db.Model):
-    position = db.Column(db.Text())
-    matatu_service = db.Column(db.Text())
+    position = db.Column(db.Text(), nullable=True)
+    matatu_service = db.Column(db.Text(), nullable=False)
 
     def __init__(self, name, id, age, matatu_service, position):
         self.name = name
@@ -159,3 +160,5 @@ class Driver(ServiceEmployee, db.Model):
         self.matatu_service = matatu_service
     def __repr__(self):
         return "\nDriver name'{}'\nid '{}'\nage '{}'\nmatatu_service: '{}'\n".format(self.name, self.id, self.age, self.matatu_service)
+
+#create the ui and view functions
