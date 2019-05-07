@@ -2,14 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72693825-717d-4e8c-83ef-df47eafec2d2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test_database.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/passwordHelper.py" beforeDir="false" afterPath="$PROJECT_DIR$/passwordHelper.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/home.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/home.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/versions/1cd716abe758_added_log_tables.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/versions/4937d7e92862_changing_some_table_name.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/versions/4b08e59fc9e7_added_constraints_to_database_columns_.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_database.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_database.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,8 +40,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1">
-              <caret line="323" column="16" selection-start-line="323" selection-start-column="7" selection-end-line="323" selection-end-column="16" />
+            <state relative-caret-position="346">
+              <caret line="167" column="32" lean-forward="true" selection-start-line="167" selection-start-column="32" selection-end-line="167" selection-end-column="32" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -72,7 +70,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/forms.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
+            <state relative-caret-position="660">
               <caret line="51" column="12" selection-start-line="51" selection-start-column="12" selection-end-line="51" selection-end-column="12" />
             </state>
           </provider>
@@ -82,7 +80,7 @@
         <entry file="file://$PROJECT_DIR$/passwordHelper.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="210">
-              <caret line="14" column="38" lean-forward="true" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
+              <caret line="14" column="38" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -94,19 +92,7 @@
         <entry file="file://$PROJECT_DIR$/templates/home.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="255">
-              <caret line="17" column="37" lean-forward="true" selection-start-line="17" selection-start-column="37" selection-end-line="17" selection-end-column="37" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test_database.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3">
-              <caret line="106" lean-forward="true" selection-start-line="106" selection-end-line="106" />
-              <folding>
-                <element signature="e#0#101#0" expanded="true" />
-              </folding>
+              <caret line="17" column="37" selection-start-line="17" selection-start-column="37" selection-end-line="17" selection-end-column="37" />
             </state>
           </provider>
         </entry>
@@ -150,9 +136,26 @@
       <find>Traveler</find>
       <find>Matatu</find>
       <find>nullable=Trie</find>
-      <find>Driver</find>
       <find>name</find>
       <find>username</find>
+      <find>backref='traveler'</find>
+      <find>Ticket',</find>
+      <find>backref</find>
+      <find>Driver</find>
+      <find>fake.username</find>
+      <find>fist</find>
+      <find>fake.middle_name</find>
+      <find>matatu_ser</find>
+      <find>matatu_</find>
+      <find>self.age</find>
+      <find>self.username</find>
+      <find>fake.date</find>
+      <find>matatu</find>
+      <find>traveler</find>
+      <find>ticket</find>
+      <find>trav</find>
+      <find>id</find>
+      <find>exec</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -316,12 +319,13 @@
       <workItem from="1557141782517" duration="5964000" />
       <workItem from="1557154692467" duration="2208000" />
       <workItem from="1557213623640" duration="16522000" />
-      <workItem from="1557239794014" duration="9792000" />
+      <workItem from="1557239794014" duration="9893000" />
+      <workItem from="1557249808141" duration="5619000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="47258000" />
+    <option name="totallyTimeSpent" value="52978000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -334,9 +338,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-1" width="1366" height="742" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.36666667" visible="true" weight="0.21969697" />
-      <window_info id="Structure" order="1" sideWeight="0.6333333" side_tool="true" visible="true" weight="0.21969697" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.47028863" visible="true" weight="0.22348484" />
+      <window_info id="Structure" order="1" sideWeight="0.52971137" side_tool="true" visible="true" weight="0.22348484" />
       <window_info id="Favorites" order="2" sideWeight="0.5017241" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -349,8 +354,8 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32956383" />
       <window_info anchor="bottom" id="Database Changes" order="9" weight="0.38933763" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.95153475" />
-      <window_info anchor="bottom" id="Python Console" order="12" weight="0.6219709" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.048465267" />
+      <window_info anchor="bottom" id="Python Console" order="12" weight="0.365105" />
       <window_info anchor="bottom" id="Database Console" order="13" weight="0.048387095" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -416,6 +421,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/templates/register.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
@@ -423,27 +435,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_database.py">
+    <entry file="file://$PROJECT_DIR$/forms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
-          <caret line="51" column="45" selection-start-line="51" selection-start-column="45" selection-end-line="51" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#6#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/home.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="37" lean-forward="true" selection-start-line="17" selection-start-column="37" selection-end-line="17" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/manage.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-column="101" />
+        <state relative-caret-position="660">
+          <caret line="51" column="12" selection-start-line="51" selection-start-column="12" selection-end-line="51" selection-end-column="12" />
         </state>
       </provider>
     </entry>
@@ -454,44 +449,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/manage.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-column="101" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/passwordHelper.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
-          <caret line="14" column="38" lean-forward="true" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
+          <caret line="14" column="38" selection-start-line="14" selection-start-column="38" selection-end-line="14" selection-end-column="38" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="51" column="12" selection-start-line="51" selection-start-column="12" selection-end-line="51" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="16" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/test_database.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3">
-          <caret line="106" lean-forward="true" selection-start-line="106" selection-end-line="106" />
+        <state relative-caret-position="1620">
+          <caret line="108" selection-start-line="108" selection-end-line="108" />
           <folding>
             <element signature="e#0#101#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/home.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="37" selection-start-line="17" selection-start-column="37" selection-end-line="17" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1">
-          <caret line="323" column="16" selection-start-line="323" selection-start-column="7" selection-end-line="323" selection-end-column="16" />
+        <state relative-caret-position="346">
+          <caret line="167" column="32" lean-forward="true" selection-start-line="167" selection-start-column="32" selection-end-line="167" selection-end-column="32" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>

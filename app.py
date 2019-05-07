@@ -89,11 +89,6 @@ class Service(db.Model):
         secondary=execs,
         backref=db.backref('services', lazy='dynamic')
         )
-    matatus = db.relationship(
-        'Matatu',
-        backref='service',
-        lazy='dynamic'
-    )
 
     def __init__(self, name):
         self.name = name
@@ -107,13 +102,8 @@ class Matatu(db.Model):
     registration = db.Column(db.Text(), primary_key=True)
     matatu_service = db.Column(db.Text(), db.ForeignKey('service.name'), nullable=False)
     seats = db.Column(db.Integer())
-    tickets = db.relationship(
-        'Ticket',
-        backref='matatu',
-        lazy='dynamic'
-    )
 
-    def __init___(self, registration, matatu_service, seats):
+    def __init__(self, registration, matatu_service, seats):
         self.seats = seats
         self.registration = registration
         self.matatu_service = matatu_service
@@ -169,8 +159,8 @@ class Exec(ServiceEmployee, db.Model):
     position = db.Column(db.Text(), nullable=True)
     matatu_service = db.Column(db.Text(), nullable=False)
 
-    def __init__(self, user_name, id, birthday, matatu_service, position, password, first_name, middle_name, last_name,
-                 salt, email):
+    def __init__(self, user_name, birthday, matatu_service, position, password, first_name, middle_name, last_name,
+                 salt, email, id):
         self.email = email
         self.user_name = user_name
         self.password = password
@@ -184,20 +174,14 @@ class Exec(ServiceEmployee, db.Model):
         self.salt = salt
 
     def __repr__(self):
-        return "\nExec name'{}'\nposition '{}'\nid '{}'\nage '{}'\nmatatu_service: '{}'\n".format(self.username,
-                                                                                                  self.position, self.id, self.age, self.matatu_service)
+        return "\nExec name'{}'\nposition '{}'\nid '{}'\nmatatu_service: '{}'\n".format(self.user_name,
+                                                                                                  self.position, self.id, self.matatu_service)
 
 
 class Traveler(Person, db.Model):
-    tickets = db.relationship(
-        'Ticket',
-        backref='traveler',
-        lazy='dynamic'
-    )
-
     def __init__(self, user_name, id, birthday, password, first_name, middle_name, last_name, salt, email):
         self.password = password
-        self.first_name = first_name
+        self.first__name = first_name
         self.middle_name = middle_name
         self.last_name = last_name
         self.user_name = user_name
@@ -207,15 +191,10 @@ class Traveler(Person, db.Model):
         self.email = email
 
     def __repr__(self):
-        return "\nTraveler name'{}'\nid '{}'\nage '{}'\n".format(self.username, self.id, self.age)
+        return "\nTraveler name'{}'\nid '{}'\n".format(self.user_name, self.id)
 
 
 class Driver(ServiceEmployee, db.Model):
-    tickets = db.relationship(
-        'Ticket',
-        backref='driver',
-        lazy='dynamic'
-    )
     def __init__(self, user_name, id, birthday, matatu_service, password, first_name, middle_name, last_name, salt,
                  email):
         self.email = email
@@ -230,7 +209,7 @@ class Driver(ServiceEmployee, db.Model):
         self.matatu_service = matatu_service
 
     def __repr__(self):
-        return "\nDriver name'{}'\nid '{}'\nage '{}'\nmatatu_service: '{}'\n".format(self.user_name, self.id, self.age,
+        return "\nDriver name'{}'\nid '{}'\nmatatu_service: '{}'\n".format(self.user_name, self.id,
                                                                                      self.matatu_service)
 
 
