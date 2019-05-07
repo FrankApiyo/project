@@ -1,0 +1,15 @@
+{% extends "home.html" %}
+{% block  main %}
+    <div class="container-fluid">
+    {% from "_formhelper.html" import render_field %}
+        <form method='POST' action="{{ url_for('login') }}">
+            <dl>
+                {{ render_field(form.email) }}
+                {{ render_field(form.password) }}
+                {{ form.hidden_tag() }}
+            </dl>
+            <p><input type=submit value=Register>
+        </form>
+    </div>
+    </div>
+{% endblock %}

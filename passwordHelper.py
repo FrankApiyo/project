@@ -12,4 +12,4 @@ def get_salt():
 
 
 def validate_password(plain, salt, expected):
-    return get_hash(plain + salt) == expected
+    return get_hash(salt + plain) == expected

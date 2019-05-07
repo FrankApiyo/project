@@ -37,3 +37,23 @@ class TravelerRegistrationForm(FlaskForm):
                                                                                                  "valid"), validators.DataRequired()])
     submit = SubmitField('submit')
     #accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
+
+
+class DriverRegistrationForm(TravelerRegistrationForm):
+    #TODO this is the same as registration for Traveler except for the matatu service
+    pass
+
+
+class ServiceRegistrationFor(FlaskForm):
+    #TODO fill this out
+    pass
+
+
+class TravelerLoginForm(FlaskForm):
+    #TODO add ability to log in with other accounts and capcha
+    email = EmailField('email', validators=[validators.DataRequired(), validators.Email(message="incorrect email "
+                                                                                                "format"),
+                                            validators.DataRequired()])
+
+    password = PasswordField('password2', validators=[validators.EqualTo('password',message='Passwords must match'),
+                                                       validators.DataRequired()])

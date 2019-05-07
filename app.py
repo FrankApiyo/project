@@ -9,7 +9,9 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_login import login_required
 from flask_login import login_user
+from flask_login import logout_user
 from forms import TravelerRegistrationForm
+from forms import TravelerLoginForm
 from user import User
 from passwordHelper import validate_password
 from passwordHelper import get_salt
@@ -41,7 +43,7 @@ routes = db.Table('service_route',
 
 class Location(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.Text(), db.CheckConstraint("lng >= 0 and lng <= 180"), nullable=False)
+    name = db.Column(db.Text(), db.CheckConstraint("lng >= -180 and lng <= 180"), nullable=False)
     lat = db.Column(db.Float(), db.CheckConstraint("lat >= -90 and lat <= 90"), nullable=False)
     lng = db.Column(db.Float(), nullable=False)
 
@@ -87,6 +89,11 @@ class Service(db.Model):
         secondary=execs,
         backref=db.backref('services', lazy='dynamic')
         )
+    matatus = db.relationship(
+        'Matatu',
+        backref='service',
+        lazy='dynamic'
+    )
 
     def __init__(self, name):
         self.name = name
@@ -99,8 +106,15 @@ class Service(db.Model):
 class Matatu(db.Model):
     registration = db.Column(db.Text(), primary_key=True)
     matatu_service = db.Column(db.Text(), db.ForeignKey('service.name'), nullable=False)
+    seats = db.Column(db.Integer())
+    tickets = db.relationship(
+        'Ticket',
+        backref='matatu',
+        lazy='dynamic'
+    )
 
-    def __init___(self, registration, matatu_service):
+    def __init___(self, registration, matatu_service, seats):
+        self.seats = seats
         self.registration = registration
         self.matatu_service = matatu_service
 
@@ -109,6 +123,7 @@ class Matatu(db.Model):
 
 
 class Ticket(db.Model):
+    #TODO add seat number here
     id = db.Column(db.Integer(), primary_key=True)
     traveler = db.Column(db.Text(), db.ForeignKey("traveler.id"), nullable=False)
     matatu = db.Column(db.Text(), db.ForeignKey("matatu.registration"), nullable=False)
@@ -154,10 +169,10 @@ class Exec(ServiceEmployee, db.Model):
     position = db.Column(db.Text(), nullable=True)
     matatu_service = db.Column(db.Text(), nullable=False)
 
-    def __init__(self, username, id, birthday, matatu_service, position, password, first_name, middle_name, last_name,
+    def __init__(self, user_name, id, birthday, matatu_service, position, password, first_name, middle_name, last_name,
                  salt, email):
         self.email = email
-        self.user_name = username
+        self.user_name = user_name
         self.password = password
         self.id = id
         self.birthday = birthday
@@ -174,6 +189,12 @@ class Exec(ServiceEmployee, db.Model):
 
 
 class Traveler(Person, db.Model):
+    tickets = db.relationship(
+        'Ticket',
+        backref='traveler',
+        lazy='dynamic'
+    )
+
     def __init__(self, user_name, id, birthday, password, first_name, middle_name, last_name, salt, email):
         self.password = password
         self.first_name = first_name
@@ -190,6 +211,11 @@ class Traveler(Person, db.Model):
 
 
 class Driver(ServiceEmployee, db.Model):
+    tickets = db.relationship(
+        'Ticket',
+        backref='driver',
+        lazy='dynamic'
+    )
     def __init__(self, user_name, id, birthday, matatu_service, password, first_name, middle_name, last_name, salt,
                  email):
         self.email = email
@@ -204,7 +230,7 @@ class Driver(ServiceEmployee, db.Model):
         self.matatu_service = matatu_service
 
     def __repr__(self):
-        return "\nDriver name'{}'\nid '{}'\nage '{}'\nmatatu_service: '{}'\n".format(self.username, self.id, self.age,
+        return "\nDriver name'{}'\nid '{}'\nage '{}'\nmatatu_service: '{}'\n".format(self.user_name, self.id, self.age,
                                                                                      self.matatu_service)
 
 
@@ -260,17 +286,31 @@ def account():
     return "You are logged in"
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("home"))
+
+
+@app.route("/login", methods=["POST", "GET"])
 def login():
-    email = request.form.get("email")
-    password = request.form.get("password")
-    user_password = get_user(email)[1].password
-    salt = get_user(email)[1].salt
-    if user_password and validate_password(password, salt, user_password):
-        user = User(email)
-        login_user(user)
-        return redirect(url_for('account'))
-    return home()
+    form = TravelerLoginForm(request.form)
+    if request.method == "GET":
+        return render_template("login.html", form=form)
+    elif request.method == 'POST' and form.validate():
+        email = form.email.data
+        password = form.password.data
+        user_password = get_user(email)[1].password
+        salt = get_user(email)[1].salt
+        if user_password and validate_password(password, salt, user_password):
+            user = User(email)
+            login_user(user)
+            return redirect(url_for('account'))
+        else:
+            return "no login"
+    else:
+        #TODO add error pages
+        return "error page"
 
 
 @app.route("/register_traveler", methods=["POST", "GET"])
@@ -288,7 +328,7 @@ def register_traveler():
         pw2 = form.password2.data
         birthday = form.birthday.data
         first_name = form.first_name.data
-        middle_name = form.last_name.data
+        middle_name = form.middle_name.data
         last_name = form.last_name.data
 
         #TODO add a way to inform user about the following failures
@@ -313,6 +353,8 @@ def register_traveler():
         #for a in form.errors:
         #    print(str(a)+": "+str(form.errors[a]))
         return render_template("register.html", form=form)
+
+
 
 
 @login_manager.user_loader
