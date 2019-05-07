@@ -1,12 +1,28 @@
 from flask import Flask
+from flask import render_template
+from flask import url_for
+from flask import redirect
+from flask import request
 from flask_sqlalchemy import SQLAlchemy
 from config import DevConfig
 from flask_migrate import Migrate
+from flask_login import LoginManager
+from flask_login import login_required
+from flask_login import login_user
+from forms import TravelerRegistrationForm
+from user import User
+from passwordHelper import validate_password
+from passwordHelper import get_salt
+from passwordHelper import get_hash
 
 app = Flask(__name__)
 app.config.from_object(DevConfig)
+app.secret_key = "81kAr5ENcPvBDbJVHa9pwb5WJevwRjwtODBcNWLWsN5IznEIXJXp2jzQfqwLXxnbDRYCUAzb2Z3NHz9ov1lHKzSXC4RK7cMDo"
+#TODO move this to the configuration file
+app.debug = True
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+login_manager = LoginManager(app)
 
 drivers = db.Table('service_drivers',
     db.Column('service', db.Text(), db.ForeignKey('service.name')),
@@ -94,7 +110,7 @@ class Matatu(db.Model):
 
 class Ticket(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    traveller = db.Column(db.Text(), db.ForeignKey("traveller.id"), nullable=False)
+    traveler = db.Column(db.Text(), db.ForeignKey("traveler.id"), nullable=False)
     matatu = db.Column(db.Text(), db.ForeignKey("matatu.registration"), nullable=False)
     pick_up_lat = db.Column(db.Float(), db.CheckConstraint("pick_up_lat >= -90 and pick_up_lat <= 90"), nullable=False)
     pick_up_lng = db.Column(db.Float(), db.CheckConstraint("pick_up_lng >= 0 and pick_up_lng <= 180"), nullable=False)
@@ -103,8 +119,8 @@ class Ticket(db.Model):
     pick_up_time = db.Column(db.DateTime(), nullable=False)
     route = db.Column(db.Integer(), db.ForeignKey("route.number"), nullable=False)
 
-    def __init__(self, traveller, matatu, pick_up_lat, pick_up_lng, driver, cost, pick_up_time, route):
-        self.traveller = traveller
+    def __init__(self, traveler, matatu, pick_up_lat, pick_up_lng, driver, cost, pick_up_time, route):
+        self.traveler = traveler
         self.matatu = matatu
         self.pick_up_lat = pick_up_lat
         self.pick_up_lng = pick_up_lng
@@ -117,10 +133,16 @@ class Ticket(db.Model):
         return "\Ticker no: {}".format(self.id)
 
 
-class Person():
-    name = db.Column(db.Text(), nullable=False)
+class Person:
+    user_name = db.Column(db.Text(), nullable=False)
     id = db.Column(db.Text(), primary_key=True)
-    age = db.Column(db.Integer(), default=18)
+    birthday = db.Column(db.DateTime())
+    password = db.Column(db.Text(), nullable=False)
+    first_name = db.Column(db.Text(), nullable=False)
+    middle_name = db.Column(db.Text(), nullable=True)
+    last_name = db.Column(db.Text(), nullable=False)
+    salt = db.Column(db.Text(), nullable=False)
+    email = db.Column(db.Text(), nullable=False)
 
 
 class ServiceEmployee(Person):
@@ -132,35 +154,58 @@ class Exec(ServiceEmployee, db.Model):
     position = db.Column(db.Text(), nullable=True)
     matatu_service = db.Column(db.Text(), nullable=False)
 
-    def __init__(self, name, id, age, matatu_service, position):
-        self.name = name
+    def __init__(self, username, id, birthday, matatu_service, position, password, first_name, middle_name, last_name,
+                 salt, email):
+        self.email = email
+        self.user_name = username
+        self.password = password
         self.id = id
-        self.age = age
+        self.birthday = birthday
         self.matatu_service = matatu_service
         self.position = position
+        self.first_name = first_name
+        self.middle_name = middle_name
+        self.last_name = last_name
+        self.salt = salt
 
     def __repr__(self):
-        return "\nExec name'{}'\nposition '{}'\nid '{}'\nage '{}'\nmatatu_service: '{}'\n".format(self.name, self.position, self.id, self.age, self.matatu_service)
+        return "\nExec name'{}'\nposition '{}'\nid '{}'\nage '{}'\nmatatu_service: '{}'\n".format(self.username,
+                                                                                                  self.position, self.id, self.age, self.matatu_service)
 
 
-class Traveller(Person, db.Model):
-    def __init__(self, name, id, age):
-        self.name = name
+class Traveler(Person, db.Model):
+    def __init__(self, user_name, id, birthday, password, first_name, middle_name, last_name, salt, email):
+        self.password = password
+        self.first_name = first_name
+        self.middle_name = middle_name
+        self.last_name = last_name
+        self.user_name = user_name
         self.id = id
-        self.age = age
+        self.birthday = birthday
+        self.salt = salt
+        self.email = email
+
     def __repr__(self):
-        return "\nTraveller name'{}'\nid '{}'\nage '{}'\n".format(self.name, self.id, self.age)
+        return "\nTraveler name'{}'\nid '{}'\nage '{}'\n".format(self.username, self.id, self.age)
 
 
 class Driver(ServiceEmployee, db.Model):
-    def __init__(self, name, id, age, matatu_service):
-        self.name = name
+    def __init__(self, user_name, id, birthday, matatu_service, password, first_name, middle_name, last_name, salt,
+                 email):
+        self.email = email
+        self.user_name = user_name
+        self.password = password
+        self.first_name = first_name
+        self.middle_name = middle_name
+        self.last_name = last_name
+        self.salt = salt
         self.id = id
-        self.age = age
+        self.birthday = birthday
         self.matatu_service = matatu_service
 
     def __repr__(self):
-        return "\nDriver name'{}'\nid '{}'\nage '{}'\nmatatu_service: '{}'\n".format(self.name, self.id, self.age, self.matatu_service)
+        return "\nDriver name'{}'\nid '{}'\nage '{}'\nmatatu_service: '{}'\n".format(self.username, self.id, self.age,
+                                                                                     self.matatu_service)
 
 
 class Log(db.Model):
@@ -185,3 +230,96 @@ class Event(db.Model):
 
     def __repr__(self):
         return "\nEvent: {}\nid: {}\n".format(self.name, self.id)
+
+
+##here we begin routing functions
+
+#helper functions
+def get_user(email):
+    traveler = Traveler.query.filter_by(email=email).first()
+    driver = Driver.query.filter_by(email=email).first()
+    executive = Exec.query.filter_by(email=email).first()
+    if executive:
+        return "exec", executive
+    elif driver:
+        return "driver", driver
+    elif traveler:
+        return "traveler", traveler
+    else:
+        return None
+
+
+@app.route("/")
+def home():
+    return render_template("home.html")
+
+
+@app.route("/account")
+@login_required
+def account():
+    return "You are logged in"
+
+
+@app.route("/login", methods=["POST"])
+def login():
+    email = request.form.get("email")
+    password = request.form.get("password")
+    user_password = get_user(email)[1].password
+    salt = get_user(email)[1].salt
+    if user_password and validate_password(password, salt, user_password):
+        user = User(email)
+        login_user(user)
+        return redirect(url_for('account'))
+    return home()
+
+
+@app.route("/register_traveler", methods=["POST", "GET"])
+def register_traveler():
+    form = TravelerRegistrationForm(request.form)
+    if request.method == "GET":
+        #print("\n\n\nplease work\n\n")
+        return render_template("register.html", form=form)
+    elif request.method == 'POST' and form.validate():
+        #print("\n\n\nplease work\n\n")
+        username = form.username.data
+        id_num = form.id.data
+        email = form.email.data
+        pw1 = form.password.data
+        pw2 = form.password2.data
+        birthday = form.birthday.data
+        first_name = form.first_name.data
+        middle_name = form.last_name.data
+        last_name = form.last_name.data
+
+        #TODO add a way to inform user about the following failures
+        #TODO add try catch block around the data request operations from the database and inform the user of failures
+        if not pw1 == pw2:
+            return "passwords dont match"
+        else:
+            salt = get_salt()
+            password = get_hash(salt+pw1)
+
+        if get_user(email):
+            return "user already registered with that email"
+
+        traveler = Traveler(username, id_num, birthday, password, first_name, middle_name, last_name, salt, email)
+        db.session.add(traveler)
+        db.session.commit()
+
+        return "you are now registered"
+
+    else:
+        #print("\n\n\nplease work3333333\n"+str(form.validate())+"\n\n")
+        #for a in form.errors:
+        #    print(str(a)+": "+str(form.errors[a]))
+        return render_template("register.html", form=form)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    user = get_user(user_id)
+    user_password = ""
+    if user:
+        user_password = user[1].email
+    if user_password:
+        return User(user_id)
