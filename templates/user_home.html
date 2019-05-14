@@ -1,80 +1,70 @@
-<!doctype html>
-<html>
-    <head>
-      <!--Import Google Icon Font-->
-      <link href="static/css/materialIcons.css" rel="stylesheet">
-      <!--Import materialize.css-->
-      <link type="text/css" rel="stylesheet" href="static/css/materialize.css"  media="screen,projection"/>
+{% extends "maintemplate.html" %}
+{% block style %}
+    {{ super() }}
+    <style type="text/css">
+        #side-bar, #mid-bar {
+            padding: 0;
+        }
 
-      <!--Let browser know website is optimized for mobile-->
-      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-      <title>materialize</title>
-        {% block style %}
-      <style type="text/css">
-          #side-bar, #mid-bar{
-              padding: 0;
-          }
-          body{
-              height: 100vh;
-          }
-          #side-bar{
-              border: 1px solid black;
-              height: 96vh;
+        body {
+            height: 100vh;
+        }
 
-          }
-          #side-bar > *{
-              margin: 0;
-              position: relative;
-          }
-          .user-view-custom > li {
-              height: 10vh;
-              border: 1px solid white;
-          }
-          .user-view-custom > li > a{
-              color: white;
-          }
-        #slide-out > li > a{
+        #side-bar {
+            border: 1px solid black;
+            height: 96vh;
+
+        }
+
+        #side-bar > * {
+            margin: 0;
+            position: relative;
+        }
+
+        .user-view-custom > li {
+            height: 10vh;
+            border: 1px solid white;
+        }
+
+        .user-view-custom > li > a {
             color: white;
         }
-      </style>
-        {% endblock %}
-    </head>
 
-    <body>
-    {% block main %}
-    <div class="row">
-        <div class="col l4 hide-on-med-and-down  purple darken-4" id="side-bar">
-            <ul class="user-view-custom">
-            {% from "_menuhelper.html" import render_menu %}
-                {{ render_menu() }}
+        #slide-out > li > a {
+            color: white;
+        }
+    </style>
+{% endblock %}
+
+{% block menu %}
+    <nav class="purple darken-4">
+        <div class="nav-wrapper">
+            <ul>
+                <li>
+                    <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                </li>
+                {% from "_menuhelper.html" import render_menu %}
+                {{ render_menu("hide-on-med-and-down") }}
             </ul>
         </div>
-        <div class="col l8 s12" id="mid-bar">
-        <nav class="purple darken-4">
-            <div class="nav-wrapper">
-                <ul>
-                    <li>
-                        <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-        </div>
-    </div>
+    </nav>
 
-        <ul id="slide-out" class="sidenav purple darken-4">
-            {{ render_menu() }}
+    <ul id="slide-out" class="sidenav purple darken-4">
+        {{ render_menu() }}
 
-            <!-- li><a href="{{ url_for('register_traveler') }}" class="waves-effect">register</a></li-->
-        </ul>
-        {% endblock %}
-      <!--JavaScript at end of body for optimized loading-->
-      <script type="text/javascript" src="static/js/jquery-3.3.1.js"></script>
-      <script type="text/javascript" src="static/js/materialize.js"></script>
-      <script type="text/javascript">
-        $(document).ready(function(){
-          $('.sidenav').sidenav();
+        <!-- li><a href="{{ url_for('register_traveler') }}" class="waves-effect">register</a></li-->
+    </ul>
+{% endblock %}
+
+
+{% block body %}
+{% endblock %}
+
+
+{% block script %}
+    <script type="application/javascript">
+        $(document).ready(function () {
+            $('.sidenav').sidenav();
         });
-      </script>
-    </body>
-  </html>
+    </script>
+{% endblock %}

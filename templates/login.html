@@ -1,6 +1,21 @@
-{% extends "home.html" %}
-{% block  main %}
-    <div class="container-fluid">
+{% extends "maintemplate.html" %}
+{% block style %}
+    {{ super() }}
+    <style>
+        .mainbody{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .mainbody > i{
+            color: #0D47A1;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="container mainbody">
+    <i class="material-icons large">fingerprint</i>
     {% from "_formhelper.html" import render_field %}
         <form method='POST' action="{{ url_for('login') }}">
             <dl>
@@ -8,8 +23,8 @@
                 {{ render_field(form.password) }}
                 {{ form.hidden_tag() }}
             </dl>
-            <p><input type=submit value=Register>
+            <p><input type=submit value=login>
         </form>
-    </div>
+        <p>or <a href="{{ url_for('register_traveler') }}">register</a></p>
     </div>
 {% endblock %}

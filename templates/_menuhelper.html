@@ -1,0 +1,7 @@
+{% macro render_menu(helper) %}
+                <li><a href="{{ url_for('book') }}" class="{{ helper }}">book</a></li>
+                <li><a href="{{ url_for('history') }}" class="{{ helper }}">history</a></li>
+                <li><a href="{{ url_for('payment') }}" class="{{ helper }}">payment</a></li>
+                <li><a href="{{ url_for('logout') }}" class="{{ helper }}">logout</a></li>
+                <!--<li><a href="{{ url_for('register_traveler') }}">register</a></li-->
+{%  endmacro %}

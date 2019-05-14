@@ -1,0 +1,44 @@
+{% extends "user_home.html" %}
+{% block style %}
+    {{ super() }}
+    <style type="text/css">
+        div.mainbody{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            flex-direction: column;
+        }
+        div.mainbody > p{
+            width: 70%;
+            text-align: center;
+        }
+        div.mainbody > span > i{
+            color: #0D47A1;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <ul class="collection">
+    {% for ticket in tickets %}
+        <li>
+            <i class="material-icons circle left">folder</i>
+            <span class="title">{{ ticket.id }}</span>
+            <p>From: {{ ticket.route.from_location }}</p>
+            <p>To: {{ ticket.route.to_location }}</p>
+        </li>
+    {% endfor %}
+    </ul>
+    <div>
+    {% if tickets|length == 0 %}
+       <div class="mainbody">
+        <span>
+            <i class="material-icons large">ac_unit</i>
+        </span>
+        <p>
+            you have not purchased any tickets yet
+        </p>
+       </div>
+    {% endif %}
+    </div>
+{% endblock %}

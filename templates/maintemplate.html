@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+    <head>
+        <!--Import Google Icon Font-->
+        <link href="static/css/materialIcons.css" rel="stylesheet">
+        <!--Import materialize.css-->
+        <link type="text/css" rel="stylesheet" href="static/css/materialize.css"  media="screen,projection"/>
+
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="UTF-8">
+        <title>Matrips</title>
+
+        {% block style %}
+            <style>
+
+            </style>
+        {% endblock %}
+
+    </head>
+    <body>
+
+        {% block menu %}
+        {% endblock %}
+
+        {% block body %}
+        {% endblock %}
+
+        <script type="text/javascript" src="static/js/jquery-3.3.1.js"></script>
+        <script type="text/javascript" src="static/js/materialize.js"></script>
+        {% block script %}
+              <!-- to overide this block one has to add their own <script> tags -->
+        {% endblock %}
+    </body>
+  </html>

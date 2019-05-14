@@ -1,0 +1,44 @@
+{% extends "user_home.html" %}
+{% block style %}
+    {{ super() }}
+    <style type="text/css">
+        div.mainbody{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            flex-direction: column;
+        }
+        div.mainbody > p{
+            width: 70%;
+            text-align: center;
+        }
+        div.mainbody > span > i{
+            color: #0D47A1;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <div class="mainbody">
+        <span>
+            <i class="material-icons large">sentiment_very_dissatisfied</i>
+        </span>
+        <p>
+            we did not find trips for that pair or departure and destination
+        </p>
+        <p>
+            <button id="back" class="btn-floating btn-large waves-effect waves-light">back</button>
+        </p>
+    </div>
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script>
+        $(document).ready(function () {
+            $("#back").click(function () {
+               window.history.back()
+               console.log("back is caled");
+            });
+        });
+    </script>
+{% endblock %}

@@ -5,8 +5,8 @@ from wtforms.fields.html5 import EmailField
 from wtforms.fields.html5 import DateField
 from wtforms import validators
 from wtforms.fields import StringField
-from wtforms.fields import BooleanField
-
+from wtforms.fields import SelectField
+from wtforms.fields import TimeField
 
 class TravelerRegistrationForm(FlaskForm):
     email = EmailField('email', validators=[validators.DataRequired(), validators.Email(message="incorrect email "
@@ -52,8 +52,27 @@ class ServiceRegistrationFor(FlaskForm):
 class TravelerLoginForm(FlaskForm):
     #TODO add ability to log in with other accounts and capcha
     email = EmailField('email', validators=[validators.DataRequired(), validators.Email(message="incorrect email "
-                                                                                                "format"),
-                                            validators.DataRequired()])
+                                                                                                "format")])
 
-    password = PasswordField('password2', validators=[validators.EqualTo('password',message='Passwords must match'),
+    password = PasswordField('password', validators=[validators.EqualTo('password',message='Passwords must match'),
                                                        validators.DataRequired()])
+
+
+class BookSeatForm(FlaskForm):
+    #get the choices data from the database
+    departure = SelectField(
+        'departure',
+        choices=[("Nakuru", "Nakuru"), ("Nairobi", "Nairobi"),  ("Mombasa", "Mombasa"), ("Kisumu", "Kisumu")],
+        validators=[validators.DataRequired()]
+    )
+    destination = SelectField(
+        'destination',
+        choices=[("Nakuru", "Nakuru"), ("Nairobi", "Nairobi"),  ("Mombasa", "Mombasa"), ("Kisumu", "Kisumu")],
+        validators=[validators.DataRequired()]
+    )
+    date = StringField("date", validators=[validators.DataRequired()],
+                     render_kw={'class': 'datepicker'})
+    time = StringField("time", validators=[validators.DataRequired()],
+                     render_kw={'class': 'timepicker'}
+                     )
+

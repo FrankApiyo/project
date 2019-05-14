@@ -1,10 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends "user_home.html" %}
+{% block body %}
+    <div class="container white">
+        {% from "_formhelper.html" import render_field %}
+        <form method='POST' action="{{ url_for('book') }}">
+            <dl>
+                {{ render_field(form.departure) }}
+                {{ render_field(form.destination) }}
+                {{ render_field(form.date) }}
+                {{ render_field(form.time) }}
+                {{ form.hidden_tag() }}
+            </dl>
+            <p><input type=submit>
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script>
+     $(document).ready(function () {
+         $('select').formSelect();
+         $('.timepicker').timepicker();
+         $('.datepicker').datepicker();
+     });
+    </script>
+{% endblock %}
