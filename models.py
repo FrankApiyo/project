@@ -9,8 +9,14 @@ execs = db.Table('service_exec',
     db.Column('service', db.Text(), db.ForeignKey('service.name')),
     db.Column('exec', db.Text(), db.ForeignKey('exec.id'))
     )
+
 routes = db.Table('service_route',
     db.Column('service', db.Text(), db.ForeignKey('service.name')),
+    db.Column('route', db.Integer(), db.ForeignKey('route.number'))
+    )
+
+location_on_route = db.Table("location_on_route",
+    db.Column('location', db.Integer(), db.ForeignKey('location.id')),
     db.Column('route', db.Integer(), db.ForeignKey('route.number'))
     )
 
@@ -20,7 +26,12 @@ class Location(db.Model):
     name = db.Column(db.Text(), db.CheckConstraint("lng >= -180 and lng <= 180"), nullable=False)
     lat = db.Column(db.Float(), db.CheckConstraint("lat >= -90 and lat <= 90"), nullable=False)
     lng = db.Column(db.Float(), nullable=False)
-    passed_by_on_route = db.Column(db.Integer(), db.ForeignKey("route.number"), nullable=True)
+
+    routes = db.relationship(
+        'Route',
+        secondary=location_on_route,
+        backref=db.backref('locations', lazy='dynamic')
+    )
 
     def __init__(self, name, lat, lng):
         self.name = name
@@ -32,7 +43,8 @@ class Location(db.Model):
 
 
 class Route(db.Model):
-    number = db.Column(db.Integer(), primary_key=True)
+    id = db.Column(db.Integer(), primary_key=True)
+    number = db.Column(db.Integer(), nullable=False)
     from_location = db.Column(db.Integer(), db.ForeignKey("location.id"), nullable=False)
     to_location = db.Column(db.Integer(), db.ForeignKey("location.id"), nullable=False)
 
@@ -168,6 +180,27 @@ class Traveler(Person, db.Model):
     def __repr__(self):
         return "\nTraveler name'{}'\nid '{}'\n".format(self.user_name, self.id)
 
+class DriverPicture(db.Model):
+    #files will be saved using this id i.e: your-image-path/(ID).(ext)
+    id = db.Column(db.Integer(), primary_key=True)
+    #for some reason we need to keep track of original name of file and extention
+    original_name = db.Column(db.Text(), nullable=False)
+    extension = db.Column(db.Text(), nullable=False)
+    #we also need to keep track of when the file was uploaded
+    datetime = db.Column(db.DateTime(), nullable=False)
+    #we are missing unique because we can keep several images  of the same driver
+    driver = db.Column(db.Text(), db.ForeignKey("driver.id"), nullable=False)
+
+    def __init__(self, id, original_name, extention, datetime, driver):
+        self.id = id
+        self.original_name = original_name
+        self.extension = extention
+        self.datetime = datetime
+        self.driver = driver
+
+    def __repr__(self):
+        return "\nDriver picture id: {}\n".format(self.id)
+
 
 class Driver(ServiceEmployee, db.Model):
     def __init__(self, user_name, id, birthday, matatu_service, password, first_name, middle_name, last_name, salt,
@@ -190,7 +223,7 @@ class Driver(ServiceEmployee, db.Model):
 
 class Log(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    time = db.Column(db.DateTime(), nullable=False)
+    datetime = db.Column(db.DateTime(), nullable=False)
     ticket = db.Column(db.Integer(), db.ForeignKey("ticket.id"), unique=True, nullable=False)
     event = db.Column(db.Text(), nullable=False, index=True)
 

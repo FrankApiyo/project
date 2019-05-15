@@ -1,5 +1,5 @@
-{% extends "user_home.html" %}
-{% block  main %}
+{% extends "maintemplate.html" %}
+{% block  body %}
     <div class="container">
     {% from "_formhelper.html" import render_field %}
         <form method='POST' action="{{ url_for('register_traveler') }}">

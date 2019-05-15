@@ -20,6 +20,9 @@ from passwordHelper import validate_password
 from passwordHelper import get_salt
 from passwordHelper import get_hash
 
+
+#TODO show user who's logged in on the screen
+
 import datetime
 
 app = Flask(__name__)
@@ -194,7 +197,7 @@ def register_traveler():
         db.session.commit()
         login_user(User(email))
 
-        return "you are now registered"
+        return redirect(url_for('account'))
 
     else:
         return render_template("register.html", form=form)
