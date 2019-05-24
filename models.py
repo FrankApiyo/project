@@ -15,6 +15,11 @@ routes = db.Table('service_route',
     db.Column('route', db.Integer(), db.ForeignKey('route.number'))
     )
 
+locations = db.Table('service_location',
+    db.Column('service', db.Text(), db.ForeignKey('service.name')),
+    db.Column('location', db.Integer(), db.ForeignKey('location.id'))
+    )
+
 location_on_route = db.Table("location_on_route",
     db.Column('location', db.Integer(), db.ForeignKey('location.id')),
     db.Column('route', db.Integer(), db.ForeignKey('route.number'))
@@ -46,7 +51,7 @@ class Location(db.Model):
         self.specific_location = specific_location
 
     def __repr__(self):
-        return "\ntown: '{}'\nlocation: '{}'\n".format(self.name, self.specific_location)
+        return "\ntown: '{}'\nlocation: '{}'\n".format(self.town, self.specific_location)
 
 
 class Route(db.Model):
@@ -67,8 +72,8 @@ class Route(db.Model):
 
 class Service(db.Model):
     name = db.Column(db.Text(), primary_key=True)
+    location = db.Column(db.Integer(), db.ForeignKey("location.id"))
     #logo will be added later on after database is ensured to be working
-
     routes = db.relationship(
         'Route',
         secondary=routes,
@@ -79,13 +84,21 @@ class Service(db.Model):
         secondary=drivers,
         backref=db.backref('services', lazy='dynamic')
         )
+    locations = db.relationship(
+        'Location',
+        secondary=locations,
+        backref=db.backref('services', lazy='dynamic')
+    )
     execs = db.relationship(
         'Exec',
         secondary=execs,
         backref=db.backref('services', lazy='dynamic')
         )
 
-    def __init__(self, name):
+    def __init__(self, name, specific_location, lat, lng):
+        self.specific_location = specific_location
+        self.lat = lat
+        self.lng = lng
         self.name = name
 
     def __repr__(self):

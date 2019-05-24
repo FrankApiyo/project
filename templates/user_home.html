@@ -57,11 +57,11 @@
 {% endblock %}
 
 
-{% block body %}
-{% endblock %}
+
 
 
 {% block script %}
+    {{ super() }}
     <script type="application/javascript">
         $(document).ready(function () {
             $('.sidenav').sidenav();

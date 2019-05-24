@@ -1,0 +1,80 @@
+{% extends "user_home.html" %}
+{% block headScript %}
+    <script>
+            var map;
+            function initMap() {
+                var locations = [];
+                {% for location in locations %}
+                        locations.push(['{{location.specific_location}}', '{{location.lat}}', '{{location.lng}}'])
+                {% endfor  %}
+                ls = locations;
+
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: {lat: -34.397, lng: 150.644},
+                    zoom: 8,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                });
+
+                var infowindow = new google.maps.InfoWindow();
+
+                var marker, i;
+                var bounds = new google.maps.LatLngBounds();
+
+                for (i = 0; i < locations.length; i++) {
+                    marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                        map: map
+                    });
+                    bounds.extend(marker.position);
+                    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                        return function() {
+                            infowindow.setContent(locations[i][0]);
+                            infowindow.open(map, marker);
+                        }
+                    })(marker, i));
+                }
+
+                map.fitBounds(bounds);
+
+            }
+            //center map on services lats and lngs
+    </script>
+{% endblock %}
+{% block style %}
+    {{ super() }}
+    <style type="text/css">
+        div.mainbody{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            flex-direction: column;
+        }
+        div.mainbody > p{
+            width: 70%;
+            text-align: center;
+        }
+        div.mainbody > span > i{
+            color: #0D47A1;
+        }
+        #map {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <!--TODO we are going to have a map view here to show all the services in the departure town area using customized markers
+        TODO we must figure out how to remove api keys from html
+    -->
+    <div id="map" >
+
+    </div>
+
+
+{% endblock %}
+{% block script %}
+        {{ super() }}
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgf9cE5IODiI7B8A93TCKTmV1ybw3ZPTs&callback=initMap" async defer></script>
+{% endblock %}

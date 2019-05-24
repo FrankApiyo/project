@@ -121,24 +121,42 @@ def history():
     return render_template("history.html", tickets=tickets)
 
 @login_required
-@app.route("/no_routes")
-def no_routes():
-    return render_template("no_routes.html")
+@app.route("/dissapointment/<message>")
+def dissapointment(message):
+    return render_template("dissapointment.html", message=message)
 
 @login_required
 @app.route("/select_matatu", methods=["POST", "GET"])
 def select_matatu():
     #look in db for routes that have this to and from
-    routes = Route.query.filter_by(from_town=session["departure"]).filter_by(to_town=session["destination"]).all();
-    print(routes);
-
+    routes = Route.query.filter_by(from_town=session["departure"]).filter_by(to_town=session["destination"]).all()
+    services = []
+    for route in routes:
+        #find services
+        services.extend(route.services)
 
     if len(routes) <= 0:
-        return redirect(url_for("no_routes"))
-
+        return redirect(url_for("dissapointment", message="we did not find routes for that pair or departure and "
+                                                          "destination"))
+    elif len(services) <= 0:
+        return redirect(url_for("dissapointment", message="we did not find any services for any route of that pair or "
+                                                          "departure and "
+                                                          "destination"))
+    #TODO how can we ensure that we aren't hoping a location does not have more that one service
+    #TODO change that dropdown on book page to a textfield
+    locations = []
+    for service in services:
+        for location in service.locations:
+            print(location)
+            print(location.town)
+            print(session["departure"])
+            print(location.town.lower() == session["departure"].lower())
+            if location.town.lower() == session["departure"].lower():
+                locations.append(location)
+                print(location)
     else:
         # TODO we now have to list all the matatus on that route
-        return "i really don't know what happened"
+        return render_template("services.html", locations=locations)
         #show routes found and then show matatus available for that route after user selects route
     #otherwise show users that there is no
 
