@@ -4,6 +4,7 @@ from flask import url_for
 from flask import redirect
 from flask import request
 from flask import session
+from flask_login import current_user
 from flask_sqlalchemy import SQLAlchemy
 from config import DevConfig
 from flask_migrate import Migrate
@@ -22,6 +23,9 @@ from passwordHelper import get_hash
 
 
 #TODO show user who's logged in on the screen
+#TODO add error pages
+#TODO add relay attack prevetion to documentation
+#TODO remember to use global
 
 import datetime
 
@@ -73,24 +77,29 @@ def logout():
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
-    form = TravelerLoginForm(request.form)
-    if request.method == "GET":
-        return render_template("login.html", form=form)
-    elif request.method == 'POST' and form.validate():
-        email = form.email.data
-        password = form.password.data
-        user_password = get_user(email)[1].password
-        salt = get_user(email)[1].salt
-        if user_password and validate_password(password, salt, user_password):
-            user = User(email)
-            login_user(user)
-            ##TODO depending on who logged in redirect to a different account
-            return redirect(url_for('account'))
-        else:
-            return redirect(url_for('login'))
+    if current_user.is_authenticated:
+        return redirect(url_for("account"))
     else:
-        #TODO add error pages
-        return "error page"
+        form = TravelerLoginForm(request.form)
+        if request.method == "GET":
+            return render_template("login.html", form=form)
+        elif request.method == 'POST' and form.validate():
+            email = form.email.data
+            password = form.password.data
+            user_password = get_user(email)[1].password
+            salt = get_user(email)[1].salt
+            if user_password and validate_password(password, salt, user_password):
+                user = User(email)
+                login_user(user)
+                ##TODO depending on who logged in redirect to a different account
+                return redirect(url_for('account'))
+            else:
+                return redirect(url_for('login'))
+        else:
+            #TODO add error pages
+            return "error page"
+
+
 @login_required
 @app.route("/payment")
 def payment():
@@ -121,16 +130,20 @@ def no_routes():
 def select_matatu():
     #look in db for routes that have this to and from
     #first we have to look if such locations exist from the locations table and place it in routes
-    from_locations = Location.query.filter_by(name=session["departure"]).all()
-    to_locations = Location.query.filter_by(name=session["destination"]).all()
+    from_locations = Location.query.filter_by(town=session["departure"]).all()
+    to_locations = Location.query.filter_by(town=session["destination"]).all()
     routes = []
     for from_location in from_locations:
         for to_location in to_locations:
             rs = Route.query.filter_by(from_location=from_location.id, to_location=from_location.id).all()
             for r in rs:
                 routes.append(r)
+    # TODO change this to correct code
+
+
     if len(routes) <= 0:
         return redirect(url_for("no_routes"))
+
     else:
         # TODO we now have to list all the matatus on that route
         return "i really don't know what happened"
@@ -148,7 +161,8 @@ def book():
         departure = form.departure.data
         date = form.date.data
         time = form.time.data
-        datetime_object = datetime.datetime.strptime(date+" "+time, '%b %d, %Y %I:%M %p')
+        datetime_object = datetime.datetime.strptime(date+" "+time, '%b %d, %Y %H:%M')
+        print(datetime_object)
         #add all the date collected here to a session
         session["datetime_object"] = datetime_object
         session["destination"] = destination
