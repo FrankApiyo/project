@@ -62,7 +62,7 @@
                     //if time entered is before or 2 minutes after now, tell the user that they cant proceed
                     if(date.getHours() > hours )
                         M.toast({html: "Please enter time in the future"});
-                    else if (date.getHours() == hours && date.getMinutes() <= (minutes + 2))
+                    else if (date.getHours() == hours && date.getMinutes() >= minutes)
                         M.toast({html: 'Please enter time in the future'});
                     else{
                         //console.log("show next button");

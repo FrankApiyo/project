@@ -21,7 +21,7 @@ from passwordHelper import validate_password
 from passwordHelper import get_salt
 from passwordHelper import get_hash
 
-
+#TODO in order to have an easy time goin forward, use facker to fill up the database
 #TODO show user who's logged in on the screen
 #TODO add error pages
 #TODO add relay attack prevetion to documentation
@@ -129,16 +129,8 @@ def no_routes():
 @app.route("/select_matatu", methods=["POST", "GET"])
 def select_matatu():
     #look in db for routes that have this to and from
-    #first we have to look if such locations exist from the locations table and place it in routes
-    from_locations = Location.query.filter_by(town=session["departure"]).all()
-    to_locations = Location.query.filter_by(town=session["destination"]).all()
-    routes = []
-    for from_location in from_locations:
-        for to_location in to_locations:
-            rs = Route.query.filter_by(from_location=from_location.id, to_location=from_location.id).all()
-            for r in rs:
-                routes.append(r)
-    # TODO change this to correct code
+    routes = Route.query.filter_by(from_town=session["departure"]).filter_by(to_town=session["destination"]).all();
+    print(routes);
 
 
     if len(routes) <= 0:

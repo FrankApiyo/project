@@ -23,9 +23,15 @@ location_on_route = db.Table("location_on_route",
 
 class Location(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.Text(), db.CheckConstraint("lng >= -180 and lng <= 180"), nullable=False)
+    #description of location, eg. nakuru,odion or Nairobi, afya center
+    town = db.Column(db.Text(), nullable=False)
+    specific_location = db.Column(db.Text(), nullable=False)
     lat = db.Column(db.Float(), db.CheckConstraint("lat >= -90 and lat <= 90"), nullable=False)
-    lng = db.Column(db.Float(), nullable=False)
+    lng = db.Column(db.Float(), db.CheckConstraint("lng >= -180 and lng <= 180"), nullable=False)
+    #we can't have 2 locations of the same latitude and longitude
+    __table_args__ = (
+        db.UniqueConstraint('lng', 'lat'),
+    )
 
     routes = db.relationship(
         'Route',
@@ -33,20 +39,21 @@ class Location(db.Model):
         backref=db.backref('locations', lazy='dynamic')
     )
 
-    def __init__(self, name, lat, lng):
-        self.name = name
+    def __init__(self, town, specific_location, lat, lng):
+        self.town = town
         self.lat = lat
         self.lng =lng
+        self.specific_location = specific_location
 
     def __repr__(self):
-        return "\nLocation name: '{}'\nlat: '{}'\nlng: '{}'\n".format(self.name, self.lat, self.lng)
+        return "\ntown: '{}'\nlocation: '{}'\n".format(self.name, self.specific_location)
 
 
 class Route(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     number = db.Column(db.Integer(), nullable=False)
-    from_location = db.Column(db.Integer(), db.ForeignKey("location.id"), nullable=False)
-    to_location = db.Column(db.Integer(), db.ForeignKey("location.id"), nullable=False)
+    from_town = db.Column(db.Text(), nullable=False)
+    to_town = db.Column(db.Text(), nullable=False)
 
     def __init__(self, number, to_location, from_location):
         self.number = number
@@ -54,7 +61,8 @@ class Route(db.Model):
         self.to_location = to_location
 
     def __repr__(self):
-        return "\nRoute: number'{}'\nto_location: '{}'\nfrom_location: '{}'".format(self.number, self.to_location, self.from_location)
+        return "\nRoute: number'{}'\nto_town: '{}'\nfrom_town: '{}'".format(self.number, self.to_town,
+                                                                                    self.from_town)
 
 
 class Service(db.Model):
