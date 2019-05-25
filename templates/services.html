@@ -4,7 +4,11 @@
             var map;
             function initMap() {
                 var locations = [];
-                {% for location in locations %}
+                var services = [];
+                var urls = [];
+                {% for location, service, url in zip(locations, services_here, urls) %}
+                        services.push('{{ service }}')
+                        urls.push('{{ url }}')
                         locations.push(['{{location.specific_location}}', '{{location.lat}}', '{{location.lng}}'])
                 {% endfor  %}
                 ls = locations;
@@ -12,7 +16,8 @@
                 map = new google.maps.Map(document.getElementById('map'), {
                     center: {lat: -34.397, lng: 150.644},
                     zoom: 8,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    disableDefaultUI: true
                 });
 
                 var infowindow = new google.maps.InfoWindow();
@@ -23,12 +28,16 @@
                 for (i = 0; i < locations.length; i++) {
                     marker = new google.maps.Marker({
                         position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-                        map: map
+                        map: map,
+                        icon: "/static/images/busmarker.svg"
                     });
                     bounds.extend(marker.position);
                     google.maps.event.addListener(marker, 'click', (function(marker, i) {
                         return function() {
-                            infowindow.setContent(locations[i][0]);
+                            //i don't want to use streetview static api so i'm going to have to ask the users to upload images
+
+                            console.log(urls)
+                            infowindow.setContent('<a href='+urls[i]+'>'+services[i]+','+locations[i][0]+'</a>');
                             infowindow.open(map, marker);
                         }
                     })(marker, i));
@@ -63,6 +72,7 @@
             margin: 0;
             padding: 0;
         }
+
     </style>
 {% endblock %}
 {% block body %}

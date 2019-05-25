@@ -37,7 +37,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db, compare_type=True)
 login_manager = LoginManager(app)
 
-from models import db, Ticket, Matatu, Traveler, Location, Route, Service, Driver, Exec, Log, Event
+from models import db, Ticket, Matatu, Traveler, Location, Route, Service, Driver, Exec, Log, Event, RoutePriceService
 
 
 ###helper functions
@@ -67,6 +67,22 @@ def home():
 @login_required
 def account():
     return render_template("user_home.html")
+
+
+@app.route("/service/<service_name>/<destination>")
+@login_required
+def service(service_name, destination):
+    #TODO show the user a list of all the routes to this destination this service offers and where they are dropped off
+    service_name = service_name.replace("_", " ")
+    service = Service.query.filter_by(name=service_name).first()
+    route_price_services = service.route_prices.all()
+    routes = []
+    for route_price_service in route_price_services:
+        if route_price_service.route.to_town == "Nairobi":
+            routes.append(route_price_service.route)
+    print(routes[0])
+
+    return render_template("list_routes.html", routes=routes)
 
 
 @app.route("/logout")
@@ -130,10 +146,14 @@ def dissapointment(message):
 def select_matatu():
     #look in db for routes that have this to and from
     routes = Route.query.filter_by(from_town=session["departure"]).filter_by(to_town=session["destination"]).all()
-    services = []
+    route_price_services = []
     for route in routes:
+        route_price_services.extend(routes[0].route_prices.all())
+
+    services = []
+    for route_price_service in route_price_services:
         #find services
-        services.extend(route.services)
+        services.append(route_price_service.service)
 
     if len(routes) <= 0:
         return redirect(url_for("dissapointment", message="we did not find routes for that pair or departure and "
@@ -144,7 +164,9 @@ def select_matatu():
                                                           "destination"))
     #TODO how can we ensure that we aren't hoping a location does not have more that one service
     #TODO change that dropdown on book page to a textfield
+    urls = [];
     locations = []
+    services_here = []
     for service in services:
         for location in service.locations:
             print(location)
@@ -152,11 +174,14 @@ def select_matatu():
             print(session["departure"])
             print(location.town.lower() == session["departure"].lower())
             if location.town.lower() == session["departure"].lower():
+                urls.append("service/" + service.name.replace(" ", "_") + "/" + session['destination'])
+                services_here.append(service.name)
                 locations.append(location)
                 print(location)
     else:
         # TODO we now have to list all the matatus on that route
-        return render_template("services.html", locations=locations)
+        return render_template("services.html", locations=locations, services_here=services_here, zip=zip,
+                               where_to=session['destination'], urls=urls)
         #show routes found and then show matatus available for that route after user selects route
     #otherwise show users that there is no
 

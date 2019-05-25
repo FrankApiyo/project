@@ -13,13 +13,11 @@ execs = db.Table('service_exec',
 
 class RoutePriceService(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    service = db.Column(db.Text(), db.ForeignKey('service.name'))
-    route = db.Column(db.Integer(), db.ForeignKey('route.number'))
+    service_name = db.Column(db.Text(), db.ForeignKey('service.name'))
+    route_number = db.Column(db.Integer(), db.ForeignKey('route.number'))
     price = db.Column(db.Float(), nullable=False)
 
-    def __init__(self, service, route, price):
-        self.service = service
-        self.route = route
+    def __init__(self, price):
         self.price = price
 
     def __repr__(self):
@@ -70,6 +68,11 @@ class Route(db.Model):
     number = db.Column(db.Integer(), nullable=False)
     from_town = db.Column(db.Text(), nullable=False)
     to_town = db.Column(db.Text(), nullable=False)
+    route_prices = db.relationship(
+        "RoutePriceService",
+        backref='route',
+        lazy='dynamic'
+    )
 
     def __init__(self, number, to_location, from_location):
         self.number = number
@@ -85,11 +88,11 @@ class Service(db.Model):
     name = db.Column(db.Text(), primary_key=True)
     location = db.Column(db.Integer(), db.ForeignKey("location.id"))
     #logo will be added later on after database is ensured to be working
-    routes = db.relationship(
-        'Route',
-        secondary=RoutePriceService,
-        backref=db.backref('services', lazy='dynamic')
-        )
+    route_prices = db.relationship(
+        "RoutePriceService",
+        backref='service',
+        lazy='dynamic'
+    )
     drivers = db.relationship(
         'Driver',
         secondary=drivers,
