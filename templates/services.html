@@ -35,6 +35,7 @@
                 }
 
                 map.fitBounds(bounds);
+                map.panToBounds(bounds);
 
             }
             //center map on services lats and lngs
@@ -67,11 +68,11 @@
 {% block body %}
     <!--TODO we are going to have a map view here to show all the services in the departure town area using customized markers
         TODO we must figure out how to remove api keys from html
+        TODO show the toast with info about the service at the marker location. maybe show a picter of the location and so on
     -->
     <div id="map" >
 
     </div>
-
 
 {% endblock %}
 {% block script %}

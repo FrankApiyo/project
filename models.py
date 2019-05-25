@@ -10,10 +10,21 @@ execs = db.Table('service_exec',
     db.Column('exec', db.Text(), db.ForeignKey('exec.id'))
     )
 
-routes = db.Table('service_route',
-    db.Column('service', db.Text(), db.ForeignKey('service.name')),
-    db.Column('route', db.Integer(), db.ForeignKey('route.number'))
-    )
+
+class RoutePriceService(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    service = db.Column(db.Text(), db.ForeignKey('service.name'))
+    route = db.Column(db.Integer(), db.ForeignKey('route.number'))
+    price = db.Column(db.Float(), nullable=False)
+
+    def __init__(self, service, route, price):
+        self.service = service
+        self.route = route
+        self.price = price
+
+    def __repr__(self):
+        return "\nService: '{}'\nroute: '{}'\nprice: '{}'\n".format(self.service, self.route, self.price)
+
 
 locations = db.Table('service_location',
     db.Column('service', db.Text(), db.ForeignKey('service.name')),
@@ -76,7 +87,7 @@ class Service(db.Model):
     #logo will be added later on after database is ensured to be working
     routes = db.relationship(
         'Route',
-        secondary=routes,
+        secondary=RoutePriceService,
         backref=db.backref('services', lazy='dynamic')
         )
     drivers = db.relationship(
