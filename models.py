@@ -10,19 +10,10 @@ execs = db.Table('service_exec',
     db.Column('exec', db.Text(), db.ForeignKey('exec.id'))
     )
 
-
-class RoutePriceService(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
-    service_name = db.Column(db.Text(), db.ForeignKey('service.name'))
-    route_number = db.Column(db.Integer(), db.ForeignKey('route.number'))
-    price = db.Column(db.Float(), nullable=False)
-
-    def __init__(self, price):
-        self.price = price
-
-    def __repr__(self):
-        return "\nService: '{}'\nroute: '{}'\nprice: '{}'\n".format(self.service, self.route, self.price)
-
+matatu_routes = db.Table('matatu_routes',
+                         db.Column('matatu_registration', db.Text(), db.ForeignKey('matatu.registration')),
+                         db.Column('route_id', db.Integer(), db.ForeignKey('route.number'))
+                         )
 
 locations = db.Table('service_location',
     db.Column('service', db.Text(), db.ForeignKey('service.name')),
@@ -33,6 +24,34 @@ location_on_route = db.Table("location_on_route",
     db.Column('location', db.Integer(), db.ForeignKey('location.id')),
     db.Column('route', db.Integer(), db.ForeignKey('route.number'))
     )
+
+
+class MatatuQueueInstance(db.Model):
+    #TODO remember that matatu queue entries are remmoved from the matatu que once they are full that is no of seats
+    # gets to zero
+    __tablename__ = "matatu_queue"
+    id = db.Column(db.Integer(), primary_key=True)
+    no_of_vacant_seats = db.Column(db.Integer(), default=0, nullable=False)
+    route_price_service_id = db.Column(db.Integer(), db.ForeignKey("route_price_service.id"), nullable=False)
+    matatu_registration = db.Column(db.Text(), db.ForeignKey("matatu.registration"), nullable=False)
+
+    def __repr__(self):
+        return "\nMatatuQueueEntry\n"
+
+
+class RoutePriceService(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    service_name = db.Column(db.Text(), db.ForeignKey('service.name'))
+    route_number = db.Column(db.Integer(), db.ForeignKey('route.number'))
+    price = db.Column(db.Float(), nullable=False)
+    matatu_queue_entry = db.relationship('MatatuQueue', backref='route_price_service', uselist=False)
+
+
+    def __init__(self, price):
+        self.price = price
+
+    def __repr__(self):
+        return "\nService: '{}'\nroute: '{}'\nprice: '{}'\n".format(self.service, self.route, self.price)
 
 
 class Location(db.Model):
@@ -108,6 +127,11 @@ class Service(db.Model):
         secondary=execs,
         backref=db.backref('services', lazy='dynamic')
         )
+    matatus = db.relationship(
+        'Matatu',
+        backref='service',
+        lazy='dynamic'
+    )
 
     def __init__(self, name, specific_location, lat, lng):
         self.specific_location = specific_location
@@ -124,6 +148,12 @@ class Matatu(db.Model):
     registration = db.Column(db.Text(), primary_key=True)
     matatu_service = db.Column(db.Text(), db.ForeignKey('service.name'), nullable=False)
     seats = db.Column(db.Integer())
+    routes = db.relationship(
+        'Route',
+        secondary=matatu_routes,
+        backref=db.backref('matatus', lazy='dynamic')
+    )
+    matatu_queue_entry = db.relationship('MatatuQueue', backref='matatu', uselist=False)
 
     def __init__(self, registration, matatu_service, seats):
         self.seats = seats

@@ -37,7 +37,8 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db, compare_type=True)
 login_manager = LoginManager(app)
 
-from models import db, Ticket, Matatu, Traveler, Location, Route, Service, Driver, Exec, Log, Event, RoutePriceService
+from models import db, Ticket, Matatu, Traveler, Location, Route, Service, Driver, Exec, Log, Event, \
+    RoutePriceService, MatatuQueueInstance
 
 
 ###helper functions
@@ -74,7 +75,7 @@ def account():
 def ticket(id):
     #TODO we need to pick a seat
     route_price_service = RoutePriceService.query.filter_by(id=id).first()
-    return str(route_price_service)
+    return render_template("pick_a_seat.html")
 
 
 @app.route("/service/<service_name>/<destination>")
