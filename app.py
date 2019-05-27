@@ -69,20 +69,30 @@ def account():
     return render_template("user_home.html")
 
 
+@app.route("/pick_a_seat/<id>")
+@login_required
+def ticket(id):
+    #TODO we need to pick a seat
+    route_price_service = RoutePriceService.query.filter_by(id=id).first()
+    return str(route_price_service)
+
+
 @app.route("/service/<service_name>/<destination>")
 @login_required
 def service(service_name, destination):
-    #TODO show the user a list of all the routes to this destination this service offers and where they are dropped off
     service_name = service_name.replace("_", " ")
     service = Service.query.filter_by(name=service_name).first()
     route_price_services = service.route_prices.all()
-    routes = []
+    route_price_services_to_destination = []
+    #prepare a link for each list item in above list
+    base_link = "/pick_a_seat/"
+    link_list = []
     for route_price_service in route_price_services:
         if route_price_service.route.to_town == "Nairobi":
-            routes.append(route_price_service.route)
-    print(routes[0])
-
-    return render_template("list_routes.html", routes=routes)
+            route_price_services_to_destination.append(route_price_service)
+            link_list.append(base_link+str(route_price_service.id))
+    return render_template("list_routes.html", route_price_services=route_price_services_to_destination,
+                           link_list=link_list, zip=zip)
 
 
 @app.route("/logout")

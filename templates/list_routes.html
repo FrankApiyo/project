@@ -2,44 +2,29 @@
 {% block style %}
     {{ super() }}
     <style type="text/css">
-        div.mainbody{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            flex-direction: column;
-        }
-        div.mainbody > p{
-            width: 70%;
-            text-align: center;
-        }
-        div.mainbody > span > i{
-            color: #0D47A1;
-        }
+
     </style>
 {% endblock %}
 {% block body %}
+    <p>{{ route_price_services[0].service_name }}</p>
     <ul class="collection">
-    {% for route in routes %}
-        <!-- TODO make this template more appropriate for what it is being used for -->
-        <li>
-            <!--i class="material-icons circle left">folder</i>
-            <span class="title"></span>
-            <p>From: </p-->
-            <p>To: {{ route.to_town }}</p>
-        </li>
+    {% for route_price_service, link in zip(route_price_services, link_list) %}
+        <a href="{{ link }}">
+            <li>
+                <!--i class="material-icons circle left">folder</i>
+                <span class="title"></span-->
+                <p>From: {{ route_price_service.route.from_town }}</p>
+                <p>To: {{ route_price_service.route.to_town }}</p>
+                <p>Price: {{ route_price_service.price }}</p>
+                <p>Route NO: {{ route_price_service.route_number }}</p>
+            </li>
+        </a>
     {% endfor %}
     </ul>
-    <div>
-    {% if routes|length == 0 %}
-       <div class="mainbody">
-        <span>
-            <i class="material-icons large">ac_unit</i>
-        </span>
-        <p>
-            unexpected
-        </p>
-       </div>
-    {% endif %}
-    </div>
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript">
+
+    </script>
 {% endblock %}
