@@ -10,9 +10,9 @@ execs = db.Table('service_exec',
     db.Column('exec', db.Text(), db.ForeignKey('exec.id'))
     )
 
-matatu_routes = db.Table('matatu_routes',
+matatu_routes = db.Table("matatu_routes",
                          db.Column('matatu_registration', db.Text(), db.ForeignKey('matatu.registration')),
-                         db.Column('route_id', db.Integer(), db.ForeignKey('route.number'))
+                         db.Column('route_number', db.Integer(), db.ForeignKey('route.number'))
                          )
 
 locations = db.Table('service_location',
@@ -26,14 +26,36 @@ location_on_route = db.Table("location_on_route",
     )
 
 
+class TakenSeatInstance(db.Model):
+    __tablename__ = "taken_seats"
+    __table_args__ = (
+        db.UniqueConstraint('matatu_queue_instance_id', 'seat_number', name='unique_component_commit'),
+    )
+    id = db.Column(db.Integer, primary_key=True)
+    matatu_queue_instance_id = db.Column(db.Integer, db.ForeignKey("matatu_queue.id"), nullable=False)
+    seat_number = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, seat_number):
+        self.seat_number = seat_number
+
+    def __repr__(self):
+        return "\nSeat no: '{}' in matatu registration : '{}'\n".format(self.seat_number,
+                                                                        self.matatu_queue_instance.matatu.registration)
+
+
 class MatatuQueueInstance(db.Model):
     #TODO remember that matatu queue entries are remmoved from the matatu que once they are full that is no of seats
-    # gets to zero
+    # gets to zero and also remove all the tacken seatInstances from the TackenSeats table
     __tablename__ = "matatu_queue"
     id = db.Column(db.Integer(), primary_key=True)
     no_of_vacant_seats = db.Column(db.Integer(), default=0, nullable=False)
     route_price_service_id = db.Column(db.Integer(), db.ForeignKey("route_price_service.id"), nullable=False)
     matatu_registration = db.Column(db.Text(), db.ForeignKey("matatu.registration"), nullable=False)
+    taken_seats = db.relationship(
+        'TakenSeatInstance',
+        backref='matatu_queue_instance',
+        lazy='dynamic'
+    )
 
     def __repr__(self):
         return "\nMatatuQueueEntry\n"
@@ -44,7 +66,7 @@ class RoutePriceService(db.Model):
     service_name = db.Column(db.Text(), db.ForeignKey('service.name'))
     route_number = db.Column(db.Integer(), db.ForeignKey('route.number'))
     price = db.Column(db.Float(), nullable=False)
-    matatu_queue_entry = db.relationship('MatatuQueue', backref='route_price_service', uselist=False)
+    matatu_queue_entry = db.relationship('MatatuQueueInstance', backref='route_price_service', uselist=False)
 
 
     def __init__(self, price):
@@ -153,7 +175,7 @@ class Matatu(db.Model):
         secondary=matatu_routes,
         backref=db.backref('matatus', lazy='dynamic')
     )
-    matatu_queue_entry = db.relationship('MatatuQueue', backref='matatu', uselist=False)
+    matatu_queue_entry = db.relationship('MatatuQueueInstance', backref='matatu', uselist=False)
 
     def __init__(self, registration, matatu_service, seats):
         self.seats = seats

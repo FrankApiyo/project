@@ -73,8 +73,10 @@ def account():
 @app.route("/pick_a_seat/<id>")
 @login_required
 def ticket(id):
-    #TODO we need to pick a seat
+    #remember that id is the route_price_service.id that we are about to purchase
+    #TODO we need to pick a seat and update the tacken seats table and matatuQueue instance table
     route_price_service = RoutePriceService.query.filter_by(id=id).first()
+
     return render_template("pick_a_seat.html")
 
 
