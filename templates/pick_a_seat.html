@@ -2,9 +2,11 @@
 {% block style %}
 {% endblock %}
 {% block body %}
-    <div id="seats">
+    <div id="seats" class="container">
         <ul>
-            <li></li>
+            {% for i in range(no) %}
+                <li><a href="/ticket/{{ loop.index }}">{{loop.index}}</a></li>
+            {% endfor %}
         </ul>
     </div>
 {% endblock %}

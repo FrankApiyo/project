@@ -124,6 +124,43 @@ class Route(db.Model):
         return "\nRoute: number'{}'\nto_town: '{}'\nfrom_town: '{}'".format(self.number, self.to_town,
                                                                                     self.from_town)
 
+class Person:
+    user_name = db.Column(db.Text(), nullable=False)
+    id = db.Column(db.Text(), primary_key=True)
+    birthday = db.Column(db.DateTime())
+    password = db.Column(db.Text(), nullable=False)
+    first_name = db.Column(db.Text(), nullable=False)
+    middle_name = db.Column(db.Text(), nullable=True)
+    last_name = db.Column(db.Text(), nullable=False)
+    salt = db.Column(db.Text(), nullable=False)
+    email = db.Column(db.Text(), nullable=False)
+
+
+
+class ServiceEmployee(Person):
+    #why this is nullable is beause an employee can leave a service but we still would like to retain data about them
+    matatu_service = db.Column(db.Text(), nullable=True)
+
+
+class Driver(ServiceEmployee, db.Model):
+    matatu = db.relationship('Matatu', backref='driver', uselist=False)
+
+    def __init__(self, user_name, id, birthday, matatu_service, password, first_name, middle_name, last_name, salt,
+                 email):
+        self.email = email
+        self.user_name = user_name
+        self.password = password
+        self.first_name = first_name
+        self.middle_name = middle_name
+        self.last_name = last_name
+        self.salt = salt
+        self.id = id
+        self.birthday = birthday
+        self.matatu_service = matatu_service
+
+    def __repr__(self):
+        return "\nDriver name'{}'\nid '{}'\nmatatu_service: '{}'\n".format(self.user_name, self.id,
+                                                                                     self.matatu_service)
 
 class Service(db.Model):
     name = db.Column(db.Text(), primary_key=True)
@@ -170,6 +207,8 @@ class Matatu(db.Model):
     registration = db.Column(db.Text(), primary_key=True)
     matatu_service = db.Column(db.Text(), db.ForeignKey('service.name'), nullable=False)
     seats = db.Column(db.Integer())
+    driver_id = db.Column(db.Text(), db.ForeignKey("driver.id"), nullable=True)
+
     routes = db.relationship(
         'Route',
         secondary=matatu_routes,
@@ -193,54 +232,34 @@ class Ticket(db.Model):
     matatu = db.Column(db.Text(), db.ForeignKey("matatu.registration"), nullable=False)
     pick_up_lat = db.Column(db.Float(), db.CheckConstraint("pick_up_lat >= -90 and pick_up_lat <= 90"), nullable=False)
     pick_up_lng = db.Column(db.Float(), db.CheckConstraint("pick_up_lng >= 0 and pick_up_lng <= 180"), nullable=False)
-    driver = db.Column(db.Text(), db.ForeignKey("driver.id"), nullable=False)
+    driver = db.Column(db.Text(), db.ForeignKey("driver.id"), nullable=True)
     cost = db.Column(db.Float(), nullable=False)
-    pick_up_time = db.Column(db.DateTime(), nullable=False)
     route = db.Column(db.Integer(), db.ForeignKey("route.number"), nullable=False)
 
-    def __init__(self, traveler, matatu, pick_up_lat, pick_up_lng, driver, cost, pick_up_time, route):
+    def __init__(self, traveler, matatu, pick_up_lat, pick_up_lng, driver, cost, route):
         self.traveler = traveler
         self.matatu = matatu
         self.pick_up_lat = pick_up_lat
         self.pick_up_lng = pick_up_lng
         self.driver = driver
         self.cost = cost
-        self.pick_up_time = pick_up_time
         self.route = route
 
     def __repr__(self):
         return "\Ticker no: {}".format(self.id)
 
 
-class Person:
-    user_name = db.Column(db.Text(), nullable=False)
-    id = db.Column(db.Text(), primary_key=True)
-    birthday = db.Column(db.DateTime())
-    password = db.Column(db.Text(), nullable=False)
-    first_name = db.Column(db.Text(), nullable=False)
-    middle_name = db.Column(db.Text(), nullable=True)
-    last_name = db.Column(db.Text(), nullable=False)
-    salt = db.Column(db.Text(), nullable=False)
-    email = db.Column(db.Text(), nullable=False)
-
-
-class ServiceEmployee(Person):
-    #why this is nullable is beause an employee can leave a service but we still would like to retain data about them
-    matatu_service = db.Column(db.Text(), nullable=True)
-
 
 class Exec(ServiceEmployee, db.Model):
     position = db.Column(db.Text(), nullable=True)
-    matatu_service = db.Column(db.Text(), nullable=False)
 
-    def __init__(self, user_name, birthday, matatu_service, position, password, first_name, middle_name, last_name,
+    def __init__(self, user_name, birthday, position, password, first_name, middle_name, last_name,
                  salt, email, id):
         self.email = email
         self.user_name = user_name
         self.password = password
         self.id = id
         self.birthday = birthday
-        self.matatu_service = matatu_service
         self.position = position
         self.first_name = first_name
         self.middle_name = middle_name
@@ -278,6 +297,7 @@ class DriverPicture(db.Model):
     #we are missing unique because we can keep several images  of the same driver
     driver = db.Column(db.Text(), db.ForeignKey("driver.id"), nullable=False)
 
+
     def __init__(self, id, original_name, extention, datetime, driver):
         self.id = id
         self.original_name = original_name
@@ -287,25 +307,6 @@ class DriverPicture(db.Model):
 
     def __repr__(self):
         return "\nDriver picture id: {}\n".format(self.id)
-
-
-class Driver(ServiceEmployee, db.Model):
-    def __init__(self, user_name, id, birthday, matatu_service, password, first_name, middle_name, last_name, salt,
-                 email):
-        self.email = email
-        self.user_name = user_name
-        self.password = password
-        self.first_name = first_name
-        self.middle_name = middle_name
-        self.last_name = last_name
-        self.salt = salt
-        self.id = id
-        self.birthday = birthday
-        self.matatu_service = matatu_service
-
-    def __repr__(self):
-        return "\nDriver name'{}'\nid '{}'\nmatatu_service: '{}'\n".format(self.user_name, self.id,
-                                                                                     self.matatu_service)
 
 
 class Log(db.Model):

@@ -16,6 +16,8 @@ from flask_login import current_user
 from forms import TravelerRegistrationForm
 from forms import TravelerLoginForm
 from forms import BookSeatForm
+from forms import ServiceManagerLoginForm
+from forms import ServiceRegistrationForm
 from user import User
 from passwordHelper import validate_password
 from passwordHelper import get_salt
@@ -53,7 +55,7 @@ def get_user(email):
     elif traveler:
         return "traveler", traveler
     else:
-        return None
+        return None, None
 
 
 ###route functions
@@ -63,6 +65,126 @@ def home():
     #check if someone is already logged in and as what
     return "try /login"
 
+@app.route("/add_service_location/<lat>/<lng>")
+@app.route("/add_service_location", defaults={"lat": None, "lng":None})
+def add_service_location(lat, lng):
+
+    if lat and lng:
+        service = Service(session["service_name"], session["service_location"], lat, lng)
+        exec = Exec(session["username"], session["birthday"],session["exec_position"], session["password"],
+                    session["first_name"], session["middle_name"], session["last_name"], session["salt"],
+                    session["email"], session["id_num"])
+        db.session.add(service)
+        service.execs.append(exec)
+        db.session.add(service)
+        db.session.commit()
+        user = User(session["email"])
+        login_user(user)
+        print("\n\nare wer here\n\n"+url_for("matrips_manager_login"))
+        return redirect(url_for("matrips_manager_login"))
+    else:
+        return render_template("add_service_location.html")
+
+@app.route("/register_manager_and_service", methods=["POST", "GET"])
+def register_manager_and_service():
+    form = ServiceRegistrationForm(request.form)
+    if request.method == "GET":
+        # print("\n\n\nplease work\n\n")
+        return render_template("register_service.html", form=form)
+    elif request.method == 'POST' and form.validate():
+        # print("\n\n\nplease work\n\n")
+        username = form.username.data
+        id_num = form.id.data
+        email = form.email.data
+        pw1 = form.password.data
+        pw2 = form.password2.data
+        birthday = form.birthday.data
+        first_name = form.first_name.data
+        middle_name = form.middle_name.data
+        last_name = form.last_name.data
+        exec_position = form.exec_position.data
+        service_name = form.service_name.data
+        service_location = form.service_location.data
+        # TODO add a way to inform user about the following failures
+        # TODO add try catch block around the data request operations from the database and inform the user of failures
+        if not pw1 == pw2:
+            return "passwords dont match"
+        else:
+            salt = get_salt()
+            password = get_hash(salt + pw1)
+
+        role, user = get_user(email)
+        if role == "exec":
+            #TODO add flash telling the user that someone is allready registered with that piece of info/credential
+            return render_template("register_service.html", form=form)
+
+        exec = Exec.query.filter_by(id=id_num).first()
+        if exec:
+            # TODO add flash telling the user that someone is allready registered with that piece of info/credential
+            return render_template("register_service.html", form=form)
+
+        service = Service.query.filter_by(name="service_name").first()
+        if service:
+            #TODO add flash telling the user that someone is allready registered with that piece of info/credential
+            return render_template("register_service.html", form=form)
+
+        session["service_name"] = service_name
+        session["username"] = username
+        session["birthday"] = birthday
+        session["exec_position"] = exec_position
+        session["password"] = password
+        session["first_name"] = first_name
+        session["middle_name"] = middle_name
+        session["last_name"] = last_name
+        session["salt"] = salt
+        session["email"] = email
+        session["id_num"] = id_num
+        session["service_location"] = service_location
+
+        return redirect(url_for('add_service_location'))
+
+    else:
+        return render_template("register.html", form=form)
+
+
+@app.route("/manager_logout")
+@login_required
+def manager_logout():
+    logout_user()
+    return redirect(url_for("matrips_manager_login"))
+
+
+@app.route("/matrips_manager", methods=["POST", "GET"])
+def matrips_manager_login():
+    print("\n\nare wer here\n\n")
+    if current_user.is_authenticated:
+        return redirect(url_for("manage"))
+    else:
+        form = ServiceManagerLoginForm(request.form)
+        if request.method == "GET":
+            return render_template("manager_login.html", form=form)
+        elif request.method == 'POST' and form.validate():
+            email = form.email.data
+            password = form.password.data
+            user_password = get_user(email)[1].password
+            salt = get_user(email)[1].salt
+            if user_password and validate_password(password, salt, user_password):
+                user = User(email)
+                login_user(user)
+                ##TODO depending on who logged in redirect to a different account
+                return redirect(url_for('manage'))
+            else:
+                return redirect(url_for('matrips_manager_login'))
+        else:
+            # TODO add error pages
+            return "error page"
+
+
+@app.route("/manage")
+@login_required
+def manage():
+    return render_template("manage.html")
+
 
 @app.route("/account")
 @login_required
@@ -70,32 +192,63 @@ def account():
     return render_template("user_home.html")
 
 
+@app.route("/ticket/<seat_number>")
+@login_required
+def ticket(seat_number):
+    route_price_service = RoutePriceService.query.filter_by(id=session["route_price_service"]).first()
+    route_price_service.matatu_queue_entry.no_of_vacant_seats -=1
+    db.session.commit()
+    traveler = Traveler.query.filter_by(email=current_user.get_id()).first()
+    service = Service.query.filter_by(name=session["service"]).first()
+    print(service)
+    service_location = None
+    for location in service.locations:
+        if location.town == session["departure"]:
+            service_location = location
+
+    ticket = Ticket(traveler.id, route_price_service.matatu_queue_entry.matatu.registration, service_location.lat,
+                    service_location.lng,
+                    None, route_price_service.price,
+                    route_price_service.route.number)
+    db.session.add(ticket)
+    db.session.commit()
+
+    return "some other thing"
+
+
 @app.route("/pick_a_seat/<id>")
 @login_required
-def ticket(id):
+def pick_a_seat(id):
     #remember that id is the route_price_service.id that we are about to purchase
     #TODO we need to pick a seat and update the tacken seats table and matatuQueue instance table
     route_price_service = RoutePriceService.query.filter_by(id=id).first()
-
-    return render_template("pick_a_seat.html")
+    no = route_price_service.matatu_queue_entry.no_of_vacant_seats
+    session["route_price_service"] = route_price_service.id
+    return render_template("pick_a_seat.html", no=no, range=range)
 
 
 @app.route("/service/<service_name>/<destination>")
 @login_required
 def service(service_name, destination):
     service_name = service_name.replace("_", " ")
+    session["service"] = service_name
     service = Service.query.filter_by(name=service_name).first()
     route_price_services = service.route_prices.all()
     route_price_services_to_destination = []
     #prepare a link for each list item in above list
     base_link = "/pick_a_seat/"
     link_list = []
+    matatu_available_list = []
     for route_price_service in route_price_services:
         if route_price_service.route.to_town == "Nairobi":
             route_price_services_to_destination.append(route_price_service)
             link_list.append(base_link+str(route_price_service.id))
+            if route_price_service.matatu_queue_entry:
+                matatu_available_list.append(True)
+            else:
+                matatu_available_list.append(False)
     return render_template("list_routes.html", route_price_services=route_price_services_to_destination,
-                           link_list=link_list, zip=zip)
+                           link_list=link_list, zip=zip, matatu_available_list=matatu_available_list)
 
 
 @app.route("/logout")
@@ -252,7 +405,8 @@ def register_traveler():
             salt = get_salt()
             password = get_hash(salt+pw1)
 
-        if get_user(email):
+        role, user = get_user(email)
+        if role == "traveler":
             return "user already registered with that email"
         traveler = Traveler(username, id_num, birthday, password, first_name, middle_name, last_name, salt, email)
         db.session.add(traveler)

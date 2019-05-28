@@ -8,8 +8,14 @@
 {% block body %}
     <p>{{ route_price_services[0].service_name }}</p>
     <ul class="collection">
-    {% for route_price_service, link in zip(route_price_services, link_list) %}
-        <a href="{{ link }}">
+    {% for route_price_service, link, matatu_available in zip(route_price_services, link_list, matatu_available_list) %}
+        <a href="
+        {% if matatu_available %}
+            {{ link }}
+         {% else %}
+            #
+          {% endif %}
+        ">
             <li>
                 <!--i class="material-icons circle left">folder</i>
                 <span class="title"></span-->
@@ -17,6 +23,7 @@
                 <p>To: {{ route_price_service.route.to_town }}</p>
                 <p>Price: {{ route_price_service.price }}</p>
                 <p>Route NO: {{ route_price_service.route_number }}</p>
+                <p>matatu available: {{ matatu_available }}</p>
             </li>
         </a>
     {% endfor %}

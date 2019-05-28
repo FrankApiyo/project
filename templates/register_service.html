@@ -1,0 +1,24 @@
+{% extends "maintemplate.html" %}
+{% block  body %}
+    <div class="container">
+    {% from "_formhelper.html" import render_field %}
+        <form method='POST' action="{{ url_for('register_manager_and_service') }}">
+            <dl>
+                {{ render_field(form.username) }}
+                {{ render_field(form.email) }}
+                {{ render_field(form.id) }}
+                {{ render_field(form.birthday) }}
+                {{ render_field(form.password) }}
+                {{ render_field(form.password2) }}
+                {{ render_field(form.first_name) }}
+                {{ render_field(form.middle_name) }}
+                {{ render_field(form.last_name) }}
+                {{ render_field(form.exec_position) }}
+                {{ render_field(form.service_name) }}
+                {{ render_field(form.service_location) }}
+                {{ form.hidden_tag() }}
+            </dl>
+            <p><input type=submit value=Register>
+        </form>
+    </div>
+{% endblock %}

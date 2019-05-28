@@ -44,9 +44,48 @@ class DriverRegistrationForm(TravelerRegistrationForm):
     pass
 
 
-class ServiceRegistrationFor(FlaskForm):
-    #TODO fill this out
-    pass
+class ServiceRegistrationForm(FlaskForm):
+    email = EmailField('email', validators=[validators.DataRequired(), validators.Email(message="incorrect email "
+                                                                                                "format"),
+                                            validators.DataRequired()])
+    password = PasswordField('password', validators=[validators.DataRequired(), validators.Length(min=8,
+                                                                                                  message="Please "
+                                                                                                          "choose a "
+                                                                                                          "passwordof "
+                                                                                                          "at least 8 "
+                                                                                                          "characters")])
+    password2 = PasswordField('password2', validators=[validators.EqualTo('password', message='Passwords must match'),
+                                                       validators.DataRequired()])
+    username = StringField("username", validators=[validators.Length(min=4, max=25, message="username must be at "
+                                                                                            "least 4 characters long "
+                                                                                            "and at most 25 "
+                                                                                            "characters long"),
+                                                   validators.DataRequired()])
+    birthday = DateField("birthday", validators=[validators.DataRequired()])
+    id = StringField("id", validators=[validators.regexp('[0-9]+', message="ID not valid"),
+                                       validators.DataRequired(), validators.length(min=1, max=15, message="enter a "
+                                                                                                           "correct id "
+                                                                                                           "number")])
+    first_name = StringField("first_name", validators=[validators.regexp('[a-zA-Z]+', message="first name not "
+                                                                                              "valid"),
+                                                       validators.DataRequired()])
+    last_name = StringField("last_name", validators=[validators.regexp('[a-zA-Z]+', message="first name not valid"),
+                                                     validators.DataRequired()])
+    middle_name = StringField("middle_name", validators=[validators.regexp('[a-zA-Z]+', message="first name not "
+                                                                                                "valid"),
+                                                         validators.DataRequired()])
+    exec_position = StringField("exec_position", validators=[validators.regexp('[a-zA-Z]+', message="position title "
+                                                                                                    "not valid"),
+                                                         validators.DataRequired()])
+    service_name = StringField("service_name", validators=[validators.regexp('[a-zA-Z]+', message="service name not "
+                                                                                               "valid"),
+                                                         validators.DataRequired()])
+    service_location = StringField("service_location", validators=[validators.regexp('[a-zA-Z]+', message="service "
+                                                                                                          "location "
+                                                                                                          "name"
+                                                                                                          "not valid"),
+                                                         validators.DataRequired()])
+    submit = SubmitField('submit')
 
 
 class TravelerLoginForm(FlaskForm):
@@ -56,6 +95,11 @@ class TravelerLoginForm(FlaskForm):
 
     password = PasswordField('password', validators=[validators.EqualTo('password',message='Passwords must match'),
                                                        validators.DataRequired()])
+
+
+class ServiceManagerLoginForm(TravelerLoginForm):
+    pass
+
 
 
 class BookSeatForm(FlaskForm):
