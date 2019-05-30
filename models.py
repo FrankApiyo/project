@@ -137,12 +137,10 @@ class Person:
 
 
 
-class ServiceEmployee(Person):
-    #why this is nullable is beause an employee can leave a service but we still would like to retain data about them
-    matatu_service = db.Column(db.Text(), nullable=True)
 
 
-class Driver(ServiceEmployee, db.Model):
+
+class Driver(db.Model, Person):
     matatu = db.relationship('Matatu', backref='driver', uselist=False)
 
     def __init__(self, user_name, id, birthday, matatu_service, password, first_name, middle_name, last_name, salt,
@@ -250,7 +248,7 @@ class Ticket(db.Model):
 
 
 
-class Exec(ServiceEmployee, db.Model):
+class Exec(db.Model, Person):
     position = db.Column(db.Text(), nullable=True)
 
     def __init__(self, user_name, birthday, position, password, first_name, middle_name, last_name,
@@ -268,7 +266,8 @@ class Exec(ServiceEmployee, db.Model):
 
     def __repr__(self):
         return "\nExec name'{}'\nposition '{}'\nid '{}'\nmatatu_service: '{}'\n".format(self.user_name,
-                                                                                                  self.position, self.id, self.matatu_service)
+                                                                                                  self.position,
+                                                                                        self.id, self.services)
 
 
 class Traveler(Person, db.Model):

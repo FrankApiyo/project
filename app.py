@@ -18,7 +18,7 @@ from forms import TravelerLoginForm
 from forms import BookSeatForm
 from forms import ServiceManagerLoginForm
 from forms import ServiceRegistrationForm
-from user import User
+from user import User, User_Exec
 from passwordHelper import validate_password
 from passwordHelper import get_salt
 from passwordHelper import get_hash
@@ -46,17 +46,14 @@ from models import db, Ticket, Matatu, Traveler, Location, Route, Service, Drive
 ###helper functions
 def get_user(email):
     traveler = Traveler.query.filter_by(email=email).first()
-    driver = Driver.query.filter_by(email=email).first()
+    if traveler:
+        return traveler
     executive = Exec.query.filter_by(email=email).first()
     if executive:
-        return "exec", executive
-    elif driver:
-        return "driver", driver
-    elif traveler:
-        return "traveler", traveler
-    else:
-        return None, None
-
+        return executive
+    driver = Driver.query.filter_by(email=email).first()
+    if driver:
+        return driver
 
 ###route functions
 @app.route("/")
@@ -64,6 +61,16 @@ def home():
     #TODO add landing page
     #check if someone is already logged in and as what
     return "try /login"
+
+
+
+
+@app.route("/manage")
+@login_required
+def manage():
+    exec = Exec.query.filter_by(email=current_user.get_id()).first();
+    #TODO stuff
+    return render_template("manage.html")
 
 @app.route("/add_service_location/<lat>/<lng>")
 @app.route("/add_service_location", defaults={"lat": None, "lng":None})
@@ -74,13 +81,12 @@ def add_service_location(lat, lng):
         exec = Exec(session["username"], session["birthday"],session["exec_position"], session["password"],
                     session["first_name"], session["middle_name"], session["last_name"], session["salt"],
                     session["email"], session["id_num"])
-        db.session.add(service)
         service.execs.append(exec)
         db.session.add(service)
         db.session.commit()
         user = User(session["email"])
         login_user(user)
-        print("\n\nare wer here\n\n"+url_for("matrips_manager_login"))
+        #print("\n\nare wer here\n\n"+url_for("matrips_manager_login"))
         return redirect(url_for("matrips_manager_login"))
     else:
         return render_template("add_service_location.html")
@@ -113,12 +119,7 @@ def register_manager_and_service():
             salt = get_salt()
             password = get_hash(salt + pw1)
 
-        role, user = get_user(email)
-        if role == "exec":
-            #TODO add flash telling the user that someone is allready registered with that piece of info/credential
-            return render_template("register_service.html", form=form)
-
-        exec = Exec.query.filter_by(id=id_num).first()
+        exec = Exec.query.filter_by(email=email).first()
         if exec:
             # TODO add flash telling the user that someone is allready registered with that piece of info/credential
             return render_template("register_service.html", form=form)
@@ -129,6 +130,7 @@ def register_manager_and_service():
             return render_template("register_service.html", form=form)
 
         session["service_name"] = service_name
+        print(service_name)
         session["username"] = username
         session["birthday"] = birthday
         session["exec_position"] = exec_position
@@ -156,7 +158,6 @@ def manager_logout():
 
 @app.route("/matrips_manager", methods=["POST", "GET"])
 def matrips_manager_login():
-    print("\n\nare wer here\n\n")
     if current_user.is_authenticated:
         return redirect(url_for("manage"))
     else:
@@ -164,26 +165,36 @@ def matrips_manager_login():
         if request.method == "GET":
             return render_template("manager_login.html", form=form)
         elif request.method == 'POST' and form.validate():
+            service_name = form.service_name.data
             email = form.email.data
             password = form.password.data
-            user_password = get_user(email)[1].password
-            salt = get_user(email)[1].salt
+            exec = Exec.query.filter_by(email=email).first()
+            if(exec):
+                user_password = exec.password
+            else:
+                return redirect(url_for('matrips_manager_login'))
+
+            salt = exec.salt
             if user_password and validate_password(password, salt, user_password):
-                user = User(email)
-                login_user(user)
-                ##TODO depending on who logged in redirect to a different account
-                return redirect(url_for('manage'))
+                session["service_name"] = service_name
+                service = Service.query.filter_by(name=service_name).first()
+                if(service):
+                    exec = Exec.query.filter_by(email=email).first()
+                else:
+                    #TODO remember to add flash messages that tell the users what went down here
+                    return redirect(url_for('matrips_manager_login'))
+                if exec in service.execs:
+                    user = User(email)
+                    print(user)
+                    login_user(user)
+                    return redirect(url_for('manage'))
+                else:
+                    return redirect(url_for('matrips_manager_login'))
             else:
                 return redirect(url_for('matrips_manager_login'))
         else:
             # TODO add error pages
             return "error page"
-
-
-@app.route("/manage")
-@login_required
-def manage():
-    return render_template("manage.html")
 
 
 @app.route("/account")
@@ -268,8 +279,8 @@ def login():
         elif request.method == 'POST' and form.validate():
             email = form.email.data
             password = form.password.data
-            user_password = get_user(email)[1].password
-            salt = get_user(email)[1].salt
+            user_password = Traveler.query.filter_by(email=email).first().password
+            salt = Traveler.query.filter_by(email=email).first().salt
             if user_password and validate_password(password, salt, user_password):
                 user = User(email)
                 login_user(user)
@@ -292,7 +303,7 @@ def payment():
 def history():
     traveler = Traveler.query.filter_by(email=current_user.get_id()).first()
     tickets = Ticket.query.filter_by(traveler=traveler.id).all()
-    #route = Route(2, "Nairobi", "Nakuru")
+    # route = Route(2, "Nairobi", "Nakuru")
     #ticket  = Ticket(None, None, None, None, None, None, None, route)
     #ticket.id = 2323
     #route2 = Route(2, "Nairobi", "Gilgil")
@@ -405,8 +416,8 @@ def register_traveler():
             salt = get_salt()
             password = get_hash(salt+pw1)
 
-        role, user = get_user(email)
-        if role == "traveler":
+        user = Traveler.query.filter_by(email=email).first()
+        if user:
             return "user already registered with that email"
         traveler = Traveler(username, id_num, birthday, password, first_name, middle_name, last_name, salt, email)
         db.session.add(traveler)
@@ -424,6 +435,7 @@ def load_user(user_id):
     user = get_user(user_id)
     user_password = ""
     if user:
-        user_password = user[1].email
+        user_password = user.email
     if user_password:
         return User(user_id)
+

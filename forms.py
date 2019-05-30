@@ -98,7 +98,9 @@ class TravelerLoginForm(FlaskForm):
 
 
 class ServiceManagerLoginForm(TravelerLoginForm):
-    pass
+    service_name = StringField("service_name", validators=[validators.regexp('[a-zA-Z]+', message="service name not "
+                                                                                                 "valid"),
+                                                                            validators.DataRequired()])
 
 
 

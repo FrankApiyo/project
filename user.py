@@ -13,3 +13,9 @@ class User:
 
     def is_authenticated(self):
         return True
+
+class User_Exec(User):
+    pass
+
+class Driver(User):
+    pass
