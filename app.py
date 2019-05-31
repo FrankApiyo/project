@@ -19,6 +19,7 @@ from forms import BookSeatForm
 from forms import ServiceManagerLoginForm
 from forms import ServiceRegistrationForm
 from forms import NewMatatuForm
+from forms import DriverRegistrationForm
 from user import User, User_Exec
 from passwordHelper import validate_password
 from passwordHelper import get_salt
@@ -64,10 +65,54 @@ def home():
     return "try /login"
 
 
-@app.route("/new_driver")
+@app.route("/new_driver", methods=["POST", "GET"])
 @login_required
 def new_driver():
-    pass
+    # this prevents other users form loging in to the wrong parts of the app
+    service = None
+    if (session["service_name"]):
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
+
+    form = DriverRegistrationForm(request.form)
+    if request.method == "GET":
+        return render_template("new_driver.html", form=form)
+    elif request.method == 'POST' and form.validate():
+        # TODO add flash telling user if there is a driver registered with that id number
+        id_num = form.id.data
+        email = form.email.data
+        pw1 = form.password.data
+        pw2 = form.password2.data
+        birthday = form.birthday.data
+        first_name = form.first_name.data
+        middle_name = form.middle_name.data
+        last_name = form.last_name.data
+
+        # TODO add a way to inform user about the following failures
+        # TODO add try catch block around the data request operations from the database and inform the user of failures
+        if not pw1 == pw2:
+            return render_template("new_driver.html", form=form)
+        else:
+            salt = get_salt()
+            password = get_hash(salt + pw1)
+
+        driver = Driver.query.filter_by(email=email).first()
+        if driver:
+            #TODO ADD FLASH TELLING THE USER THAT A DRIVER is already registered with that email
+            return render_template("new_driver.html", form=form)
+        driver = Driver(id_num, birthday, password, first_name, middle_name, last_name, salt, email)
+        db.session.add(driver)
+        driver.services.append(service)
+        db.session.commit()
+
+        return redirect(url_for("manage_drivers"))
+    else:
+        # this means that the form did not validate
+        # TODO remember to add flash messages telling user why form did not validate
+        return render_template("new_driver.html", form=form)
 
 
 @app.route("/manage_drivers")
@@ -82,8 +127,10 @@ def manage_drivers():
     if not service:
         redirect(url_for("login"))
 
+    drivers = service.drivers
+    #print(drivers[0].services.all())
+    return render_template("manage_drivers.html", drivers=drivers)
 
-    return render_template("manage_drivers.html")
 
 @app.route("/manage_matatu/<registration>")
 @login_required

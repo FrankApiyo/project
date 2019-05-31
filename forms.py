@@ -35,7 +35,7 @@ class TravelerRegistrationForm(FlaskForm):
 
 
 class DriverRegistrationForm(TravelerRegistrationForm):
-    #TODO this is the same as registration for Traveler except for the matatu service
+    # TODO find out how to get and store the signature of drivers
     pass
 
 
@@ -118,4 +118,5 @@ class NewMatatuForm(FlaskForm):
     registration = StringField("registration",  validators=[validators.DataRequired()])
     seats = StringField("seats",  validators=[validators.regexp('[0-9]+', message="number of seats not valid"),
                                                            validators.DataRequired()])
+
 

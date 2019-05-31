@@ -135,14 +135,10 @@ class Person:
     email = db.Column(db.Text(), nullable=False)
 
 
-
-
-
-
 class Driver(db.Model, Person):
     matatu = db.relationship('Matatu', backref='driver', uselist=False)
 
-    def __init__(self, id, birthday, matatu_service, password, first_name, middle_name, last_name, salt,
+    def __init__(self, id, birthday, password, first_name, middle_name, last_name, salt,
                  email):
         self.email = email
         self.password = password
@@ -152,11 +148,9 @@ class Driver(db.Model, Person):
         self.salt = salt
         self.id = id
         self.birthday = birthday
-        self.matatu_service = matatu_service
 
     def __repr__(self):
-        return "\nDriver name'{}'\nid '{}'\nmatatu_service: '{}'\n".format(self.middle_name, self.id,
-                                                                                     self.matatu_service)
+        return "\nDriver name'{}'\nid '{}'\n".format(self.middle_name, self.id)
 
 class Service(db.Model):
     name = db.Column(db.Text(), primary_key=True)
