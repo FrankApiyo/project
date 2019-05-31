@@ -122,3 +122,10 @@ class BookSeatForm(FlaskForm):
                      render_kw={'class': 'timepicker'}
                      )
 
+
+class NewMatatuForm(FlaskForm):
+    #TODO add regular expression to validate registration
+    registration = StringField("registration",  validators=[validators.DataRequired()])
+    seats = StringField("seats",  validators=[validators.regexp('[0-9]+', message="number of seats not valid"),
+                                                           validators.DataRequired()])
+

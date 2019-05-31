@@ -18,6 +18,7 @@ from forms import TravelerLoginForm
 from forms import BookSeatForm
 from forms import ServiceManagerLoginForm
 from forms import ServiceRegistrationForm
+from forms import NewMatatuForm
 from user import User, User_Exec
 from passwordHelper import validate_password
 from passwordHelper import get_salt
@@ -62,15 +63,71 @@ def home():
     #check if someone is already logged in and as what
     return "try /login"
 
+@app.route("/manage_matatu/<registration>")
+@login_required
+def manage_matatu(registration):
+    # this prevents other users form loging in to the wrong parts of the app
+    service = None
+    if (session["service_name"]):
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
 
+    #here we will be able to do the following to matatus
+    #1. add driver
+    #2. add matatu to queue
+    #3. manage routes
+    #4. delete matatu
+
+    matatu = Matatu.query.filter_by(registration=registration).first()
+    print(matatu)
+    return redirect(url_for("manage"))
+
+
+@app.route("/new_matatu", methods=["POST", "GET"])
+@login_required
+def new_matatu():
+    # this prevents other users form loging in to the wrong parts of the app
+    service = None
+    if (session["service_name"]):
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
+
+    form = NewMatatuForm(request.form)
+    if request.method == "GET":
+        return render_template("new_matatu.html", form=form)
+    elif request.method == 'POST' and form.validate():
+        #TODO add flash telling user if there is a matatu registered with that registration number
+        seats = form.seats.data
+        registration = form.registration.data
+        matatu = Matatu(registration, seats)
+        matatu.service = service
+        db.session.add(matatu)
+        db.session.commit()
+        return redirect(url_for("manage"))
+    else:
+        #this means that the form did not validate
+        #TODO remember to add flash messages telling user why form did not validate
+        return render_template("new_matatu.html", form=form)
 
 
 @app.route("/manage")
 @login_required
 def manage():
-    exec = Exec.query.filter_by(email=current_user.get_id()).first();
-    #TODO stuff
-    return render_template("manage.html")
+
+    #this prevents other users form loging in to the wrong parts of the app
+    if(session["service_name"]):
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        render_template("/login")
+
+    matatus = service.matatus.all()
+    return render_template("manage.html", matatus =matatus)
 
 @app.route("/add_service_location/<lat>/<lng>")
 @app.route("/add_service_location", defaults={"lat": None, "lng":None})

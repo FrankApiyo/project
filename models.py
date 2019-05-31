@@ -214,10 +214,9 @@ class Matatu(db.Model):
     )
     matatu_queue_entry = db.relationship('MatatuQueueInstance', backref='matatu', uselist=False)
 
-    def __init__(self, registration, matatu_service, seats):
+    def __init__(self, registration, seats):
         self.seats = seats
         self.registration = registration
-        self.matatu_service = matatu_service
 
     def __repr__(self):
         return "\n<Matatu registration:'{}', service: '{}'>\n".format(self.registration, self.matatu_service)
