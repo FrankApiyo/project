@@ -1,0 +1,151 @@
+{% extends "locations.html" %}
+{% block headScript %}
+    <script async deffer>
+        var map, infoWindow, marker;
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 6,
+                gestureHandling: 'greedy'
+            });
+
+            google.maps.event.addListener(map, 'click', function(event) {
+                if(marker != null)
+                    marker.setMap(null)
+                placeMarker(event.latLng);
+            });
+
+
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+
+                    //infoWindow.setPosition(pos);
+                    //infoWindow.setContent('Location found.');
+                    //infoWindow.open(map);
+                    map.setCenter(pos);
+                }, function() {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+
+            // Create the search box and link it to the UI element.
+            var input = document.getElementById('search');
+            var searchBox = new google.maps.places.SearchBox(input);
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+            // Bias the SearchBox results towards current map's viewport.
+            map.addListener('bounds_changed', function() {
+                searchBox.setBounds(map.getBounds());
+            });
+
+            var markers = [];
+            // Listen for the event fired when the user selects a prediction and retrieve
+            // more details for that place.
+            searchBox.addListener('places_changed', function() {
+                var places = searchBox.getPlaces();
+
+                if (places.length == 0) {
+                    return;
+                }
+
+                // Clear out the old markers.
+                markers.forEach(function(marker) {
+                    marker.setMap(null);
+                });
+                markers = [];
+
+                // For each place, get the icon, name and location.
+                var bounds = new google.maps.LatLngBounds();
+                places.forEach(function(place) {
+                    if (!place.geometry) {
+                        console.log("Returned place contains no geometry");
+                        return;
+                    }
+                    var icon = {
+                        url: place.icon,
+                        size: new google.maps.Size(71, 71),
+                        origin: new google.maps.Point(0, 0),
+                        anchor: new google.maps.Point(17, 34),
+                        scaledSize: new google.maps.Size(25, 25)
+                    };
+
+                    // Create a marker for each place.
+                    markers.push(new google.maps.Marker({
+                        map: map,
+                        icon: icon,
+                        title: place.name,
+                        position: place.geometry.location
+                    }));
+
+                    if (place.geometry.viewport) {
+                        // Only geocodes have viewport.
+                        bounds.union(place.geometry.viewport);
+                    } else {
+                        bounds.extend(place.geometry.location);
+                    }
+                });
+                map.fitBounds(bounds);
+            });
+            document.getElementById("ok").onclick = function () {
+                if(marker == null)
+                    ;
+                else
+                    location.href = "/add__location/"+marker.position.lat()+"/"+marker.position.lng();
+            };
+        }
+
+        function placeMarker(location) {
+            marker = new google.maps.Marker({
+                position: location,
+                map: map,
+                draggable: true
+            });
+        }
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+            //TODO do something different when the user refuses to be tracked
+        }
+        //center map on services lats and lngs
+    </script>
+{% endblock %}
+{% block style %}
+    {{ super() }}
+    <style type="text/css">
+        body{
+            height: 100vh;
+        }
+        #map {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #search{
+            display: block;
+            width: 50%;
+            margin-left: 20%;
+        }
+    </style>
+{% endblock %}
+{% block body %}
+    <input id="search" class="controls" type="text" placeholder="Search Box">
+    <input type="submit" id="ok">
+    <div class="row" id="map">
+
+    </div>
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgf9cE5IODiI7B8A93TCKTmV1ybw3ZPTs&callback=initMap&libraries=places" async defer></script>
+{% endblock %}

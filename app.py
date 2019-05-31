@@ -66,6 +66,22 @@ def home():
     return "try /login"
 
 
+@app.route("/add_location")
+@login_required
+def add_location():
+    # this prevents other users form loging in to the wrong parts of the app
+    service = None
+    if (session["service_name"]):
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
+
+    #TODO next episode begins here
+    return render_template("add_location.html")
+
+
 @app.route("/manage_locations")
 @login_required
 def manage_locations():
@@ -282,6 +298,7 @@ def manage():
 
 @app.route("/add_service_location/<lat>/<lng>")
 @app.route("/add_service_location", defaults={"lat": None, "lng":None})
+@login_required
 def add_service_location(lat, lng):
 
     if lat and lng:
@@ -499,13 +516,14 @@ def login():
             return "error page"
 
 
-@login_required
 @app.route("/payment")
+@login_required
 def payment():
     return render_template("payment.html")
 
-@login_required
+
 @app.route("/history")
+@login_required
 def history():
     traveler = Traveler.query.filter_by(email=current_user.get_id()).first()
     tickets = Ticket.query.filter_by(traveler=traveler.id).all()
@@ -519,13 +537,15 @@ def history():
     #tickets.append(ticket2)
     return render_template("history.html", tickets=tickets)
 
-@login_required
+
 @app.route("/dissapointment/<message>")
+@login_required
 def dissapointment(message):
     return render_template("dissapointment.html", message=message)
 
-@login_required
+
 @app.route("/select_matatu", methods=["POST", "GET"])
+@login_required
 def select_matatu():
     #look in db for routes that have this to and from
     routes = Route.query.filter_by(from_town=session["departure"]).filter_by(to_town=session["destination"]).all()
@@ -568,8 +588,9 @@ def select_matatu():
         #show routes found and then show matatus available for that route after user selects route
     #otherwise show users that there is no
 
-@login_required
+
 @app.route("/book", methods=["POST", "GET"])
+@login_required
 def book():
     form = BookSeatForm(request.form)
     if request.method == "GET":
@@ -595,8 +616,8 @@ def book():
         return "error page"
 
 
-@login_required
 @app.route("/register_traveler", methods=["POST", "GET"])
+@login_required
 def register_traveler():
     form = TravelerRegistrationForm(request.form)
     if request.method == "GET":
