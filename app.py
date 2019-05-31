@@ -65,6 +65,22 @@ def home():
     #check if someone is already logged in and as what
     return "try /login"
 
+
+@app.route("/manage_locations")
+@login_required
+def manage_locations():
+    # this prevents other users form loging in to the wrong parts of the app
+    service = None
+    if (session["service_name"]):
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
+
+    locations = service.locations
+    return render_template("locations.html", locations=locations)
+
 @app.route("/new_exec", methods=["POST", "GET"])
 @login_required
 def new_exec():
