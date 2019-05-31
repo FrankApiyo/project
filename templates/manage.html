@@ -2,7 +2,7 @@
 {% block menu %}
     <nav>
         <ul class="nav-wrapper">
-            <li class="tab col s3"><a href="#" class="active">Matatus</a></li>
+            <li class="tab col s3"><a href="{{ url_for('manage') }}" class="active">Matatus</a></li>
             <li class="tab col s3"><a href="#">Drivers</a></li>
             <li class="tab col s3"><a href="#">Locations</a></li>
             <li class="tab col s3"><a href="#">Exec</a></li>
@@ -10,17 +10,19 @@
             <li class="tab col s3"><a href="/manager_logout">Logout</a></li>
         </ul>
     </nav>
+    {% block sub_tabs %}
     <ul class="tabs">
-        <li class="tab col s3 active"><a href="#">matatus</a></li>
+        <li class="tab col s3 active"><a href="{{ url_for('manage') }}">matatus</a></li>
         <li class="tab col s3"><a href="{{ url_for('new_matatu') }}">new matatu</a></li>
     </ul>
+    {% endblock %}
 {% endblock %}
 {% block body %}
     <div class="row">
         <ul class="collection">
             {% for matatu in matatus %}
                 <li class="collection-item">
-                    <a href="">
+                    <a href="/manage_matatu/{{ matatu.registration }}">
                         <div>
                             <p>Registration: {{ matatu.registration }}</p>
                             <p>Driver: {{ matatu.driver }}</p>

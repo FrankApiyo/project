@@ -28,7 +28,7 @@ from passwordHelper import get_hash
 #TODO show user who's logged in on the screen
 #TODO add error pages
 #TODO add relay attack prevetion to documentation
-#TODO remember to use global
+#TODO remember to add prices for each route on the routes tab
 
 import datetime
 
@@ -63,6 +63,12 @@ def home():
     #check if someone is already logged in and as what
     return "try /login"
 
+@app.route("/manage_drivers")
+@login_required
+def manage_drivers():
+    pass
+
+
 @app.route("/manage_matatu/<registration>")
 @login_required
 def manage_matatu(registration):
@@ -80,10 +86,8 @@ def manage_matatu(registration):
     #2. add matatu to queue
     #3. manage routes
     #4. delete matatu
-
     matatu = Matatu.query.filter_by(registration=registration).first()
-    print(matatu)
-    return redirect(url_for("manage"))
+    return render_template("manage_matatu.html", registration=matatu.registration)
 
 
 @app.route("/new_matatu", methods=["POST", "GET"])
