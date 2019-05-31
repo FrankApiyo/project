@@ -63,11 +63,27 @@ def home():
     #check if someone is already logged in and as what
     return "try /login"
 
+
+@app.route("/new_driver")
+@login_required
+def new_driver():
+    pass
+
+
 @app.route("/manage_drivers")
 @login_required
 def manage_drivers():
-    pass
+    # this prevents other users form loging in to the wrong parts of the app
+    service = None
+    if (session["service_name"]):
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
 
+
+    return render_template("manage_drivers.html")
 
 @app.route("/manage_matatu/<registration>")
 @login_required
@@ -81,6 +97,7 @@ def manage_matatu(registration):
     if not service:
         redirect(url_for("login"))
 
+    #TODO finish this later
     #here we will be able to do the following to matatus
     #1. add driver
     #2. add matatu to queue
@@ -139,7 +156,7 @@ def add_service_location(lat, lng):
 
     if lat and lng:
         service = Service(session["service_name"], session["service_location"], lat, lng)
-        exec = Exec(session["username"], session["birthday"],session["exec_position"], session["password"],
+        exec = Exec(session["birthday"],session["exec_position"], session["password"],
                     session["first_name"], session["middle_name"], session["last_name"], session["salt"],
                     session["email"], session["id_num"])
         service.execs.append(exec)
@@ -160,7 +177,6 @@ def register_manager_and_service():
         return render_template("register_service.html", form=form)
     elif request.method == 'POST' and form.validate():
         # print("\n\n\nplease work\n\n")
-        username = form.username.data
         id_num = form.id.data
         email = form.email.data
         pw1 = form.password.data
@@ -192,7 +208,6 @@ def register_manager_and_service():
 
         session["service_name"] = service_name
         print(service_name)
-        session["username"] = username
         session["birthday"] = birthday
         session["exec_position"] = exec_position
         session["password"] = password
@@ -459,7 +474,6 @@ def register_traveler():
         return render_template("register.html", form=form)
     elif request.method == 'POST' and form.validate():
         #print("\n\n\nplease work\n\n")
-        username = form.username.data
         id_num = form.id.data
         email = form.email.data
         pw1 = form.password.data
@@ -480,7 +494,7 @@ def register_traveler():
         user = Traveler.query.filter_by(email=email).first()
         if user:
             return "user already registered with that email"
-        traveler = Traveler(username, id_num, birthday, password, first_name, middle_name, last_name, salt, email)
+        traveler = Traveler(id_num, birthday, password, first_name, middle_name, last_name, salt, email)
         db.session.add(traveler)
         db.session.commit()
         login_user(User(email))

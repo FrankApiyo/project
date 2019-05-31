@@ -125,7 +125,6 @@ class Route(db.Model):
                                                                                     self.from_town)
 
 class Person:
-    user_name = db.Column(db.Text(), nullable=False)
     id = db.Column(db.Text(), primary_key=True)
     birthday = db.Column(db.DateTime())
     password = db.Column(db.Text(), nullable=False)
@@ -143,10 +142,9 @@ class Person:
 class Driver(db.Model, Person):
     matatu = db.relationship('Matatu', backref='driver', uselist=False)
 
-    def __init__(self, user_name, id, birthday, matatu_service, password, first_name, middle_name, last_name, salt,
+    def __init__(self, id, birthday, matatu_service, password, first_name, middle_name, last_name, salt,
                  email):
         self.email = email
-        self.user_name = user_name
         self.password = password
         self.first_name = first_name
         self.middle_name = middle_name
@@ -157,7 +155,7 @@ class Driver(db.Model, Person):
         self.matatu_service = matatu_service
 
     def __repr__(self):
-        return "\nDriver name'{}'\nid '{}'\nmatatu_service: '{}'\n".format(self.user_name, self.id,
+        return "\nDriver name'{}'\nid '{}'\nmatatu_service: '{}'\n".format(self.middle_name, self.id,
                                                                                      self.matatu_service)
 
 class Service(db.Model):
@@ -250,10 +248,9 @@ class Ticket(db.Model):
 class Exec(db.Model, Person):
     position = db.Column(db.Text(), nullable=True)
 
-    def __init__(self, user_name, birthday, position, password, first_name, middle_name, last_name,
+    def __init__(self, birthday, position, password, first_name, middle_name, last_name,
                  salt, email, id):
         self.email = email
-        self.user_name = user_name
         self.password = password
         self.id = id
         self.birthday = birthday
@@ -264,25 +261,24 @@ class Exec(db.Model, Person):
         self.salt = salt
 
     def __repr__(self):
-        return "\nExec name'{}'\nposition '{}'\nid '{}'\nmatatu_service: '{}'\n".format(self.user_name,
-                                                                                                  self.position,
-                                                                                        self.id, self.services)
+        return "\nExec name'{}'\nposition '{}'\nid '{}'\nmatatu_service: '{}'\n".format(self.middle_name,
+                                                                                        self.position, self.id,
+                                                                                        self.services)
 
 
 class Traveler(Person, db.Model):
-    def __init__(self, user_name, id, birthday, password, first_name, middle_name, last_name, salt, email):
+    def __init__(self, id, birthday, password, first_name, middle_name, last_name, salt, email):
         self.password = password
         self.first_name = first_name
         self.middle_name = middle_name
         self.last_name = last_name
-        self.user_name = user_name
         self.id = id
         self.birthday = birthday
         self.salt = salt
         self.email = email
 
     def __repr__(self):
-        return "\nTraveler name'{}'\nid '{}'\n".format(self.user_name, self.id)
+        return "\nTraveler name'{}'\nid '{}'\n".format(self.middle_name, self.id)
 
 class DriverPicture(db.Model):
     #files will be saved using this id i.e: your-image-path/(ID).(ext)

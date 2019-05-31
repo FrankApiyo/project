@@ -19,11 +19,6 @@ class TravelerRegistrationForm(FlaskForm):
                                                                                                         "at least 8 "
                                                                                                         "characters")])
     password2 = PasswordField('password2', validators=[validators.EqualTo('password',message='Passwords must match'), validators.DataRequired()])
-    username = StringField("username", validators=[validators.Length(min=4, max=25, message="username must be at "
-                                                                                            "least 4 characters long "
-                                                                                            "and at most 25 "
-                                                                                            "characters long"),
-                                                   validators.DataRequired()])
     birthday = DateField("birthday", validators=[validators.DataRequired()])
     id = StringField("id", validators=[validators.regexp('[0-9]+', message="ID not valid"),
                                        validators.DataRequired(), validators.length(min=1, max=15, message="enter a "
@@ -56,11 +51,6 @@ class ServiceRegistrationForm(FlaskForm):
                                                                                                           "characters")])
     password2 = PasswordField('password2', validators=[validators.EqualTo('password', message='Passwords must match'),
                                                        validators.DataRequired()])
-    username = StringField("username", validators=[validators.Length(min=4, max=25, message="username must be at "
-                                                                                            "least 4 characters long "
-                                                                                            "and at most 25 "
-                                                                                            "characters long"),
-                                                   validators.DataRequired()])
     birthday = DateField("birthday", validators=[validators.DataRequired()])
     id = StringField("id", validators=[validators.regexp('[0-9]+', message="ID not valid"),
                                        validators.DataRequired(), validators.length(min=1, max=15, message="enter a "

@@ -4,7 +4,6 @@
     {% from "_formhelper.html" import render_field %}
         <form method='POST' action="{{ url_for('register_manager_and_service') }}">
             <dl>
-                {{ render_field(form.username) }}
                 {{ render_field(form.email) }}
                 {{ render_field(form.id) }}
                 {{ render_field(form.birthday) }}
