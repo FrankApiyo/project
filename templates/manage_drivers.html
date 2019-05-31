@@ -10,11 +10,11 @@
         <ul class="collection">
             {% for driver in drivers %}
                 <li class="collection-item">
-                    <a href="/manage_matatu/{{ driver.id }}">
+                    <a href="#">
                         <div>
-                            <p>Registration: {{ driver.id }}</p>
-                            <p>Driver: {{ driver.middle_name }}</p>
-                            <p>Seats: {{ driver.last_name }}</p>
+                            <p>id number: {{ driver.id }}</p>
+                            <p>middle_name: {{ driver.middle_name }}</p>
+                            <p>last_name: {{ driver.last_name }}</p>
                         </div>
                     </a>
                 </li>

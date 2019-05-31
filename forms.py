@@ -39,6 +39,14 @@ class DriverRegistrationForm(TravelerRegistrationForm):
     pass
 
 
+class ExecRegistrationForm(TravelerRegistrationForm):
+    # TODO find out how to get and store the signature of execs
+    #TODO update regular expression to allow spaces in position name
+    position = StringField("position", validators=[validators.regexp('[a-zA-Z]+', message="first name not "
+                                                                                                "valid"),
+                                                         validators.DataRequired()])
+
+
 class ServiceRegistrationForm(FlaskForm):
     email = EmailField('email', validators=[validators.DataRequired(), validators.Email(message="incorrect email "
                                                                                                 "format"),

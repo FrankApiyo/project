@@ -1,0 +1,21 @@
+{% extends "manage_execs.html" %}
+{% block body %}
+    <div class="row">
+        {% from "_formhelper.html" import render_field %}
+        <form method='POST' action="{{ url_for('new_exec') }}">
+            <dl>
+                {{ render_field(form.email) }}
+                {{ render_field(form.id) }}
+                {{ render_field(form.birthday) }}
+                {{ render_field(form.password) }}
+                {{ render_field(form.password2) }}
+                {{ render_field(form.first_name) }}
+                {{ render_field(form.middle_name) }}
+                {{ render_field(form.last_name) }}
+                {{ render_field(form.position) }}
+                {{ form.hidden_tag() }}
+            </dl>
+            <p><input type=submit value='add driver'>
+        </form>
+    </div>
+{% endblock %}
