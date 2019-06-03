@@ -66,19 +66,28 @@ def home():
     return "try /login"
 
 
-@app.route("/add_location")
+@app.route("/add_location/<lat>/<lng>/<specific_location>/<town>")
+@app.route("/add_location", defaults={"lat": None, "lng": None, "specific_location": None, "town":None})
 @login_required
-def add_location():
+def add_location(lat, lng, specific_location, town):
     # this prevents other users form loging in to the wrong parts of the app
     service = None
-    if (session["service_name"]):
+    if session["service_name"]:
         service = Service.query.filter_by(name=session["service_name"]).first()
     else:
         redirect(url_for("login"))
     if not service:
         redirect(url_for("login"))
 
-    #TODO next episode begins here
+    if lat and lng and specific_location and town:
+        town = town.strip().replace("_", " ")
+        specific_location = specific_location.strip().replace("_", " ")
+        location = Location(town, specific_location, lat, lng)
+        service.locations.append(location)
+        db.session.add(service)
+        db.session.commit()
+        return redirect(url_for("manage_locations"))
+
     return render_template("add_location.html")
 
 

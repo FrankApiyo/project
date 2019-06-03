@@ -97,8 +97,11 @@
             document.getElementById("ok").onclick = function () {
                 if(marker == null)
                     ;
-                else
-                    location.href = "/add__location/"+marker.position.lat()+"/"+marker.position.lng();
+                else{
+                    var geocoder = new google.maps.Geocoder;
+                    console.log(geocoder);
+                    geocodeLatLng(geocoder, map);
+                }
             };
         }
 
@@ -118,6 +121,41 @@
             //TODO do something different when the user refuses to be tracked
         }
         //center map on services lats and lngs
+        function geocodeLatLng(geocoder, map) {
+            var lng = marker.position.lng();
+            var lat = marker.position.lat();
+            var latlng = {lat: parseFloat(lat), lng: parseFloat(lng)};
+            geocoder.geocode({'location': latlng}, function(results, status) {
+                if (status === 'OK') {
+                    if (results[0]) {
+                        console.log(marker.position.lat())
+                        console.log(marker.position.lng())
+                        console.log(results)
+                        specific_location = results[0].formatted_address.split(",")[0].trim()
+                        town = results[0].formatted_address.split(",")[1].trim()
+                        M.toast({html: '<input type="text" id="specific_location" value='+specific_location+'><input type="text" id="town" value='+town+'><button class="btn-flat toast-action" onclick="add_location()">Correct</button>',
+                            displayLength: 4000000,
+                            completeCallback: function(){
+                                location.href = "/add__location/"+marker.position.lat()+"/"+marker.position.lng()+"/"+specific_location+"/"+town
+                                }
+                        });
+
+                    } else {
+                        window.alert('No results found');
+                    }
+                } else {
+                    window.alert('Geocoder failed due to: ' + status);
+                }
+            });
+        }
+        function add_location(){
+            M.Toast.dismissAll();
+            specific_location = document.getElementById("specific_location").value.replace(" ", "_");
+            town = document.getElementById("town").value.replace(" ", "_");
+            //console.log(town)
+            //console.log(specific_location)
+            location.href = "/add_location/"+marker.position.lat()+"/"+marker.position.lng()+"/"+specific_location+"/"+town
+        }
     </script>
 {% endblock %}
 {% block style %}
@@ -136,6 +174,9 @@
             width: 50%;
             margin-left: 20%;
         }
+        #specific_location, #town{
+            color: whitesmoke;
+        }
     </style>
 {% endblock %}
 {% block body %}
@@ -147,5 +188,5 @@
 {% endblock %}
 {% block script %}
     {{ super() }}
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgf9cE5IODiI7B8A93TCKTmV1ybw3ZPTs&callback=initMap&libraries=places" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRVb5EfmVrwTwPrthwmDB74yCTVHkOI5k&callback=initMap&libraries=places" async defer></script>
 {% endblock %}
