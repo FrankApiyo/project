@@ -105,6 +105,13 @@ def add_routes():
         to_location = form.to_location.data
         print(to_location)
         route_price_service = RoutePriceService(price)
+        route_in_table = Route.query.filter_by(to_town_id=to_location).filter_by(
+            from_town_id=from_location).filter_by(
+            number=route_number).first()
+
+        if route_in_table:
+            print("route in table")
+            return redirect(url_for("routes"))
         route = Route(route_number, to_location, from_location)
         route_price_service.route = route
         service.route_prices.append(route_price_service)
