@@ -6,7 +6,8 @@ from wtforms.fields.html5 import DateField
 from wtforms import validators
 from wtforms.fields import StringField
 from wtforms.fields import SelectField
-from wtforms.fields import TimeField
+from app import locations
+
 
 class TravelerRegistrationForm(FlaskForm):
     email = EmailField('email', validators=[validators.DataRequired(), validators.Email(message="incorrect email "
@@ -106,7 +107,7 @@ class BookSeatForm(FlaskForm):
     #get the choices data from the database
     departure = SelectField(
         'departure',
-        choices=[("Nakuru", "Nakuru"), ("Nairobi", "Nairobi"),  ("Mombasa", "Mombasa"), ("Kisumu", "Kisumu")],
+        choices=[("one", "Nakuru"), ("Nairobi", "Nairobi"),  ("Mombasa", "Mombasa"), ("Kisumu", "Kisumu")],
         validators=[validators.DataRequired()]
     )
     destination = SelectField(
@@ -127,4 +128,18 @@ class NewMatatuForm(FlaskForm):
     seats = StringField("seats",  validators=[validators.regexp('[0-9]+', message="number of seats not valid"),
                                                            validators.DataRequired()])
 
+
+class NewRoutePriceForm(FlaskForm):
+    price = StringField("prce",  validators=[validators.regexp('[0-9]+', message="price not valid"),
+                                                           validators.DataRequired()])
+    route_number = StringField("route_number", validators=[validators.regexp('[0-9]+', message="price not valid"),
+                                                           validators.DataRequired()])
+    from_location = SelectField("from location",
+                                choices=[(str(location.town)+", "+str(location.specific_location), str(location.id)) for location in locations],
+                                validators=[validators.DataRequired()]
+                                )
+    to_location = SelectField("to location",
+                                choices=[(str(location.town) + ", " + str(location.specific_location), str(location.id))for location in locations],
+                                validators=[validators.DataRequired()]
+                              )
 

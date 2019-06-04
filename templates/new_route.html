@@ -1,0 +1,24 @@
+{% extends "routes.html" %}
+{% block body %}
+    <div class="row">
+        {% from "_formhelper.html" import render_field %}
+        <form method='POST' action="{{ url_for('new_exec') }}">
+            <dl>
+                {{ render_field(form.price) }}
+                {{ render_field(form.route_number) }}
+                {{ render_field(form.from_location) }}
+                {{ render_field(form.to_location) }}
+                {{ form.hidden_tag() }}
+            </dl>
+            <p><input type=submit value='add route'>
+        </form>
+    </div>
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script>
+     $(document).ready(function () {
+         $('select').formSelect();
+     });
+     </script>
+{% endblock %}

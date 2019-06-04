@@ -4,6 +4,7 @@ from flask import url_for
 from flask import redirect
 from flask import request
 from flask import session
+from flask import g
 from flask_login import current_user
 from flask_sqlalchemy import SQLAlchemy
 from config import DevConfig
@@ -13,14 +14,6 @@ from flask_login import login_required
 from flask_login import login_user
 from flask_login import logout_user
 from flask_login import current_user
-from forms import TravelerRegistrationForm
-from forms import TravelerLoginForm
-from forms import BookSeatForm
-from forms import ServiceManagerLoginForm
-from forms import ServiceRegistrationForm
-from forms import NewMatatuForm
-from forms import DriverRegistrationForm
-from forms import ExecRegistrationForm
 from user import User, User_Exec
 from passwordHelper import validate_password
 from passwordHelper import get_salt
@@ -33,7 +26,6 @@ from passwordHelper import get_hash
 #TODO remember to add prices for each route on the routes tab
 
 import datetime
-
 app = Flask(__name__)
 app.config.from_object(DevConfig)
 app.config['DEBUG'] = True
@@ -44,6 +36,17 @@ login_manager = LoginManager(app)
 
 from models import db, Ticket, Matatu, Traveler, Location, Route, Service, Driver, Exec, Log, Event, \
     RoutePriceService, MatatuQueueInstance
+locations = []
+
+from forms import TravelerRegistrationForm
+from forms import TravelerLoginForm
+from forms import BookSeatForm
+from forms import ServiceManagerLoginForm
+from forms import ServiceRegistrationForm
+from forms import NewMatatuForm
+from forms import DriverRegistrationForm
+from forms import ExecRegistrationForm
+from forms import NewRoutePriceForm
 
 
 ###helper functions
@@ -64,6 +67,59 @@ def home():
     #TODO add landing page
     #check if someone is already logged in and as what
     return "try /login"
+
+
+@app.route("/add_routes")
+@login_required
+def add_routes():
+    # this prevents other users form loging in to the wrong parts of the app
+    service = None
+    if (session["service_name"]):
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
+
+    form = NewRoutePriceForm(request.form)
+    if request.method == "GET":
+        return render_template("new_route.html", form=form)
+    elif request.method == 'POST' and form.validate():
+        locations = service.locations
+        price = form.price.data
+        route_number = form.route_number.data
+        from_location = form.from_location.data
+        to_location = form.to_location.data
+
+        route_price_service = RoutePriceService(price)
+        route = Route(route_number, to_location, from_location)
+        route_price_service.route = route
+        service.route_prices.append(route_price_service)
+        db.session.add(route)
+        db.session.add(route_price_service)
+        db.session.commit()
+
+        return redirect(url_for("routes"))
+    else:
+        # this means that the form did not validate
+        # TODO remember to add flash messages telling user why form did not validate
+        return render_template("new_route.html", form=form)
+
+
+@app.route("/routes")
+@login_required
+def routes():
+    # this prevents other users form loging in to the wrong parts of the app
+    service = None
+    if session["service_name"]:
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
+
+    route_prices = service.route_prices.all()
+    return render_template("routes.html", route_price_services=route_prices)
 
 
 @app.route("/add_location/<lat>/<lng>/<specific_location>/<town>")
@@ -528,6 +584,7 @@ def login():
 @app.route("/payment")
 @login_required
 def payment():
+    #TODO add a means of payment
     return render_template("payment.html")
 
 
