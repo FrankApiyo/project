@@ -88,11 +88,7 @@ class Location(db.Model):
         db.UniqueConstraint('lng', 'lat'),
     )
 
-    routes = db.relationship(
-        'Route',
-        secondary=location_on_route,
-        backref=db.backref('locations', lazy='dynamic')
-    )
+
 
     def __init__(self, town, specific_location, lat, lng):
         self.town = town
@@ -105,24 +101,24 @@ class Location(db.Model):
 
 
 class Route(db.Model):
-    id = db.Column(db.Integer(), primary_key=True)
-    number = db.Column(db.Integer(), nullable=False)
-    from_town = db.Column(db.Text(), nullable=False)
-    to_town = db.Column(db.Text(), nullable=False)
+    number = db.Column(db.Integer(), primary_key=True)
+    from_town_id = db.Column(db.Integer, db.ForeignKey("location.id"), primary_key=False)
+    to_town_id = db.Column(db.Integer, db.ForeignKey("location.id"), primary_key=False)
     route_prices = db.relationship(
         "RoutePriceService",
         backref='route',
         lazy='dynamic'
     )
 
-    def __init__(self, number, to_location, from_location):
+    def __init__(self, number, from_location, to_location):
         self.number = number
-        self.from_location = from_location
-        self.to_location = to_location
+        self.from_town_id = from_location
+        self.to_town_id = to_location
 
     def __repr__(self):
-        return "\nRoute: number'{}'\nto_town: '{}'\nfrom_town: '{}'".format(self.number, self.to_town,
-                                                                                    self.from_town)
+        return "\nRoute: number'{}'\nto_town: '{}'\nfrom_town: '{}'".format(self.number, self.to_town_id,
+                                                                                    self.from_town_id)
+
 
 class Person:
     id = db.Column(db.Text(), primary_key=True)

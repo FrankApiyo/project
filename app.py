@@ -19,6 +19,10 @@ from passwordHelper import validate_password
 from passwordHelper import get_salt
 from passwordHelper import get_hash
 
+
+from wtforms import validators
+from wtforms.fields import SelectField
+
 #TODO in order to have an easy time goin forward, use facker to fill up the database
 #TODO show user who's logged in on the screen
 #TODO add error pages
@@ -36,7 +40,6 @@ login_manager = LoginManager(app)
 
 from models import db, Ticket, Matatu, Traveler, Location, Route, Service, Driver, Exec, Log, Event, \
     RoutePriceService, MatatuQueueInstance
-locations = []
 
 from forms import TravelerRegistrationForm
 from forms import TravelerLoginForm
@@ -69,7 +72,7 @@ def home():
     return "try /login"
 
 
-@app.route("/add_routes")
+@app.route("/add_routes", methods=["POST", "GET"])
 @login_required
 def add_routes():
     # this prevents other users form loging in to the wrong parts of the app
@@ -81,22 +84,33 @@ def add_routes():
     if not service:
         redirect(url_for("login"))
 
+    locations = service.locations
+    NewRoutePriceForm.to_location = SelectField("to location",
+                                choices=[(str(location.id), str(location.town) + ", " + str(location.specific_location))for location in locations],
+                                validators=[validators.DataRequired()]
+                              )
+    NewRoutePriceForm.from_location = SelectField("from location",
+                choices=[(str(location.id), str(location.town) + ", " + str(location.specific_location))for location in locations],
+                validators=[validators.DataRequired()]
+                )
     form = NewRoutePriceForm(request.form)
+
     if request.method == "GET":
         return render_template("new_route.html", form=form)
     elif request.method == 'POST' and form.validate():
-        locations = service.locations
         price = form.price.data
         route_number = form.route_number.data
         from_location = form.from_location.data
+        print(from_location)
         to_location = form.to_location.data
-
+        print(to_location)
         route_price_service = RoutePriceService(price)
         route = Route(route_number, to_location, from_location)
         route_price_service.route = route
         service.route_prices.append(route_price_service)
         db.session.add(route)
         db.session.add(route_price_service)
+        print(route)
         db.session.commit()
 
         return redirect(url_for("routes"))
@@ -119,6 +133,7 @@ def routes():
         redirect(url_for("login"))
 
     route_prices = service.route_prices.all()
+    print(route_prices)
     return render_template("routes.html", route_price_services=route_prices)
 
 

@@ -6,7 +6,6 @@ from wtforms.fields.html5 import DateField
 from wtforms import validators
 from wtforms.fields import StringField
 from wtforms.fields import SelectField
-from app import locations
 
 
 class TravelerRegistrationForm(FlaskForm):
@@ -130,16 +129,10 @@ class NewMatatuForm(FlaskForm):
 
 
 class NewRoutePriceForm(FlaskForm):
-    price = StringField("prce",  validators=[validators.regexp('[0-9]+', message="price not valid"),
+    locations = []
+
+    price = StringField("price",  validators=[validators.regexp('[0-9]+', message="price not valid"),
                                                            validators.DataRequired()])
     route_number = StringField("route_number", validators=[validators.regexp('[0-9]+', message="price not valid"),
                                                            validators.DataRequired()])
-    from_location = SelectField("from location",
-                                choices=[(str(location.town)+", "+str(location.specific_location), str(location.id)) for location in locations],
-                                validators=[validators.DataRequired()]
-                                )
-    to_location = SelectField("to location",
-                                choices=[(str(location.town) + ", " + str(location.specific_location), str(location.id))for location in locations],
-                                validators=[validators.DataRequired()]
-                              )
 

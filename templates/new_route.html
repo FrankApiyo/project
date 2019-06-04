@@ -2,7 +2,7 @@
 {% block body %}
     <div class="row">
         {% from "_formhelper.html" import render_field %}
-        <form method='POST' action="{{ url_for('new_exec') }}">
+        <form method='POST' action="{{ url_for('add_routes') }}">
             <dl>
                 {{ render_field(form.price) }}
                 {{ render_field(form.route_number) }}
