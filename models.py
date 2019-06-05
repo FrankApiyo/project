@@ -50,12 +50,15 @@ class MatatuQueueInstance(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     no_of_vacant_seats = db.Column(db.Integer(), default=0, nullable=False)
     route_price_service_id = db.Column(db.Integer(), db.ForeignKey("route_price_service.id"), nullable=False)
-    matatu_registration = db.Column(db.Text(), db.ForeignKey("matatu.registration"), nullable=False)
+    matatu_registration = db.Column(db.Text(), db.ForeignKey("matatu.registration"), nullable=False, unique=True)
     taken_seats = db.relationship(
         'TakenSeatInstance',
         backref='matatu_queue_instance',
         lazy='dynamic'
     )
+
+    def __init__(self, no_of_vacant_seats):
+        self.no_of_vacant_seats = no_of_vacant_seats
 
     def __repr__(self):
         return "\nMatatuQueueEntry\n"

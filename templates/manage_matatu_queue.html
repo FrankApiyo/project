@@ -1,0 +1,47 @@
+{% extends "manage_matatu.html" %}
+{% block body %}
+    {% if entry %}
+        <div class="row">
+            <p>Click queue to remove</p>
+            <a href="/manage_matatu_queue/{{registration}}/{{ location_id }}/{{ route_number }}/-">
+                <div>
+                    <p>route: {{ route_number }}</p>
+                    <p>from location: {{ location_id }}</p>
+                </div>
+            </a>
+        </div>
+    {% endif %}
+    {% if locations %}
+        <div class="row">
+            <p>Select Location to add to queue</p>
+            <ul class="collection">
+                {% for location in locations %}
+                    <li class="collection-item">
+                        <a href="/manage_matatu_queue/{{registration}}/{{ location.id }}">
+                            <div>
+                                <p>town: {{ location.town }}</p>
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% if routes_from_location %}
+        <div class="row">
+            <p>Select Route to add to queue</p>
+            <ul class="collection">
+                {% for route, to_town in zip(routes_from_location, to_towns) %}
+                    <li class="collection-item">
+                        <a href="/manage_matatu_queue/{{registration}}/{{ location_id }}/{{ route.number }}">
+                            <div>
+                                <p>number: {{ route.number }}</p>
+                                <p>destination: {{ to_town.town }}</p>
+                            </div>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}

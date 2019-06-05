@@ -323,6 +323,82 @@ def manage_drivers():
     return render_template("manage_drivers.html", drivers=drivers)
 
 
+@app.route("/manage_matatu_queue/<registration>/<location_id>/<route_number>/<remove>")
+@app.route("/manage_matatu_queue/<registration>/<location_id>/<route_number>", defaults={"remove": None})
+@app.route("/manage_matatu_queue/<registration>/<location_id>", defaults={"route_number": None, "remove": None})
+@app.route("/manage_matatu_queue/<registration>", defaults={"route_number": None, "location_id": None, "remove": None})
+@login_required
+def manage_matatu_queue(registration, route_number, location_id, remove):
+    # this prevents other users form loging in to the wrong parts of the app
+    service = None
+    if session["service_name"]:
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
+
+    matatu = Matatu.query.filter_by(registration=registration).first()
+
+    if remove == "-":
+        db.session.delete(matatu.matatu_queue_entry)
+
+        db.session.commit()
+        locations = service.locations
+        return render_template("manage_matatu_queue.html", registration=matatu.registration, locations=locations)
+
+    if location_id and not route_number:
+        #ensure service has such a location
+        location = Location.query.filter_by(id=location_id).first()
+        if location in service.locations:
+            #now show all routes from this location
+            routes_from_location = []
+            to_towns = []
+            for route_price in service.route_prices:
+                route = route_price.route
+                if route.from_town_id == location.id:
+                    routes_from_location.append(route)
+                    to_towns.append(Location.query.filter_by(id=route.to_town_id).first())
+            return render_template("manage_matatu_queue.html", registration=matatu.registration,
+                                   routes_from_location=routes_from_location, to_towns=to_towns, zip=zip,
+                                   location_id=location_id)
+    elif location_id and route_number:
+        #add matatu to queue at location and at route
+        matatu_queue_entry = MatatuQueueInstance.query.filter_by(matatu_registration=registration).first()
+        if(matatu_queue_entry):
+            return render_template("manage_matatu_queue.html", registration=matatu.registration,
+                                   entry=matatu.matatu_queue_entry, location_id=location_id, route_number=route_number)
+        matatu_queue_entry = MatatuQueueInstance(matatu.seats)
+        route_price_service = None
+        route_prices = service.route_prices
+        for route_price in route_prices:
+            if str(route_price.route.number) == route_number and location_id == str(route_price.route.from_town_id):
+                route_price_service = route_price
+        matatu_queue_entry.route_price_service_id = route_price_service.id
+        matatu_queue_entry.matatu_registration = matatu.registration
+        db.session.add(matatu_queue_entry)
+        db.session.commit()
+        return render_template("manage_matatu_queue.html", registration=matatu.registration,
+                               entry=matatu.matatu_queue_entry, location_id=location_id, route_number=route_number)
+
+    #a matatu can only be in one queue instance at a time
+    #if matatu already on queue then just show that queue
+    if matatu.matatu_queue_entry:
+        #show queue
+        print("adfadsf\n\n\n\n" + str(matatu.matatu_queue_entry.route_price_service_id) + "\n\n\n")
+        route_price_service = RoutePriceService.query.filter_by(
+            id=matatu.matatu_queue_entry.route_price_service_id).first()
+        route = route_price_service.route
+        return render_template("manage_matatu_queue.html", registration=matatu.registration,
+                               entry=matatu.matatu_queue_entry, route_number=route.number,
+                               location_id=route.from_town_id)
+    #else provide routes to add queue on
+    else:
+        #show list of locations to add matatu queue instance
+        locations = service.locations
+        return render_template("manage_matatu_queue.html", registration=matatu.registration, locations=locations)
+
+
 @app.route("/manage_matatu_routes/<registration>/<add_or_remove>/<route_number>")
 @app.route("/manage_matatu_routes/<registration>", defaults={"add_or_remove": None, "route_number": None})
 @login_required
