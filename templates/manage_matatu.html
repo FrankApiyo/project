@@ -4,9 +4,9 @@
         <li class="tab col s3">{{ registration }}</li>
     </ul>
     <ul class="tabs">
-        <li class="tab col s3"><a href="">drivers</a></li>
-        <li class="tab col s3"><a href="">manage routes</a></li>
-        <li class="tab col s3"><a href="">manage queues</a></li>
+        <li class="tab col s3"><a href="/manage_matatu/{{registration}}">drivers</a></li>
+        <li class="tab col s3"><a href="#">manage routes</a></li>
+        <li class="tab col s3"><a href="#">manage queues</a></li>
     </ul>
 {% endblock %}
 {% block body %}
@@ -15,7 +15,7 @@
         <ul class="collection">
             {% for driver in matatu_drivers %}
                 <li class="collection-item">
-                    <a href="#">
+                    <a href="/manage_matatu/{{registration}}/-/{{ driver.id }}">
                         <div>
                             <p>id number: {{ driver.id }}</p>
                             <p>middle_name: {{ driver.middle_name }}</p>
@@ -31,7 +31,7 @@
         <ul class="collection">
             {% for driver in potential_drivers %}
                 <li class="collection-item">
-                    <a href="#">
+                    <a href="/manage_matatu/{{registration}}/+/{{ driver.id }}">
                         <div>
                             <p>id number: {{ driver.id }}</p>
                             <p>middle_name: {{ driver.middle_name }}</p>
