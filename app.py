@@ -109,8 +109,13 @@ def add_routes():
             from_town_id=from_location).filter_by(
             number=route_number).first()
 
-        if route_in_table:
-            print("route in table")
+        route_number_in_table = False
+        for route_price in service.route_prices:
+            if route_price.route.number == route_number:
+                route_number_in_table = True
+
+        if route_in_table or route_number_in_table:
+            #TODO find a way to tell the user that the route number is already in the service routes
             return redirect(url_for("routes"))
         route = Route(route_number, to_location, from_location)
         route_price_service.route = route
@@ -316,6 +321,45 @@ def manage_drivers():
     drivers = service.drivers
     #print(drivers[0].services.all())
     return render_template("manage_drivers.html", drivers=drivers)
+
+
+@app.route("/manage_matatu_routes/<registration>/<add_or_remove>/<route_number>")
+@app.route("/manage_matatu_routes/<registration>", defaults={"add_or_remove": None, "route_number": None})
+@login_required
+def manage_matatu_routes(registration, add_or_remove, route_number):
+    # this prevents other users form loging in to the wrong parts of the app
+    service = None
+    if session["service_name"]:
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
+
+    matatu = Matatu.query.filter_by(registration=registration).first()
+
+    if add_or_remove == "-":
+        for route in matatu.routes:
+            if str(route.number) == route_number:
+                #TODO remove route here and commit to database
+                pass
+
+    elif add_or_remove == "+":
+        for route_price_service in service.route_prices:
+            route = route_price_service.route
+            if str(route.number) == route_number and route not in matatu.routes:
+                matatu.routes.append(route)
+                db.session.commit()
+
+    potential_routes = []
+    for route_price_service in service.route_prices:
+        route = route_price_service.route
+        if not route in matatu.routes:
+            potential_routes.append(route)
+
+    return render_template("manage_matatu_routes.html", registration=matatu.registration, routes=matatu.routes,
+                           potential_routes=potential_routes)
+
 
 
 @app.route("/manage_matatu/<registration>/<add_or_remove>/<driver_id>")

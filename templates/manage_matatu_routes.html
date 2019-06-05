@@ -1,0 +1,31 @@
+{% extends "manage_matatu.html" %}
+{% block body %}
+    <div class="row">
+        <p>Matatu Routes</p>
+        <ul class="collection">
+            {% for route in routes %}
+                <li class="collection-item">
+                    <a href="/manage_matatu_routes/{{registration}}/-/{{ route.number }}">
+                        <div>
+                            <p>route: {{ route.number }}</p>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="row">
+        <p>Potential Routes</p>
+        <ul class="collection">
+            {% for route in potential_routes %}
+                <li class="collection-item">
+                    <a href="/manage_matatu_routes/{{registration}}/+/{{ route.number }}">
+                        <div>
+                            <p>route: {{ route.number }}</p>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}
