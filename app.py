@@ -414,11 +414,13 @@ def manage_matatu_routes(registration, add_or_remove, route_number):
 
     matatu = Matatu.query.filter_by(registration=registration).first()
 
-    if add_or_remove == "-":
+    if str(add_or_remove) == "-":
         for route in matatu.routes:
-            if str(route.number) == route_number:
-                #TODO remove route here and commit to database
-                pass
+            if str(route.number) == str(route_number):
+                matatu.routes.remove(route)
+                db.session.commit()
+                return redirect("/manage_matatu_routes/"+registration)
+
 
     elif add_or_remove == "+":
         for route_price_service in service.route_prices:
