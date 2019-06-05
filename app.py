@@ -318,9 +318,10 @@ def manage_drivers():
     return render_template("manage_drivers.html", drivers=drivers)
 
 
-@app.route("/manage_matatu/<registration>")
+@app.route("/manage_matatu/<registration>/<add_or_remove>/<driver_id>")
+@app.route("/manage_matatu/<registration>/", defaults={"driver_id": None, "add_or_remove": None})
 @login_required
-def manage_matatu(registration):
+def manage_matatu(registration, add_or_remove, driver_id):
     # this prevents other users form loging in to the wrong parts of the app
     service = None
     if (session["service_name"]):
@@ -330,14 +331,36 @@ def manage_matatu(registration):
     if not service:
         redirect(url_for("login"))
 
-    #TODO finish this later
-    #here we will be able to do the following to matatus
-    #1. add driver
-    #2. add matatu to queue
-    #3. manage routes
-    #4. delete matatu
     matatu = Matatu.query.filter_by(registration=registration).first()
-    return render_template("manage_matatu.html", registration=matatu.registration)
+
+    if add_or_remove == "-":
+        driver = Driver.query.filter_by(id=driver_id).first()
+        if driver.id == matatu.driver.id:
+            matatu.driver = None
+            db.session.commit()
+
+    elif add_or_remove == "+":
+        driver = Driver.query.filter_by(id=driver_id).first()
+        if matatu.driver is None:
+            matatu.driver = driver
+            db.session.commit()
+
+    if matatu.driver:
+        matatu_drivers = [matatu.driver]
+        #print("matatu drivers" + str(matatu_drivers))
+    potential_drivers = []
+    #print("potential drivers"+str(potential_drivers))
+    for driver in service.drivers:
+        if not driver.matatu:
+            potential_drivers.append(driver)
+
+    #TODO find a way to tell user when we dont have a driver for the matatu
+    if not matatu.driver:
+        return render_template("manage_matatu.html", registration=matatu.registration,
+                               potential_drivers=potential_drivers)
+    else:
+        return render_template("manage_matatu.html", registration=matatu.registration,
+                           potential_drivers=potential_drivers, matatu_drivers=matatu_drivers)
 
 
 @app.route("/new_matatu", methods=["POST", "GET"])

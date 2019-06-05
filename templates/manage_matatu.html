@@ -11,6 +11,35 @@
 {% endblock %}
 {% block body %}
     <div class="row">
-
+        <p>Matatu Driver</p>
+        <ul class="collection">
+            {% for driver in matatu_drivers %}
+                <li class="collection-item">
+                    <a href="#">
+                        <div>
+                            <p>id number: {{ driver.id }}</p>
+                            <p>middle_name: {{ driver.middle_name }}</p>
+                            <p>last_name: {{ driver.last_name }}</p>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="row">
+        <p>Available drivers</p>
+        <ul class="collection">
+            {% for driver in potential_drivers %}
+                <li class="collection-item">
+                    <a href="#">
+                        <div>
+                            <p>id number: {{ driver.id }}</p>
+                            <p>middle_name: {{ driver.middle_name }}</p>
+                            <p>last_name: {{ driver.last_name }}</p>
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
     </div>
 {% endblock %}
