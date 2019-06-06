@@ -39,7 +39,7 @@ migrate = Migrate(app, db, compare_type=True)
 login_manager = LoginManager(app)
 
 from models import db, Ticket, Matatu, Traveler, Location, Route, Service, Driver, Exec, Log, Event, \
-    RoutePriceService, MatatuQueueInstance
+    RoutePriceService, MatatuQueueInstance, TakenSeatInstance
 
 from forms import TravelerRegistrationForm
 from forms import TravelerLoginForm
@@ -671,11 +671,11 @@ def account():
 @login_required
 def ticket(seat_number):
     route_price_service = RoutePriceService.query.filter_by(id=session["route_price_service"]).first()
-    route_price_service.matatu_queue_entry.no_of_vacant_seats -=1
+    #route_price_service.matatu_queue_entry.no_of_vacant_seats -=1
     db.session.commit()
     traveler = Traveler.query.filter_by(email=current_user.get_id()).first()
     service = Service.query.filter_by(name=session["service"]).first()
-    print(service)
+    #print(service)
     service_location = None
     for location in service.locations:
         if location.town == session["departure"]:
@@ -685,10 +685,21 @@ def ticket(seat_number):
                     service_location.lng,
                     None, route_price_service.price,
                     route_price_service.route.number)
+    #mark seat at taken
+    taken_seat = TakenSeatInstance(seat_number)
+    taken_seat.matatu_queue_instance_id = session["matatu_queue_entry_id"]
+    print(session["matatu_queue_entry_id"])
+    db.session.add(taken_seat)
+    #if its the last ticket available then take the matatu off the queue at location
+    taken_seats = TakenSeatInstance.query.filter_by(matatu_queue_instance_id=session["matatu_queue_entry_id"]).all()
     db.session.add(ticket)
+    if len(taken_seats) == session["no"]:
+        db.session.delete(MatatuQueueInstance.query.filter_by(id=taken_seat.matatu_queue_instance_id))
+        for seat in taken_seats:
+            db.session.delete(taken_seat)
     db.session.commit()
 
-    return "some other thing"
+    return redirect(url_for("history"))
 
 
 @app.route("/pick_a_seat/<id>")
@@ -697,9 +708,22 @@ def pick_a_seat(id):
     #remember that id is the route_price_service.id that we are about to purchase
     #TODO we need to pick a seat and update the tacken seats table and matatuQueue instance table
     route_price_service = RoutePriceService.query.filter_by(id=id).first()
-    no = route_price_service.matatu_queue_entry.no_of_vacant_seats
+    no = route_price_service.matatu_queue_entry.matatu.seats
+    session["no"]  = no
     session["route_price_service"] = route_price_service.id
-    return render_template("pick_a_seat.html", no=no, range=range)
+    seat_numbers = []
+    for i in range(no):
+        seat_numbers.append(i)
+    #default to true for all seats
+    available_seats = [True for i in seat_numbers]
+    #if seat is tacken then set available seat to false
+    matatu_queue_entry_id = route_price_service.matatu_queue_entry.id
+    taken_seats = TakenSeatInstance.query.filter_by(matatu_queue_instance_id=matatu_queue_entry_id).all()
+    for taken_seat in taken_seats:
+        available_seats[taken_seat.seat_number] = True
+    session["matatu_queue_entry_id"] = matatu_queue_entry_id
+    return render_template("pick_a_seat.html", available_seats=available_seats, range=range,
+                           seat_numbers=seat_numbers, zip=zip)
 
 
 @app.route("/service/<service_name>/<destination>")

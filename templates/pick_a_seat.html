@@ -4,8 +4,18 @@
 {% block body %}
     <div id="seats" class="container">
         <ul>
-            {% for i in range(no) %}
-                <li><a href="/ticket/{{ loop.index }}">{{loop.index}}</a></li>
+            {% for seat_number, available_seat in zip(seat_numbers, available_seats) %}
+                <li>
+                    {% if available_seat %}
+                    <a href="/ticket/{{ seat_number }}">
+                        {% else %}
+                        <a href="#"></a>
+                        {% endif %}
+                    <div>
+                        <p>seat no: {{ seat_number }}</p>
+                        <p>available: {{ available_seat }}</p>
+                    </div>
+                </a></li>
             {% endfor %}
         </ul>
     </div>
