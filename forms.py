@@ -101,19 +101,7 @@ class ServiceManagerLoginForm(TravelerLoginForm):
                                                                             validators.DataRequired()])
 
 
-
 class BookSeatForm(FlaskForm):
-    #get the choices data from the database
-    departure = SelectField(
-        'departure',
-        choices=[("one", "Nakuru"), ("Nairobi", "Nairobi"),  ("Mombasa", "Mombasa"), ("Kisumu", "Kisumu")],
-        validators=[validators.DataRequired()]
-    )
-    destination = SelectField(
-        'destination',
-        choices=[("Nakuru", "Nakuru"), ("Nairobi", "Nairobi"),  ("Mombasa", "Mombasa"), ("Kisumu", "Kisumu")],
-        validators=[validators.DataRequired()]
-    )
     date = StringField("date", validators=[validators.DataRequired()],
                      render_kw={'class': 'datepicker'})
     time = StringField("time", validators=[validators.DataRequired()],

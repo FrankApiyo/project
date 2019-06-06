@@ -706,7 +706,8 @@ def service(service_name, destination):
     link_list = []
     matatu_available_list = []
     for route_price_service in route_price_services:
-        if route_price_service.route.to_town == "Nairobi":
+        location_name = Location.query.filter_by(id=route_price_service.route.from_town_id).first().town
+        if location_name == "Nairobi":
             route_price_services_to_destination.append(route_price_service)
             link_list.append(base_link+str(route_price_service.id))
             if route_price_service.matatu_queue_entry:
@@ -781,7 +782,17 @@ def dissapointment(message):
 @login_required
 def select_matatu():
     #look in db for routes that have this to and from
-    routes = Route.query.filter_by(from_town=session["departure"]).filter_by(to_town=session["destination"]).all()
+    #get all town id
+    print("departure"+str(session["departure"]))
+    print("to location"+str(session["destination"]))
+    depart_locations = Location.query.filter_by(town=session["departure"]).all()
+    destination_locations = Location.query.filter_by(town=session["destination"]).all()
+    print(depart_locations)
+    print(destination_locations)
+    routes =[]
+    for depart_location, destination_location in zip(depart_locations, destination_locations):
+        routes.extend(Route.query.filter_by(from_town_id=depart_location.id).filter_by(
+            to_town_id=destination_location.id).all())
     route_price_services = []
     for route in routes:
         route_price_services.extend(routes[0].route_prices.all())
@@ -825,6 +836,20 @@ def select_matatu():
 @app.route("/book", methods=["POST", "GET"])
 @login_required
 def book():
+    locations = Location.query.all()
+    choices = [(str(location.town), str(location.town)) for location in
+                 locations ]
+    choices = list(set(choices))
+    BookSeatForm.departure = SelectField(
+        'departure',
+        choices=choices,
+        validators=[validators.DataRequired()]
+    )
+    BookSeatForm.destination = SelectField(
+        'destination',
+        choices=choices,
+        validators=[validators.DataRequired()]
+    )
     form = BookSeatForm(request.form)
     if request.method == "GET":
         return render_template("book.html", form=form)
