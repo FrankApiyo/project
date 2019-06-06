@@ -8,13 +8,13 @@
 {% block body %}
     <div class="row">
         <ul class="collection">
-            {% for route_price_service in route_price_services %}
+            {% for route_price_service, from_location, to_location in zip(route_price_services, from_locations, to_locations) %}
                 <li class="collection-item">
                     <a href="#">
                         <div>
                             <p>price: {{ route_price_service.price }}</p>
-                            <p>to location: {{ route_price_service.route.to_location }}</p>
-                            <p>from location: {{ route_price_service.route.from_location }}</p>
+                            <p>to location: {{ to_location.town }}</p>
+                            <p>from location: {{ from_location.town }}</p>
                         </div>
                     </a>
                 </li>

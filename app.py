@@ -145,8 +145,17 @@ def routes():
         redirect(url_for("login"))
 
     route_prices = service.route_prices.all()
+    from_locations = []
+    to_locations = []
+    for route_price in route_prices:
+        from_location = Location.query.filter_by(id=route_price.route.from_town_id).first()
+        from_locations.append(from_location)
+        to_location = Location.query.filter_by(id=route_price.route.to_town_id).first()
+        to_locations.append(to_location)
+
     print(route_prices)
-    return render_template("routes.html", route_price_services=route_prices)
+    return render_template("routes.html", route_price_services=route_prices, from_locations=from_locations,
+                           to_locations=to_locations, zip=zip)
 
 
 @app.route("/add_location/<lat>/<lng>/<specific_location>/<town>")
@@ -706,16 +715,23 @@ def service(service_name, destination):
     link_list = []
     matatu_available_list = []
     for route_price_service in route_price_services:
-        location_name = Location.query.filter_by(id=route_price_service.route.from_town_id).first().town
-        if location_name == "Nairobi":
-            route_price_services_to_destination.append(route_price_service)
-            link_list.append(base_link+str(route_price_service.id))
-            if route_price_service.matatu_queue_entry:
-                matatu_available_list.append(True)
-            else:
-                matatu_available_list.append(False)
+        route_price_services_to_destination.append(route_price_service)
+        link_list.append(base_link+str(route_price_service.id))
+        if route_price_service.matatu_queue_entry:
+            print(route_price_service.matatu_queue_entry)
+            matatu_available_list.append(True)
+        else:
+            matatu_available_list.append(False)
+    from_locations = []
+    to_locations = []
+    for route_price in route_price_services_to_destination:
+        from_location = Location.query.filter_by(id=route_price.route.from_town_id).first()
+        from_locations.append(from_location)
+        to_location = Location.query.filter_by(id=route_price.route.to_town_id).first()
+        to_locations.append(to_location)
     return render_template("list_routes.html", route_price_services=route_price_services_to_destination,
-                           link_list=link_list, zip=zip, matatu_available_list=matatu_available_list)
+                           link_list=link_list, zip=zip, matatu_available_list=matatu_available_list,
+                           from_locations=from_locations, to_locations=to_locations)
 
 
 @app.route("/logout")
