@@ -78,11 +78,6 @@ class ServiceRegistrationForm(FlaskForm):
     service_name = StringField("service_name", validators=[validators.regexp('[a-zA-Z]+', message="service name not "
                                                                                                "valid"),
                                                          validators.DataRequired()])
-    service_location = StringField("service_location", validators=[validators.regexp('[a-zA-Z]+', message="service "
-                                                                                                          "location "
-                                                                                                          "name"
-                                                                                                          "not valid"),
-                                                         validators.DataRequired()])
     submit = SubmitField('submit')
 
 

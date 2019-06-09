@@ -72,6 +72,21 @@ def home():
     return "try /login"
 
 
+@app.route("/add_remove_payment_details", methods=["POST", "GET"])
+@login_required
+def add_remove_payment_details():
+    # this prevents other users form loging in to the wrong parts of the app
+    service = None
+    if (session["service_name"]):
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
+
+    #add some more code here
+
+
 @app.route("/add_routes", methods=["POST", "GET"])
 @login_required
 def add_routes():
@@ -537,25 +552,6 @@ def manage():
     matatus = service.matatus.all()
     return render_template("manage.html", matatus =matatus)
 
-@app.route("/add_service_location/<lat>/<lng>")
-@app.route("/add_service_location", defaults={"lat": None, "lng":None})
-@login_required
-def add_service_location(lat, lng):
-
-    if lat and lng:
-        service = Service(session["service_name"], session["service_location"], lat, lng)
-        exec = Exec(session["birthday"],session["exec_position"], session["password"],
-                    session["first_name"], session["middle_name"], session["last_name"], session["salt"],
-                    session["email"], session["id_num"])
-        service.execs.append(exec)
-        db.session.add(service)
-        db.session.commit()
-        user = User(session["email"])
-        login_user(user)
-        #print("\n\nare wer here\n\n"+url_for("matrips_manager_login"))
-        return redirect(url_for("matrips_manager_login"))
-    else:
-        return render_template("add_service_location.html")
 
 @app.route("/register_manager_and_service", methods=["POST", "GET"])
 def register_manager_and_service():
@@ -575,7 +571,6 @@ def register_manager_and_service():
         last_name = form.last_name.data
         exec_position = form.exec_position.data
         service_name = form.service_name.data
-        service_location = form.service_location.data
         # TODO add a way to inform user about the following failures
         # TODO add try catch block around the data request operations from the database and inform the user of failures
         if not pw1 == pw2:
@@ -605,9 +600,19 @@ def register_manager_and_service():
         session["salt"] = salt
         session["email"] = email
         session["id_num"] = id_num
-        session["service_location"] = service_location
 
-        return redirect(url_for('add_service_location'))
+        #TODO fix this mess here some day
+        service = Service(session["service_name"])
+        exec = Exec(session["birthday"], session["exec_position"], session["password"],
+                    session["first_name"], session["middle_name"], session["last_name"], session["salt"],
+                    session["email"], session["id_num"])
+        service.execs.append(exec)
+        db.session.add(service)
+        db.session.commit()
+        user = User(session["email"])
+        login_user(user)
+
+        return redirect(url_for("matrips_manager_login"))
 
     else:
         return render_template("register.html", form=form)

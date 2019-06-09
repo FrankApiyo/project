@@ -153,7 +153,6 @@ class Driver(db.Model, Person):
 
 class Service(db.Model):
     name = db.Column(db.Text(), primary_key=True)
-    location = db.Column(db.Integer(), db.ForeignKey("location.id"))
     #logo will be added later on after database is ensured to be working
     route_prices = db.relationship(
         "RoutePriceService",
@@ -181,10 +180,7 @@ class Service(db.Model):
         lazy='dynamic'
     )
 
-    def __init__(self, name, specific_location, lat, lng):
-        self.specific_location = specific_location
-        self.lat = lat
-        self.lng = lng
+    def __init__(self, name):
         self.name = name
 
     def __repr__(self):
