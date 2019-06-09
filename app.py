@@ -4,8 +4,6 @@ from flask import url_for
 from flask import redirect
 from flask import request
 from flask import session
-from flask import g
-from flask_login import current_user
 from flask_sqlalchemy import SQLAlchemy
 from config import DevConfig
 from flask_migrate import Migrate
@@ -14,7 +12,7 @@ from flask_login import login_required
 from flask_login import login_user
 from flask_login import logout_user
 from flask_login import current_user
-from user import User, User_Exec
+from user import User
 from passwordHelper import validate_password
 from passwordHelper import get_salt
 from passwordHelper import get_hash
@@ -72,9 +70,9 @@ def home():
     return "try /login"
 
 
-@app.route("/add_remove_payment_details", methods=["POST", "GET"])
+@app.route("/manage_payment", methods=["POST", "GET"])
 @login_required
-def add_remove_payment_details():
+def manage_payment():
     # this prevents other users form loging in to the wrong parts of the app
     service = None
     if (session["service_name"]):
@@ -84,7 +82,10 @@ def add_remove_payment_details():
     if not service:
         redirect(url_for("login"))
 
-    #add some more code here
+    #TODO show history in terms of tickets or payments
+    #TODO  show from the tickets table a list of payments history
+    #and show no payments if there are no payments yet.
+    return render_template("manage_payment.html")
 
 
 @app.route("/add_routes", methods=["POST", "GET"])

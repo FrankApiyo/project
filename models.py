@@ -133,7 +133,6 @@ class Person:
     salt = db.Column(db.Text(), nullable=False)
     email = db.Column(db.Text(), nullable=False)
 
-
 class Driver(db.Model, Person):
     matatu = db.relationship('Matatu', backref='driver', uselist=False)
 
