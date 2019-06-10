@@ -240,6 +240,7 @@ def new_exec():
         middle_name = form.middle_name.data
         last_name = form.last_name.data
         position = form.position.data
+        phone = form.phone.data
 
         # TODO add a way to inform user about the following failures
         # TODO add try catch block around the data request operations from the database and inform the user of failures
@@ -253,7 +254,7 @@ def new_exec():
         if exec:
             #TODO ADD FLASH TELLING THE USER THAT A DRIVER is already registered with that email
             return render_template("new_exec.html", form=form)
-        exec = Exec(birthday, position, password, first_name, middle_name, last_name, salt, email, id_num)
+        exec = Exec(birthday, position, password, first_name, middle_name, last_name, salt, email, id_num, phone)
         db.session.add(exec)
         exec.services.append(service)
         db.session.commit()
@@ -306,6 +307,7 @@ def new_driver():
         first_name = form.first_name.data
         middle_name = form.middle_name.data
         last_name = form.last_name.data
+        phone = form.phone.data
 
         # TODO add a way to inform user about the following failures
         # TODO add try catch block around the data request operations from the database and inform the user of failures
@@ -319,7 +321,7 @@ def new_driver():
         if driver:
             #TODO ADD FLASH TELLING THE USER THAT A DRIVER is already registered with that email
             return render_template("new_driver.html", form=form)
-        driver = Driver(id_num, birthday, password, first_name, middle_name, last_name, salt, email)
+        driver = Driver(id_num, birthday, password, first_name, middle_name, last_name, salt, email, phone)
         db.session.add(driver)
         driver.services.append(service)
         db.session.commit()
@@ -572,6 +574,7 @@ def register_manager_and_service():
         last_name = form.last_name.data
         exec_position = form.exec_position.data
         service_name = form.service_name.data
+        phone = form.phone.data
         # TODO add a way to inform user about the following failures
         # TODO add try catch block around the data request operations from the database and inform the user of failures
         if not pw1 == pw2:
@@ -591,26 +594,12 @@ def register_manager_and_service():
             return render_template("register_service.html", form=form)
 
         session["service_name"] = service_name
-        print(service_name)
-        session["birthday"] = birthday
-        session["exec_position"] = exec_position
-        session["password"] = password
-        session["first_name"] = first_name
-        session["middle_name"] = middle_name
-        session["last_name"] = last_name
-        session["salt"] = salt
-        session["email"] = email
-        session["id_num"] = id_num
-
-        #TODO fix this mess here some day
-        service = Service(session["service_name"])
-        exec = Exec(session["birthday"], session["exec_position"], session["password"],
-                    session["first_name"], session["middle_name"], session["last_name"], session["salt"],
-                    session["email"], session["id_num"])
+        service = Service(service_name)
+        exec = Exec(birthday, exec_position, password, first_name, middle_name, last_name, salt, email, id_num, phone)
         service.execs.append(exec)
         db.session.add(service)
         db.session.commit()
-        user = User(session["email"])
+        user = User(email)
         login_user(user)
 
         return redirect(url_for("matrips_manager_login"))
@@ -795,13 +784,6 @@ def login():
             return "error page"
 
 
-@app.route("/payment")
-@login_required
-def payment():
-    #TODO add a means of payment
-    return render_template("payment.html")
-
-
 @app.route("/history")
 @login_required
 def history():
@@ -921,7 +903,6 @@ def book():
 
 
 @app.route("/register_traveler", methods=["POST", "GET"])
-@login_required
 def register_traveler():
     form = TravelerRegistrationForm(request.form)
     if request.method == "GET":
@@ -937,6 +918,7 @@ def register_traveler():
         first_name = form.first_name.data
         middle_name = form.middle_name.data
         last_name = form.last_name.data
+        phone = form.phone.data
 
         #TODO add a way to inform user about the following failures
         #TODO add try catch block around the data request operations from the database and inform the user of failures
@@ -949,7 +931,7 @@ def register_traveler():
         user = Traveler.query.filter_by(email=email).first()
         if user:
             return "user already registered with that email"
-        traveler = Traveler(id_num, birthday, password, first_name, middle_name, last_name, salt, email)
+        traveler = Traveler(id_num, birthday, password, first_name, middle_name, last_name, salt, email, phone)
         db.session.add(traveler)
         db.session.commit()
         login_user(User(email))

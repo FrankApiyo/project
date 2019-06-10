@@ -132,12 +132,13 @@ class Person:
     last_name = db.Column(db.Text(), nullable=False)
     salt = db.Column(db.Text(), nullable=False)
     email = db.Column(db.Text(), nullable=False)
+    phone = db.Column(db.Text(), nullable=False)
 
 class Driver(db.Model, Person):
     matatu = db.relationship('Matatu', backref='driver', uselist=False)
 
     def __init__(self, id, birthday, password, first_name, middle_name, last_name, salt,
-                 email):
+                 email, phone):
         self.email = email
         self.password = password
         self.first_name = first_name
@@ -146,6 +147,7 @@ class Driver(db.Model, Person):
         self.salt = salt
         self.id = id
         self.birthday = birthday
+        self.phone = phone
 
     def __repr__(self):
         return "\nDriver name'{}'\nid '{}'\n".format(self.middle_name, self.id)
@@ -232,12 +234,11 @@ class Ticket(db.Model):
         return "\Ticker no: {}".format(self.id)
 
 
-
 class Exec(db.Model, Person):
     position = db.Column(db.Text(), nullable=True)
 
     def __init__(self, birthday, position, password, first_name, middle_name, last_name,
-                 salt, email, id):
+                 salt, email, id, phone):
         self.email = email
         self.password = password
         self.id = id
@@ -247,6 +248,7 @@ class Exec(db.Model, Person):
         self.middle_name = middle_name
         self.last_name = last_name
         self.salt = salt
+        self.phone = phone
 
     def __repr__(self):
         return "\nExec name'{}'\nposition '{}'\nid '{}'\nmatatu_service: '{}'\n".format(self.middle_name,
@@ -255,7 +257,7 @@ class Exec(db.Model, Person):
 
 
 class Traveler(Person, db.Model):
-    def __init__(self, id, birthday, password, first_name, middle_name, last_name, salt, email):
+    def __init__(self, id, birthday, password, first_name, middle_name, last_name, salt, email, phone):
         self.password = password
         self.first_name = first_name
         self.middle_name = middle_name
@@ -264,6 +266,7 @@ class Traveler(Person, db.Model):
         self.birthday = birthday
         self.salt = salt
         self.email = email
+        self.phone = phone
 
     def __repr__(self):
         return "\nTraveler name'{}'\nid '{}'\n".format(self.middle_name, self.id)

@@ -30,6 +30,16 @@ class TravelerRegistrationForm(FlaskForm):
                                                      validators.DataRequired()])
     middle_name = StringField("middle_name", validators=[validators.regexp('[a-zA-Z]+', message="first name not "
                                                                                                  "valid"), validators.DataRequired()])
+    phone = StringField("phone", validators=[validators.regexp('[0-9]+', message="phone number not valid"),
+                                             validators.DataRequired(),
+                                             validators.length(min=10, max=10, message="phone "
+                                                                                       "number "
+                                                                                       "must "
+                                                                                       "contain "
+                                                                                       "10 "
+                                                                                       "digits "
+                                                                                       "in teh"
+                                                                                       "")])
     submit = SubmitField('submit')
     #accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
 
@@ -78,6 +88,15 @@ class ServiceRegistrationForm(FlaskForm):
     service_name = StringField("service_name", validators=[validators.regexp('[a-zA-Z]+', message="service name not "
                                                                                                "valid"),
                                                          validators.DataRequired()])
+    phone = StringField("phone", validators=[validators.regexp('[0-9]+', message="phone number not valid"),
+                                       validators.DataRequired(), validators.length(min=10, max=10, message="phone "
+                                                                                                            "number "
+                                                                                                            "must "
+                                                                                                            "contain "
+                                                                                                            "10 "
+                                                                                                            "digits "
+                                                                                                            "in teh"
+                                                                                                            "")])
     submit = SubmitField('submit')
 
 
