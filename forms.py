@@ -116,11 +116,7 @@ class ServiceManagerLoginForm(TravelerLoginForm):
 
 
 class BookSeatForm(FlaskForm):
-    date = StringField("date", validators=[validators.DataRequired()],
-                     render_kw={'class': 'datepicker'})
-    time = StringField("time", validators=[validators.DataRequired()],
-                     render_kw={'class': 'timepicker'}
-                     )
+    pass
 
 
 class NewMatatuForm(FlaskForm):

@@ -6,8 +6,6 @@
             <dl>
                 {{ render_field(form.departure) }}
                 {{ render_field(form.destination) }}
-                {{ render_field(form.date) }}
-                {{ render_field(form.time) }}
                 {{ form.hidden_tag() }}
             </dl>
             <p style="visibility: hidden" id="next"><input type="submit" class="waves-effect waves-light btn"  value="next" ></p>
@@ -17,63 +15,9 @@
 {% block script %}
     {{ super() }}
     <script>
-     $(document).ready(function () {
-         $('select').formSelect();
-         $('.datepicker').datepicker({
-             minDate: new Date()
-         });
-         $('.timepicker').timepicker({
-             twelveHour: false,
-             onOpenStart: function(){
-               //ensure we have a date before we try to enter a time
-                 console.log("check if date is available")
-                 datePickerInstance = M.Datepicker.getInstance($('.datepicker'))
-                 datePickerDate = datePickerInstance.toString().split(" ");
-                 console.log(datePickerDate[0] == [""] && datePickerDate.length == 1)
-                 if(datePickerDate[0] == [""] && datePickerDate.length == 1){
-                     //make sure we never have that freezing error
-                     console.log("do something")
-                     //destroy time picker instance and ask user to select date first
-                     location.reload();
-                 }
-
-             },
-            onCloseStart: function(){
-                //show a toast if the user enters a time before now today which would be nuts
-                //check if day is today
-                //get datepicker instance and get date array
-                //all the following are lines i used in debuging
-                datePickerInstance = M.Datepicker.getInstance($('.datepicker'));
-                datePickerDate = datePickerInstance.toString().split(" ");
-                datePickerDate[1] = datePickerDate[1].slice(0, -1);
-                //console.log(datePickerDate);
-                todaysDate = new Date().toString().split(" ").slice(1, 4);
-                //console.log(todaysDate);
-                //console.log('are they equal? : '+(todaysDate[0] == datePickerDate[0] && todaysDate[1] == datePickerDate[1] && todaysDate[2] == datePickerDate[2]));
-                if(todaysDate[0] == datePickerDate[0] && todaysDate[1] == datePickerDate[1] && todaysDate[2] == datePickerDate[2]) {
-                    //check if time entered is before now if time is today
-                    //only show the submit button if time and date are valid
-                    timePickerInstance = M.Timepicker.getInstance($('.timepicker'))
-                    timeArray = timePickerInstance.time.split(":");
-                    hours = parseInt(timeArray[0]);
-                    minutes = parseInt(timeArray[1]);
-                    //console.log(hours+"hrs and "+minutes+" minutes");
-                    date = new Date()
-                    //if time entered is before or 2 minutes after now, tell the user that they cant proceed
-                    if(date.getHours() > hours )
-                        M.toast({html: "Please enter time in the future"});
-                    else if (date.getHours() == hours && date.getMinutes() >= minutes)
-                        M.toast({html: 'Please enter time in the future'});
-                    else{
-                        //console.log("show next button");
-                        $("#next").css("visibility", "visible");
-                    }
-                }else{
-                    //console.log("show next button");
-                    $("#next").css("visibility", "visible");
-                }
-            }
-         });
-     });
+        $(document).ready(function () {
+            $('select').formSelect();
+            $("#next").css("visibility", "visible");
+        });
     </script>
 {% endblock %}

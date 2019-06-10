@@ -17,6 +17,8 @@ from passwordHelper import validate_password
 from passwordHelper import get_salt
 from passwordHelper import get_hash
 
+from lipanampesa import lipa_na_mpesa
+
 
 from wtforms import validators
 from wtforms.fields import SelectField
@@ -68,25 +70,6 @@ def home():
     #TODO add landing page
     #check if someone is already logged in and as what
     return "try /login"
-
-
-@app.route("/manage_payment", methods=["POST", "GET"])
-@login_required
-def manage_payment():
-    # this prevents other users form loging in to the wrong parts of the app
-    service = None
-    if (session["service_name"]):
-        service = Service.query.filter_by(name=session["service_name"]).first()
-    else:
-        redirect(url_for("login"))
-    if not service:
-        redirect(url_for("login"))
-
-    #TODO show history in terms of tickets or payments
-    #TODO  show from the tickets table a list of payments history
-    #and show no payments if there are no payments yet.
-    return render_template("manage_payment.html")
-
 
 @app.route("/add_routes", methods=["POST", "GET"])
 @login_required
@@ -717,6 +700,14 @@ def pick_a_seat(id):
     for taken_seat in taken_seats:
         available_seats[taken_seat.seat_number] = True
     session["matatu_queue_entry_id"] = matatu_queue_entry_id
+
+
+    #do mpesa magic here
+    traveler = Traveler.query.filter_by(email=current_user.get_id()).first()
+    #fix this
+    result = lipa_na_mpesa(traveler.phone[-10:], 1)
+
+
     return render_template("pick_a_seat.html", available_seats=available_seats, range=range,
                            seat_numbers=seat_numbers, zip=zip)
 
@@ -884,12 +875,6 @@ def book():
     elif request.method == "POST" and form.validate():
         destination = form.destination.data
         departure = form.departure.data
-        date = form.date.data
-        time = form.time.data
-        datetime_object = datetime.datetime.strptime(date+" "+time, '%b %d, %Y %H:%M')
-        print(datetime_object)
-        #add all the date collected here to a session
-        session["datetime_object"] = datetime_object
         session["destination"] = destination
         session["departure"] = departure
         #TODO redirect to select_matatu

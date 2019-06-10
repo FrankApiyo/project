@@ -131,9 +131,10 @@
                         console.log(marker.position.lat())
                         console.log(marker.position.lng())
                         console.log(results)
-                        specific_location = results[0].formatted_address.split(",")[0].trim()
+                        specific_location = results[0].formatted_address.split(",")[0]
+                        console.log(specific_location)
                         town = results[0].formatted_address.split(",")[1].trim()
-                        M.toast({html: '<input type="text" id="specific_location" value='+specific_location+'><input type="text" id="town" value='+town+'><button class="btn-flat toast-action" onclick="add_location()">Correct</button>',
+                        M.toast({html: '<input type="text" id="specific_location" value="'+specific_location+'"><input type="text" id="town" value='+town+'><button class="btn-flat toast-action" onclick="add_location()">Correct</button>',
                             displayLength: 4000000,
                             completeCallback: function(){
                                 location.href = "/add__location/"+marker.position.lat()+"/"+marker.position.lng()+"/"+specific_location+"/"+town
@@ -188,5 +189,5 @@
 {% endblock %}
 {% block script %}
     {{ super() }}
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRVb5EfmVrwTwPrthwmDB74yCTVHkOI5k&callback=initMap&libraries=places" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ apiKey }}&callback=initMap&libraries=places" async defer></script>
 {% endblock %}
