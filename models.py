@@ -212,6 +212,7 @@ class Matatu(db.Model):
 
 class Ticket(db.Model):
     #TODO add seat number here
+    #TODO add fulfilled and payed fields to be updated later
     id = db.Column(db.Integer(), primary_key=True)
     traveler = db.Column(db.Text(), db.ForeignKey("traveler.id"), nullable=False)
     matatu = db.Column(db.Text(), db.ForeignKey("matatu.registration"), nullable=False)
@@ -220,6 +221,10 @@ class Ticket(db.Model):
     driver = db.Column(db.Text(), db.ForeignKey("driver.id"), nullable=True)
     cost = db.Column(db.Float(), nullable=False)
     route = db.Column(db.Integer(), db.ForeignKey("route.number"), nullable=False)
+    fulfilled = db.Column(db.Boolean, nullable=False, default=False)
+    payed = db.Column(db.Boolean, nullable=False, default=False)
+    balance = db.Column(db.Float(), nullable=False)
+
 
     def __init__(self, traveler, matatu, pick_up_lat, pick_up_lng, driver, cost, route):
         self.traveler = traveler
@@ -257,6 +262,7 @@ class Exec(db.Model, Person):
 
 
 class Traveler(Person, db.Model):
+    outstanding = db.Column(db.Float, default=0)
     def __init__(self, id, birthday, password, first_name, middle_name, last_name, salt, email, phone):
         self.password = password
         self.first_name = first_name

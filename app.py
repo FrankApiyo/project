@@ -657,6 +657,26 @@ def mpesa_hook():
             if "ResultCode" in data["Body"]["stkCallback"]:
                 code = data["Body"]["stkCallback"]["ResultCode"]
                 print("\n\nThe code is "+str(code)+"\n\n")
+                if code == 0:
+                    phone = str(data["Body"]["stkCallback"]["CallbackMetadata"]["Item"][4]["Value"])
+                    print(phone)
+                    traveler = Traveler.query.filter_by(phone=="0"+phone[3:]).first()
+                    if traveler:
+                        ticket = Ticket.query.filter_by(traveler=traveler.id).first()
+                        if ticket:
+                            payed = data["Body"]["stkCallback"]["CallbackMetadata"]["Item"][0]["Value"]
+                            if ticket.balance > payed:
+                                ticket.balance -= payed
+                            elif ticket.balance == payed:
+                                ticket.balance = 0
+                                ticket.payed = True
+                            else:
+                                traveler.outstanding = payed - ticket.balance
+                                ticket.balance = 0
+                            db.session.commit()
+                    #compare number and the ticket number and then set found ticket to payed if the ammount is
+                    # correct, else reduce ammount and wait for balance
+                    #set ticket to payed here
 
     message = {
         "ResponseCode": "00000000",
@@ -668,17 +688,37 @@ def mpesa_hook():
 @app.route("/ticket/<seat_number>")
 @login_required
 def ticket(seat_number):
+    #TODO if seat is not payed for in 1 minute, its taken away
     traveler = Traveler.query.filter_by(email=current_user.get_id()).first()
-    result = lipa_na_mpesa("254"+traveler.phone[1:], 1)
-    if "ResponseCode" not in result:
-        return redirect("/dissapointment/problem making payment")
-    elif int(result["ResponseCode"]) != 0:
-        print(result["ResponseCode"])
-        return redirect("/dissapointment/problem making payment")
+    ticket = Ticket.query.filter_by(traveler=traveler.id).first()
+    if ticket:
+        return redirect("/dissapointment/you haven't made your payment yet worth: "+str(ticket.cost))
 
-    #move this code to the hook function
     route_price_service = RoutePriceService.query.filter_by(id=session["route_price_service"]).first()
-    route_price_service.matatu_queue_entry.no_of_vacant_seats -=1
+    paid = False
+    balance = route_price_service.price
+    if traveler.outstanding is None:
+        traveler.outstanding = 0
+    if int(traveler.outstanding) > 0:
+        if traveler.outstanding >= route_price_service.price:
+            traveler.outstanding -= route_price_service.price
+            paid = True
+            balance = 0;
+        else:
+            cost = route_price_service.price - traveler.outstanding
+            balance = cost
+            result = lipa_na_mpesa("254" + traveler.phone[1:], cost)
+            if "ResponseCode" not in result:
+                return redirect("/dissapointment/problem making payment")
+            elif int(result["ResponseCode"]) != 0:
+                print(result["ResponseCode"])
+                return redirect("/dissapointment/problem making payment")
+
+
+
+
+
+    route_price_service.matatu_queue_entry.no_of_vacant_seats -= 1
     db.session.commit()
     service = Service.query.filter_by(name=session["service"]).first()
     #print(service)
@@ -691,6 +731,8 @@ def ticket(seat_number):
                     service_location.lng,
                     None, route_price_service.price,
                     route_price_service.route.number)
+    ticket.payed = paid
+    ticket.balance = balance
     #mark seat at taken
     taken_seat = TakenSeatInstance(seat_number)
     taken_seat.matatu_queue_instance_id = session["matatu_queue_entry_id"]
