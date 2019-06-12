@@ -704,50 +704,50 @@ def ticket(seat_number):
             traveler.outstanding -= route_price_service.price
             paid = True
             balance = 0;
-        else:
-            cost = route_price_service.price - traveler.outstanding
-            balance = cost
-            result = lipa_na_mpesa("254" + traveler.phone[1:], cost)
-            if "ResponseCode" not in result:
-                return redirect("/dissapointment/problem making payment")
-            elif int(result["ResponseCode"]) != 0:
-                print(result["ResponseCode"])
-                return redirect("/dissapointment/problem making payment")
+    else:
+        cost = route_price_service.price - traveler.outstanding
+        balance = cost
+        result = lipa_na_mpesa("254" + traveler.phone[1:], cost)
+        if "ResponseCode" not in result:
+            return redirect("/dissapointment/problem making payment")
+        elif int(result["ResponseCode"]) != 0:
+            print(result["ResponseCode"])
+            return redirect("/dissapointment/problem making payment")
+
+        route_price_service.matatu_queue_entry.no_of_vacant_seats -= 1
+        db.session.commit()
+        service = Service.query.filter_by(name=session["service"]).first()
+        # print(service)
+        service_location = None
+        for location in service.locations:
+            if location.town == session["departure"]:
+                service_location = location
+
+        ticket = Ticket(traveler.id, route_price_service.matatu_queue_entry.matatu.registration, service_location.lat,
+                        service_location.lng,
+                        None, route_price_service.price,
+                        route_price_service.route.number)
+        ticket.payed = paid
+        ticket.balance = balance
+        # mark seat at taken
+        taken_seat = TakenSeatInstance(seat_number)
+        taken_seat.matatu_queue_instance_id = session["matatu_queue_entry_id"]
+        print(session["matatu_queue_entry_id"])
+        db.session.add(taken_seat)
+        # if its the last ticket available then take the matatu off the queue at location
+        taken_seats = TakenSeatInstance.query.filter_by(matatu_queue_instance_id=session["matatu_queue_entry_id"]).all()
+        db.session.add(ticket)
+        if len(taken_seats) == session["no"]:
+            db.session.delete(MatatuQueueInstance.query.filter_by(id=taken_seat.matatu_queue_instance_id))
+            for seat in taken_seats:
+                db.session.delete(seat)
+        db.session.commit()
+
+        return redirect(url_for("history"))
 
 
 
 
-
-    route_price_service.matatu_queue_entry.no_of_vacant_seats -= 1
-    db.session.commit()
-    service = Service.query.filter_by(name=session["service"]).first()
-    #print(service)
-    service_location = None
-    for location in service.locations:
-        if location.town == session["departure"]:
-            service_location = location
-
-    ticket = Ticket(traveler.id, route_price_service.matatu_queue_entry.matatu.registration, service_location.lat,
-                    service_location.lng,
-                    None, route_price_service.price,
-                    route_price_service.route.number)
-    ticket.payed = paid
-    ticket.balance = balance
-    #mark seat at taken
-    taken_seat = TakenSeatInstance(seat_number)
-    taken_seat.matatu_queue_instance_id = session["matatu_queue_entry_id"]
-    print(session["matatu_queue_entry_id"])
-    db.session.add(taken_seat)
-    #if its the last ticket available then take the matatu off the queue at location
-    taken_seats = TakenSeatInstance.query.filter_by(matatu_queue_instance_id=session["matatu_queue_entry_id"]).all()
-    db.session.add(ticket)
-    if len(taken_seats) == session["no"]:
-        db.session.delete(MatatuQueueInstance.query.filter_by(id=taken_seat.matatu_queue_instance_id))
-        for seat in taken_seats:
-            db.session.delete(seat)
-    db.session.commit()
-
-    return redirect(url_for("history"))
 
 
 @app.route("/pick_a_seat/<id>")

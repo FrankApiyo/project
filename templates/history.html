@@ -26,6 +26,11 @@
             <span class="title">{{ ticket.id }}</span>
             <p>From: {{ from_location.town }}</p>
             <p>To: {{ to_location.town }}</p>
+            {% if ticket.paid %}
+                <p>Paid</p>
+            {% else %}
+                <p>Balance: {{ ticket.balance }}</p>
+            {% endif %}
         </li>
     {% endfor %}
     </ul>

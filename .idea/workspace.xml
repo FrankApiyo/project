@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="72693825-717d-4e8c-83ef-df47eafec2d2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/history.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/history.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,11 +33,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="256">
-              <caret line="698" column="39" selection-start-line="698" selection-start-column="39" selection-end-line="698" selection-end-column="39" />
+            <state relative-caret-position="194">
+              <caret line="862" column="35" selection-start-line="862" selection-start-column="28" selection-end-line="862" selection-end-column="35" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -45,11 +45,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/templates/history.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="27" column="45" selection-start-line="27" selection-start-column="45" selection-end-line="27" selection-end-column="45" />
+            <state relative-caret-position="240">
+              <caret line="31" column="45" selection-start-line="31" selection-start-column="45" selection-end-line="31" selection-end-column="45" />
             </state>
           </provider>
         </entry>
@@ -148,9 +148,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>service</find>
-      <find>register_serv</find>
-      <find>service_location</find>
       <find>manage</find>
       <find>manage.html</find>
       <find>payment</find>
@@ -178,6 +175,9 @@
       <find>Trav</find>
       <find>mpesa</find>
       <find>Ticket</find>
+      <find>login</find>
+      <find>account</find>
+      <find>history</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -233,10 +233,10 @@
         <option value="$PROJECT_DIR$/forms.py" />
         <option value="$PROJECT_DIR$/templates/book.html" />
         <option value="$PROJECT_DIR$/templates/maintemplate.html" />
-        <option value="$PROJECT_DIR$/templates/history.html" />
         <option value="$PROJECT_DIR$/lipanampesa.py" />
         <option value="$PROJECT_DIR$/models.py" />
         <option value="$PROJECT_DIR$/app.py" />
+        <option value="$PROJECT_DIR$/templates/history.html" />
       </list>
     </option>
   </component>
@@ -447,12 +447,12 @@
       <workItem from="1560072824774" duration="1139000" />
       <workItem from="1560112125214" duration="265000" />
       <workItem from="1560150589147" duration="13860000" />
-      <workItem from="1560329609072" duration="7813000" />
+      <workItem from="1560329609072" duration="9054000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="263855000" />
+    <option name="totallyTimeSpent" value="265096000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -467,12 +467,12 @@
     <frame x="0" y="-1" width="1366" height="742" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.87096775" visible="true" weight="0.15681818" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.87096775" visible="true" weight="0.15681818" />
       <window_info id="Structure" order="1" sideWeight="0.12903225" side_tool="true" weight="0.25075758" />
       <window_info id="Favorites" order="2" sideWeight="0.5017241" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32956383" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.048465267" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.14862682" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -481,7 +481,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.33764136" />
       <window_info anchor="bottom" id="Database Changes" order="9" weight="0.38933763" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.5848142" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.08239096" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.6009693" />
       <window_info anchor="bottom" id="Database Console" order="13" weight="0.048387095" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -833,13 +833,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/history.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="45" selection-start-line="27" selection-start-column="45" selection-end-line="27" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/my_functions.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -907,11 +900,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="256">
-          <caret line="698" column="39" selection-start-line="698" selection-start-column="39" selection-end-line="698" selection-end-column="39" />
+        <state relative-caret-position="194">
+          <caret line="862" column="35" selection-start-line="862" selection-start-column="28" selection-end-line="862" selection-end-column="35" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/history.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="31" column="45" selection-start-line="31" selection-start-column="45" selection-end-line="31" selection-end-column="45" />
         </state>
       </provider>
     </entry>
