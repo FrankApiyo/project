@@ -18,6 +18,7 @@ from passwordHelper import get_salt
 from passwordHelper import get_hash
 
 from lipanampesa import lipa_na_mpesa
+import json
 
 
 from wtforms import validators
@@ -85,13 +86,13 @@ def add_routes():
 
     locations = service.locations
     NewRoutePriceForm.to_location = SelectField("to location",
-                                choices=[(str(location.id), str(location.town) + ", " + str(location.specific_location))for location in locations],
-                                validators=[validators.DataRequired()]
-                              )
+                                                choices=[(str(location.id), str(location.town) + ", " + str(location.specific_location))for location in locations],
+                                                validators=[validators.DataRequired()]
+                                                )
     NewRoutePriceForm.from_location = SelectField("from location",
-                choices=[(str(location.id), str(location.town) + ", " + str(location.specific_location))for location in locations],
-                validators=[validators.DataRequired()]
-                )
+                                                  choices=[(str(location.id), str(location.town) + ", " + str(location.specific_location))for location in locations],
+                                                  validators=[validators.DataRequired()]
+                                                  )
     form = NewRoutePriceForm(request.form)
 
     if request.method == "GET":
@@ -492,7 +493,7 @@ def manage_matatu(registration, add_or_remove, driver_id):
                                potential_drivers=potential_drivers)
     else:
         return render_template("manage_matatu.html", registration=matatu.registration,
-                           potential_drivers=potential_drivers, matatu_drivers=matatu_drivers)
+                               potential_drivers=potential_drivers, matatu_drivers=matatu_drivers)
 
 
 @app.route("/new_matatu", methods=["POST", "GET"])
@@ -645,13 +646,40 @@ def account():
     return render_template("user_home.html")
 
 
+@app.route("/mpesa_hook", methods=["POST", "GET"])
+def mpesa_hook():
+    #print(str(request.data))
+    data = json.loads(request.data.decode('utf-8'))
+    print(data)
+
+    if "Body" in data:
+        if "stkCallback" in data["Body"]:
+            if "ResultCode" in data["Body"]["stkCallback"]:
+                code = data["Body"]["stkCallback"]["ResultCode"]
+                print("\n\nThe code is "+str(code)+"\n\n")
+
+    message = {
+        "ResponseCode": "00000000",
+        "ResponseDesc": "success"
+    }
+    return json.dumps(message)
+
+
 @app.route("/ticket/<seat_number>")
 @login_required
 def ticket(seat_number):
-    route_price_service = RoutePriceService.query.filter_by(id=session["route_price_service"]).first()
-    #route_price_service.matatu_queue_entry.no_of_vacant_seats -=1
-    db.session.commit()
     traveler = Traveler.query.filter_by(email=current_user.get_id()).first()
+    result = lipa_na_mpesa("254"+traveler.phone[1:], 1)
+    if "ResponseCode" not in result:
+        return redirect("/dissapointment/problem making payment")
+    elif int(result["ResponseCode"]) != 0:
+        print(result["ResponseCode"])
+        return redirect("/dissapointment/problem making payment")
+
+    #move this code to the hook function
+    route_price_service = RoutePriceService.query.filter_by(id=session["route_price_service"]).first()
+    route_price_service.matatu_queue_entry.no_of_vacant_seats -=1
+    db.session.commit()
     service = Service.query.filter_by(name=session["service"]).first()
     #print(service)
     service_location = None
@@ -674,7 +702,7 @@ def ticket(seat_number):
     if len(taken_seats) == session["no"]:
         db.session.delete(MatatuQueueInstance.query.filter_by(id=taken_seat.matatu_queue_instance_id))
         for seat in taken_seats:
-            db.session.delete(taken_seat)
+            db.session.delete(seat)
     db.session.commit()
 
     return redirect(url_for("history"))
@@ -698,15 +726,8 @@ def pick_a_seat(id):
     matatu_queue_entry_id = route_price_service.matatu_queue_entry.id
     taken_seats = TakenSeatInstance.query.filter_by(matatu_queue_instance_id=matatu_queue_entry_id).all()
     for taken_seat in taken_seats:
-        available_seats[taken_seat.seat_number] = True
+        available_seats[taken_seat.seat_number] = False
     session["matatu_queue_entry_id"] = matatu_queue_entry_id
-
-
-    #do mpesa magic here
-    traveler = Traveler.query.filter_by(email=current_user.get_id()).first()
-    #fix this
-    result = lipa_na_mpesa(traveler.phone[-10:], 1)
-
 
     return render_template("pick_a_seat.html", available_seats=available_seats, range=range,
                            seat_numbers=seat_numbers, zip=zip)
@@ -788,7 +809,17 @@ def history():
     #ticket2.id = 8978
     #tickets.append(ticket)
     #tickets.append(ticket2)
-    return render_template("history.html", tickets=tickets)
+    from_locations =[]
+    to_locations = []
+    for ticket in tickets:
+        route = Route.query.filter_by(number=ticket.route).first()
+        from_location = Location.query.filter_by(id=route.from_town_id).first()
+        to_location = Location.query.filter_by(id=route.to_town_id).first()
+        from_locations.append(from_location)
+        to_locations.append(to_location)
+
+    return render_template("history.html", tickets=tickets, from_locations=from_locations, to_locations=to_locations,
+                           zip=zip)
 
 
 @app.route("/dissapointment/<message>")
@@ -857,7 +888,7 @@ def select_matatu():
 def book():
     locations = Location.query.all()
     choices = [(str(location.town), str(location.town)) for location in
-                 locations ]
+               locations ]
     choices = list(set(choices))
     BookSeatForm.departure = SelectField(
         'departure',

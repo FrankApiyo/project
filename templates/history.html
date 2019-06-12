@@ -20,12 +20,12 @@
 {% endblock %}
 {% block body %}
     <ul class="collection">
-    {% for ticket in tickets %}
+    {% for ticket, from_location, to_location in zip(tickets, from_locations, to_locations) %}
         <li>
             <i class="material-icons circle left">folder</i>
             <span class="title">{{ ticket.id }}</span>
-            <p>From: {{ ticket.route.from_location }}</p>
-            <p>To: {{ ticket.route.to_location }}</p>
+            <p>From: {{ from_location.town }}</p>
+            <p>To: {{ to_location.town }}</p>
         </li>
     {% endfor %}
     </ul>
