@@ -29,6 +29,7 @@ from wtforms.fields import SelectField
 #TODO add error pages
 #TODO add relay attack prevetion to documentation
 #TODO remember to add prices for each route on the routes tab
+#TODO register everyone as a traveler
 
 import datetime
 app = Flask(__name__)
@@ -643,7 +644,7 @@ def matrips_manager_login():
 @app.route("/account")
 @login_required
 def account():
-    return render_template("user_home.html")
+    return redirect(url_for("history"))
 
 
 @app.route("/mpesa_hook", methods=["POST", "GET"])
