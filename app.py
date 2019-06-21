@@ -296,7 +296,7 @@ def new_driver():
 
         # TODO add a way to inform user about the following failures
         # TODO add try catch block around the data request operations from the database and inform the user of failures
-        if not pw1 == pw2:
+        if not pw1 != pw2:
             return render_template("new_driver.html", form=form)
         else:
             salt = get_salt()
@@ -353,6 +353,11 @@ def manage_matatu_queue(registration, route_number, location_id, remove):
     matatu = Matatu.query.filter_by(registration=registration).first()
 
     if remove == "-":
+        #check if there are other tables that use this matatu queue entry
+        tacken_seats = TakenSeatInstance.query.filter_by(matatu_queue_instance_id=matatu.matatu_queue_entry.id).all()
+        for tacken_seat in tacken_seats:
+            db.session.delete(tacken_seat)
+
         db.session.delete(matatu.matatu_queue_entry)
 
         db.session.commit()
