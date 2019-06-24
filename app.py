@@ -52,6 +52,7 @@ from forms import NewMatatuForm
 from forms import DriverRegistrationForm
 from forms import ExecRegistrationForm
 from forms import NewRoutePriceForm
+from forms import DriverLoginForm
 
 
 ###helper functions
@@ -74,8 +75,43 @@ def home():
     return "try /login"
 
 
+@app.route("/driver_logout")
+@login_required
+def driver_logout():
+    logout_user()
+    return redirect(url_for("driver_login"))
+
+
+@app.route("/driver_login", methods=["POST", "GET"])
+def driver_login():
+    if current_user.is_authenticated and session["driver_id"]:
+        return redirect(url_for("/driver_dashboard"))
+    else:
+        form = DriverLoginForm(request.form)
+        if request.method == "GET":
+            return render_template("driver_login.html", form=form)
+        elif request.method == 'POST' and form.validate():
+            email = form.email.data
+            password = form.password.data
+            user_password = Driver.query.filter_by(email=email).first().password
+            salt = Driver.query.filter_by(email=email).first().salt
+            if user_password and validate_password(password, salt, user_password):
+                user = User(email)
+                login_user(user)
+                ##TODO depending on who logged in redirect to a different account
+                return redirect(url_for('driver_dash'))
+            else:
+                return redirect(url_for('driver_login'))
+        else:
+            #TODO add error pages
+            return "error page"
+
+
 @app.route("/driver_dashboard")
+@login_required
 def driver_dash():
+    if not session["driver_id"]:
+        redirect(url_for("driver_login"))
     driver = Driver.query.first();
     session["driver_id"] = driver.id
     matatu = Matatu.query.filter_by(driver_id=driver.id).first()
@@ -83,6 +119,7 @@ def driver_dash():
         return redirect("/manage_matatu_queue/"+matatu.registration)
     else:
         return render_template("driver_dash.html", no_matatu=True, driver=driver)
+
 
 @app.route("/add_routes", methods=["POST", "GET"])
 @login_required

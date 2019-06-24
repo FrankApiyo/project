@@ -115,6 +115,10 @@ class ServiceManagerLoginForm(TravelerLoginForm):
                                                                             validators.DataRequired()])
 
 
+class DriverLoginForm(TravelerLoginForm):
+    pass
+
+
 class BookSeatForm(FlaskForm):
     pass
 
