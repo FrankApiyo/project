@@ -75,6 +75,10 @@ def home():
     return "try /login"
 
 
+@app.route("/reports")
+def reports():
+    return "reports"
+
 @app.route("/driver_logout")
 @login_required
 def driver_logout():
