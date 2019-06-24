@@ -73,6 +73,17 @@ def home():
     #check if someone is already logged in and as what
     return "try /login"
 
+
+@app.route("/driver_dashboard")
+def driver_dash():
+    driver = Driver.query.first();
+    session["driver_id"] = driver.id
+    matatu = Matatu.query.filter_by(driver_id=driver.id).first()
+    if matatu:
+        return redirect("/manage_matatu_queue/"+matatu.registration)
+    else:
+        return render_template("driver_dash.html", no_matatu=True, driver=driver)
+
 @app.route("/add_routes", methods=["POST", "GET"])
 @login_required
 def add_routes():
@@ -227,6 +238,7 @@ def new_exec():
         position = form.position.data
         phone = form.phone.data
 
+
         # TODO add a way to inform user about the following failures
         # TODO add try catch block around the data request operations from the database and inform the user of failures
         if not pw1 == pw2:
@@ -296,7 +308,7 @@ def new_driver():
 
         # TODO add a way to inform user about the following failures
         # TODO add try catch block around the data request operations from the database and inform the user of failures
-        if not pw1 != pw2:
+        if pw1 != pw2:
             return render_template("new_driver.html", form=form)
         else:
             salt = get_salt()
@@ -343,8 +355,14 @@ def manage_drivers():
 def manage_matatu_queue(registration, route_number, location_id, remove):
     # this prevents other users form loging in to the wrong parts of the app
     service = None
+    driver = None
     if session["service_name"]:
         service = Service.query.filter_by(name=session["service_name"]).first()
+    if session["driver_id"]:
+        driver = Driver.query.filter_by(id=session["driver_id"]).first()
+        matatu = Matatu.query.filter_by(driver_id=driver.id).first()
+        service = Service.query.filter_by(name=matatu.matatu_service).first()
+        session["service_name"] = None
     else:
         redirect(url_for("login"))
     if not service:
@@ -354,6 +372,7 @@ def manage_matatu_queue(registration, route_number, location_id, remove):
 
     if remove == "-":
         #check if there are other tables that use this matatu queue entry
+        print("\n\n"+str(matatu.matatu_queue_entry)+"\n\n")
         tacken_seats = TakenSeatInstance.query.filter_by(matatu_queue_instance_id=matatu.matatu_queue_entry.id).all()
         for tacken_seat in tacken_seats:
             db.session.delete(tacken_seat)
@@ -362,6 +381,10 @@ def manage_matatu_queue(registration, route_number, location_id, remove):
 
         db.session.commit()
         locations = service.locations
+        #print("\n\n"+str(driver)+"\n\n")
+        if driver:
+            return render_template("driver_dash.html", registration=matatu.registration, locations=locations,
+                                driver=driver)
         return render_template("manage_matatu_queue.html", registration=matatu.registration, locations=locations)
 
     if location_id and not route_number:
@@ -376,6 +399,10 @@ def manage_matatu_queue(registration, route_number, location_id, remove):
                 if route.from_town_id == location.id:
                     routes_from_location.append(route)
                     to_towns.append(Location.query.filter_by(id=route.to_town_id).first())
+            if driver:
+                return render_template("driver_dash.html", registration=matatu.registration,
+                                       routes_from_location=routes_from_location, to_towns=to_towns, zip=zip,
+                                       location_id=location_id, driver=driver)
             return render_template("manage_matatu_queue.html", registration=matatu.registration,
                                    routes_from_location=routes_from_location, to_towns=to_towns, zip=zip,
                                    location_id=location_id)
@@ -383,6 +410,10 @@ def manage_matatu_queue(registration, route_number, location_id, remove):
         #add matatu to queue at location and at route
         matatu_queue_entry = MatatuQueueInstance.query.filter_by(matatu_registration=registration).first()
         if(matatu_queue_entry):
+            if(driver):
+                return render_template("driver_dash.html", registration=matatu.registration,
+                                       entry=matatu.matatu_queue_entry, location_id=location_id,
+                                       route_number=route_number, driver=driver)
             return render_template("manage_matatu_queue.html", registration=matatu.registration,
                                    entry=matatu.matatu_queue_entry, location_id=location_id, route_number=route_number)
         matatu_queue_entry = MatatuQueueInstance(matatu.seats)
@@ -395,6 +426,10 @@ def manage_matatu_queue(registration, route_number, location_id, remove):
         matatu_queue_entry.matatu_registration = matatu.registration
         db.session.add(matatu_queue_entry)
         db.session.commit()
+        if(driver):
+            return render_template("driver_dash.html", registration=matatu.registration,
+                                   entry=matatu.matatu_queue_entry, location_id=location_id,
+                                   route_number=route_number, driver=driver)
         return render_template("manage_matatu_queue.html", registration=matatu.registration,
                                entry=matatu.matatu_queue_entry, location_id=location_id, route_number=route_number)
 
@@ -406,6 +441,10 @@ def manage_matatu_queue(registration, route_number, location_id, remove):
         route_price_service = RoutePriceService.query.filter_by(
             id=matatu.matatu_queue_entry.route_price_service_id).first()
         route = route_price_service.route
+        if(driver):
+            return render_template("driver_dash.html", registration=matatu.registration,
+                                   entry=matatu.matatu_queue_entry, route_number=route.number,
+                                   location_id=route.from_town_id, driver=driver)
         return render_template("manage_matatu_queue.html", registration=matatu.registration,
                                entry=matatu.matatu_queue_entry, route_number=route.number,
                                location_id=route.from_town_id)
@@ -413,6 +452,9 @@ def manage_matatu_queue(registration, route_number, location_id, remove):
     else:
         #show list of locations to add matatu queue instance
         locations = service.locations
+        if(driver):
+            return render_template("driver_dash.html", registration=matatu.registration, locations=locations,
+                                   driver=driver)
         return render_template("manage_matatu_queue.html", registration=matatu.registration, locations=locations)
 
 

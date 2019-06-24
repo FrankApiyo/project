@@ -31,7 +31,7 @@ class TravelerRegistrationForm(FlaskForm):
     middle_name = StringField("middle_name", validators=[validators.regexp('[a-zA-Z]+', message="first name not "
                                                                                                  "valid"), validators.DataRequired()])
     phone = StringField("phone", validators=[validators.regexp('[0-9]+', message="phone number not valid"),
-                                             validators.DataRequired(),
+                                             validators.DataRequired(message="phone number required"),
                                              validators.length(min=10, max=10, message="phone "
                                                                                        "number "
                                                                                        "must "
