@@ -4,6 +4,9 @@ from flask import url_for
 from flask import redirect
 from flask import request
 from flask import session
+from flask import make_response
+from flask import send_file
+from PyPDF2 import PdfFileMerger
 from flask_sqlalchemy import SQLAlchemy
 from config import DevConfig
 from flask_migrate import Migrate
@@ -19,6 +22,7 @@ from passwordHelper import get_hash
 
 from lipanampesa import lipa_na_mpesa
 import json
+import pdfkit
 
 
 from wtforms import validators
@@ -77,7 +81,64 @@ def home():
 
 @app.route("/reports")
 def reports():
-    return "reports"
+    service = None
+    if (session["service_name"]):
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        render_template("/login")
+
+    matatus = service.matatus.all()
+    rendered = render_template("matatu_report.html", matatus=matatus)
+
+    #pdf = pdfkit.from_string(rendered, False)
+    pdfkit.from_string(rendered, "one.pdf")
+
+    drivers = service.drivers
+    # print(drivers[0].services.all())
+    rendered = render_template("driver_reports.html", drivers=drivers)
+    pdfkit.from_string(rendered, "two.pdf")
+
+    locations = service.locations
+    rendered = render_template("locations_report.html", locations=locations)
+    pdfkit.from_string(rendered, "three.pdf")
+
+    execs = service.execs
+    rendered = render_template("execs_report.html", execs=execs)
+    pdfkit.from_string(rendered, "four.pdf")
+
+    route_prices = service.route_prices.all()
+    from_locations = []
+    to_locations = []
+    for route_price in route_prices:
+        from_location = Location.query.filter_by(id=route_price.route.from_town_id).first()
+        from_locations.append(from_location)
+        to_location = Location.query.filter_by(id=route_price.route.to_town_id).first()
+        to_locations.append(to_location)
+
+    print(route_prices)
+    rendered = render_template("routes_report.html", route_price_services=route_prices, from_locations=from_locations,
+                               to_locations=to_locations, zip=zip)
+    pdfkit.from_string(rendered, "five.pdf")
+
+    pdf = pdfkit.from_string(rendered, False)
+
+    pdfs = ['one.pdf', 'two.pdf', 'three.pdf', 'four.pdf', "five.pdf"]
+
+    merger = PdfFileMerger()
+
+    for pdf in pdfs:
+        merger.append(pdf)
+
+    merger.write("result.pdf")
+    merger.close()
+
+    try:
+        return send_file('result.pdf',
+                         attachment_filename='report.pdf')
+    except Exception as e:
+        #TODO don't you dare show the user such an error
+        return str(e)
+
 
 @app.route("/driver_logout")
 @login_required
@@ -185,6 +246,39 @@ def add_routes():
         return render_template("new_route.html", form=form)
 
 
+@app.route("/routes_report")
+@login_required
+def routes_report():
+    service = None
+    if session["service_name"]:
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
+
+    route_prices = service.route_prices.all()
+    from_locations = []
+    to_locations = []
+    for route_price in route_prices:
+        from_location = Location.query.filter_by(id=route_price.route.from_town_id).first()
+        from_locations.append(from_location)
+        to_location = Location.query.filter_by(id=route_price.route.to_town_id).first()
+        to_locations.append(to_location)
+
+    print(route_prices)
+    rendered = render_template("routes_report.html", route_price_services=route_prices, from_locations=from_locations,
+                           to_locations=to_locations, zip=zip)
+
+    pdf = pdfkit.from_string(rendered, False)
+
+    response = make_response(pdf)
+    response.headers["Content-Type"] = "application/pdf"
+    response.headers["Content-Disposition"] = "inline; filename=routes.pdf"
+
+    return response
+
+
 @app.route("/routes")
 @login_required
 def routes():
@@ -236,6 +330,29 @@ def add_location(lat, lng, specific_location, town):
     return render_template("add_location.html")
 
 
+@app.route("/location_report")
+@login_required
+def location_report():
+    service = None
+    if session["service_name"]:
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
+
+    locations = service.locations
+    rendered = render_template("locations_report.html", locations=locations)
+
+    pdf = pdfkit.from_string(rendered, False)
+
+    response = make_response(pdf)
+    response.headers["Content-Type"] = "application/pdf"
+    response.headers["Content-Disposition"] = "inline; filename=locations.pdf"
+
+    return response
+
+
 @app.route("/manage_locations")
 @login_required
 def manage_locations():
@@ -250,6 +367,7 @@ def manage_locations():
 
     locations = service.locations
     return render_template("locations.html", locations=locations)
+
 
 @app.route("/new_exec", methods=["POST", "GET"])
 @login_required
@@ -302,6 +420,30 @@ def new_exec():
         # this means that the form did not validate
         # TODO remember to add flash messages telling user why form did not validate
         return render_template("new_driver.html", form=form)
+
+
+@app.route("/execs_report")
+@login_required
+def execs_report():
+    service = None
+    if session["service_name"]:
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
+
+    execs = service.execs
+    rendered = render_template("execs_report.html", execs=execs)
+
+    pdf = pdfkit.from_string(rendered, False)
+
+    response = make_response(pdf)
+    response.headers["Content-Type"] = "application/pdf"
+    response.headers["Content-Disposition"] = "inline; filename=execs.pdf"
+
+    return response
+
 
 @app.route("/manage_execs")
 @login_required
@@ -371,6 +513,31 @@ def new_driver():
         return render_template("new_driver.html", form=form)
 
 
+@app.route("/driver_reports")
+@login_required
+def driver_reports():
+    # this prevents other users form loging in to the wrong parts of the app
+    service = None
+    if (session["service_name"]):
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        redirect(url_for("login"))
+    if not service:
+        redirect(url_for("login"))
+
+    drivers = service.drivers
+    # print(drivers[0].services.all())
+    rendered = render_template("driver_reports.html", drivers=drivers)
+
+    pdf = pdfkit.from_string(rendered, False)
+
+    response = make_response(pdf)
+    response.headers["Content-Type"] = "application/pdf"
+    response.headers["Content-Disposition"] = "inline; filename=drivers.pdf"
+
+    return response
+
+
 @app.route("/manage_drivers")
 @login_required
 def manage_drivers():
@@ -425,7 +592,7 @@ def manage_matatu_queue(registration, route_number, location_id, remove):
         #print("\n\n"+str(driver)+"\n\n")
         if driver:
             return render_template("driver_dash.html", registration=matatu.registration, locations=locations,
-                                driver=driver)
+                                   driver=driver)
         return render_template("manage_matatu_queue.html", registration=matatu.registration, locations=locations)
 
     if location_id and not route_number:
@@ -613,6 +780,25 @@ def new_matatu():
         #this means that the form did not validate
         #TODO remember to add flash messages telling user why form did not validate
         return render_template("new_matatu.html", form=form)
+
+@app.route("/matatu_report")
+@login_required
+def matatu_report():
+    if (session["service_name"]):
+        service = Service.query.filter_by(name=session["service_name"]).first()
+    else:
+        render_template("/login")
+
+    matatus = service.matatus.all()
+    rendered = render_template("matatu_report.html", matatus=matatus)
+
+    pdf = pdfkit.from_string(rendered, False)
+
+    response = make_response(pdf)
+    response.headers["Content-Type"] = "application/pdf"
+    response.headers["Content-Disposition"] = "inline; filename=matatus.pdf"
+
+    return response
 
 
 @app.route("/manage")

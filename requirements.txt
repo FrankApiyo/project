@@ -22,9 +22,11 @@ Mako==1.0.9
 MarkupSafe==1.1.0
 more-itertools==7.0.0
 pathlib2==2.3.3
+pdfkit==0.6.1
 pluggy==0.9.0
 psycopg2-binary==2.8.2
 py==1.8.0
+PyPDF2==1.26.0
 pytest==4.4.1
 python-dateutil==2.8.0
 python-editor==1.0.4
