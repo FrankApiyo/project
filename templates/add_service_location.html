@@ -64,7 +64,8 @@
           });
         } else {
           // Browser doesn't support Geolocation
-            //TODO tell the user he/she can't proceede without geolocation support
+            //TODOne tell the user he/she can't proceede without geolocation support
+            alert("your browser does not support geolocation")
           map = null
         }
       }
@@ -74,7 +75,12 @@
       };
 
       function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        //TODO what to do here?
+          infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+        //TODOne what to do here?
       }
     </script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgf9cE5IODiI7B8A93TCKTmV1ybw3ZPTs&callback=initMap" async defer></script>

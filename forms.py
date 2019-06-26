@@ -15,15 +15,17 @@ class TravelerRegistrationForm(FlaskForm):
     password = PasswordField('password', validators=[validators.DataRequired(),validators.Length(min=8,
                                                                                                  message="Please "
                                                                                                          "choose a "
-                                                                                                         "passwordof "
+                                                                                                         "password of "
                                                                                                          "at least 8 "
                                                                                                          "characters")])
     password2 = PasswordField('password2', validators=[validators.EqualTo('password',message='Passwords must match'), validators.DataRequired()])
     birthday = DateField("birthday", validators=[validators.DataRequired()])
     id = StringField("id", validators=[validators.regexp('[0-9]+', message="ID not valid"),
-                                       validators.DataRequired(), validators.length(min=1, max=15, message="enter a "
-                                                                                                           "correct id "
-                                                                                                           "number")])
+                                       validators.DataRequired(), validators.length(min=1, max=15, message="ID "
+                                                                                                           "number "
+                                                                                                           "can only "
+                                                                                                           "contain "
+                                                                                                           "digits")])
     first_name = StringField("first_name", validators=[validators.regexp('[a-zA-Z]+', message="first name not "
                                                                                               "valid"), validators.DataRequired()])
     last_name = StringField("last_name", validators=[validators.regexp('[a-zA-Z]+', message="first name not valid"),
@@ -52,8 +54,8 @@ class DriverRegistrationForm(TravelerRegistrationForm):
 class ExecRegistrationForm(TravelerRegistrationForm):
     # TODO find out how to get and store the signature of execs
     #TODO update regular expression to allow spaces in position name
-    position = StringField("position", validators=[validators.regexp('[a-zA-Z]+', message="first name not "
-                                                                                          "valid"),
+    position = StringField("position", validators=[validators.regexp('[a-zA-Z]', message="position needs to be an "
+                                                                                         "acronym with no spaces"),
                                                    validators.DataRequired()])
 
 
@@ -64,7 +66,7 @@ class ServiceRegistrationForm(FlaskForm):
     password = PasswordField('password', validators=[validators.DataRequired(), validators.Length(min=8,
                                                                                                   message="Please "
                                                                                                           "choose a "
-                                                                                                          "passwordof "
+                                                                                                          "password of "
                                                                                                           "at least 8 "
                                                                                                           "characters")])
     password2 = PasswordField('password2', validators=[validators.EqualTo('password', message='Passwords must match'),

@@ -1,6 +1,6 @@
 {% extends "manage_execs.html" %}
 {% block body %}
-    <div class="row">
+    <div class="row container">
         {% from "_formhelper.html" import render_field %}
         <form method='POST' action="{{ url_for('new_exec') }}">
             <dl>

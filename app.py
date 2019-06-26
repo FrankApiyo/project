@@ -104,22 +104,22 @@ def reports():
         render_template("/login")
 
     matatus = service.matatus.all()
-    rendered = render_template("matatu_report.html", matatus=matatus)
+    rendered = render_template("matatu_report.html", matatus=matatus, title=False, service=service)
 
     #pdf = pdfkit.from_string(rendered, False)
     pdfkit.from_string(rendered, "one.pdf")
 
     drivers = service.drivers
     # print(drivers[0].services.all())
-    rendered = render_template("driver_reports.html", drivers=drivers)
+    rendered = render_template("driver_reports.html", drivers=drivers, title=False, service=service)
     pdfkit.from_string(rendered, "two.pdf")
 
     locations = service.locations
-    rendered = render_template("locations_report.html", locations=locations)
+    rendered = render_template("locations_report.html", locations=locations, title=False, service=service)
     pdfkit.from_string(rendered, "three.pdf")
 
     execs = service.execs
-    rendered = render_template("execs_report.html", execs=execs)
+    rendered = render_template("execs_report.html", execs=execs, title=False, service=service)
     pdfkit.from_string(rendered, "four.pdf")
 
     route_prices = service.route_prices.all()
@@ -133,7 +133,7 @@ def reports():
 
     print(route_prices)
     rendered = render_template("routes_report.html", route_price_services=route_prices, from_locations=from_locations,
-                               to_locations=to_locations, zip=zip)
+                               to_locations=to_locations, zip=zip, title=False, service=service)
     pdfkit.from_string(rendered, "five.pdf")
 
     pdf = pdfkit.from_string(rendered, False)
@@ -287,7 +287,7 @@ def routes_report():
 
     print(route_prices)
     rendered = render_template("routes_report.html", route_price_services=route_prices, from_locations=from_locations,
-                           to_locations=to_locations, zip=zip)
+                           to_locations=to_locations, zip=zip, title=True, service=service)
 
     pdf = pdfkit.from_string(rendered, False)
 
@@ -361,7 +361,7 @@ def location_report():
         redirect(url_for("login"))
 
     locations = service.locations
-    rendered = render_template("locations_report.html", locations=locations)
+    rendered = render_template("locations_report.html", locations=locations,  title=True, service=service)
 
     pdf = pdfkit.from_string(rendered, False)
 
@@ -453,7 +453,7 @@ def execs_report():
         redirect(url_for("login"))
 
     execs = service.execs
-    rendered = render_template("execs_report.html", execs=execs)
+    rendered = render_template("execs_report.html", execs=execs,  title=True, service=service)
 
     pdf = pdfkit.from_string(rendered, False)
 
@@ -546,7 +546,7 @@ def driver_reports():
 
     drivers = service.drivers
     # print(drivers[0].services.all())
-    rendered = render_template("driver_reports.html", drivers=drivers)
+    rendered = render_template("driver_reports.html", drivers=drivers,  title=True, service=service)
 
     pdf = pdfkit.from_string(rendered, False)
 
@@ -809,7 +809,7 @@ def matatu_report():
         render_template("/login")
 
     matatus = service.matatus.all()
-    rendered = render_template("matatu_report.html", matatus=matatus)
+    rendered = render_template("matatu_report.html", matatus=matatus,  title=True, service=service)
 
     pdf = pdfkit.from_string(rendered, False)
 

@@ -2,15 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72693825-717d-4e8c-83ef-df47eafec2d2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/driver_help.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/help_user.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/manager_manual.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/five.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/five.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/_menuhelper.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/_menuhelper.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/four.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/four.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/one.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/one.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/result.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/result.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/add_location.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/add_location.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/add_service_location.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/add_service_location.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/driver_dash.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/driver_dash.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/manage.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/manage.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/driver_reports.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/driver_reports.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/execs_report.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/execs_report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/locations_report.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/locations_report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/matatu_report.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/matatu_report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/new_driver.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/new_driver.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/new_exec.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/new_exec.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/new_matatu.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/new_matatu.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/new_route.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/new_route.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/routes_report.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/routes_report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/services.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/services.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/three.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/three.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/two.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/two.pdf" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -40,11 +53,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="1003" column="24" selection-start-line="1003" selection-start-column="17" selection-end-line="1003" selection-end-column="24" />
+            <state relative-caret-position="364">
+              <caret line="152" column="57" selection-start-line="152" selection-start-column="57" selection-end-line="152" selection-end-column="57" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -52,41 +65,65 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/forms.py">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/new_route.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="125" column="31" lean-forward="true" selection-start-line="125" selection-start-column="31" selection-end-line="125" selection-end-column="31" />
-              <folding>
-                <element signature="e#0#31#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="30">
+              <caret line="2" column="29" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/driver_dash.html">
+        <entry file="file://$PROJECT_DIR$/templates/new_exec.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="2" column="19" lean-forward="true" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/new_driver.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="300">
+              <caret line="20" column="14" lean-forward="true" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/routes_report.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="30">
+              <caret line="2" column="4" lean-forward="true" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/execs_report.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="75">
-              <caret line="5" column="46" selection-start-line="5" selection-start-column="46" selection-end-line="5" selection-end-column="46" />
+              <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/help_user.html">
+        <entry file="file://$PROJECT_DIR$/templates/driver_reports.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="1" selection-start-line="1" selection-end-line="3" selection-end-column="31" />
+            <state relative-caret-position="75">
+              <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/driver_help.html">
+        <entry file="file://$PROJECT_DIR$/templates/matatu_report.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="420">
-              <caret line="28" column="17" selection-start-line="28" selection-start-column="17" selection-end-line="28" selection-end-column="17" />
+            <state relative-caret-position="30">
+              <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -104,7 +141,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Service</find>
       <find>manage_matat</find>
       <find>remove</find>
       <find>driver</find>
@@ -122,7 +158,6 @@
       <find>manage_execs</find>
       <find>/route</find>
       <find>.pdf</find>
-      <find>report</find>
       <find>routes</find>
       <find>reports</find>
       <find>login</find>
@@ -134,6 +169,8 @@
       <find>driver_dash</find>
       <find>driver_help</find>
       <find>lipa_na</find>
+      <find>title=True</find>
+      <find>report</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -145,12 +182,8 @@
         <option value="$PROJECT_DIR$/templates/dissapointment.html" />
         <option value="$PROJECT_DIR$/templates/user_home.html" />
         <option value="$PROJECT_DIR$/templates/register_manager.html" />
-        <option value="$PROJECT_DIR$/templates/add_service_location.html" />
         <option value="$PROJECT_DIR$/templates/manager_login.html" />
         <option value="$PROJECT_DIR$/user.py" />
-        <option value="$PROJECT_DIR$/templates/new_matatu.html" />
-        <option value="$PROJECT_DIR$/templates/new_exec.html" />
-        <option value="$PROJECT_DIR$/templates/new_route.html" />
         <option value="$PROJECT_DIR$/templates/manage_matatu_route.html" />
         <option value="$PROJECT_DIR$/templates/manage_matatu_routes.html" />
         <option value="$PROJECT_DIR$/templates/new_matatu_queue_instance.html" />
@@ -162,8 +195,6 @@
         <option value="$PROJECT_DIR$/templates/manage_payment.html" />
         <option value="$PROJECT_DIR$/templates/register.html" />
         <option value="$PROJECT_DIR$/templates/register_service.html" />
-        <option value="$PROJECT_DIR$/templates/add_location.html" />
-        <option value="$PROJECT_DIR$/templates/services.html" />
         <option value="$PROJECT_DIR$/keys.py" />
         <option value="$PROJECT_DIR$/my_functions.py" />
         <option value="$PROJECT_DIR$/templates/book.html" />
@@ -171,28 +202,34 @@
         <option value="$PROJECT_DIR$/models.py" />
         <option value="$PROJECT_DIR$/templates/history.html" />
         <option value="$PROJECT_DIR$/config.py" />
-        <option value="$PROJECT_DIR$/templates/new_driver.html" />
         <option value="$PROJECT_DIR$/templates/driver_login.html" />
         <option value="$PROJECT_DIR$/templates/reports.html" />
-        <option value="$PROJECT_DIR$/templates/matatu_report.html" />
         <option value="$PROJECT_DIR$/templates/maintemplate.html" />
         <option value="$PROJECT_DIR$/templates/print_drivers.html" />
         <option value="$PROJECT_DIR$/templates/manage_drivers.html" />
-        <option value="$PROJECT_DIR$/templates/driver_reports.html" />
-        <option value="$PROJECT_DIR$/templates/locations_report.html" />
         <option value="$PROJECT_DIR$/templates/locations.html" />
-        <option value="$PROJECT_DIR$/templates/execs_report.html" />
         <option value="$PROJECT_DIR$/templates/manage_execs.html" />
         <option value="$PROJECT_DIR$/templates/routes.html" />
-        <option value="$PROJECT_DIR$/templates/routes_report.html" />
         <option value="$PROJECT_DIR$/templates/manage.html" />
         <option value="$PROJECT_DIR$/templates/manager_manual.html" />
         <option value="$PROJECT_DIR$/templates/_menuhelper.html" />
         <option value="$PROJECT_DIR$/templates/help_user.html" />
-        <option value="$PROJECT_DIR$/app.py" />
-        <option value="$PROJECT_DIR$/templates/driver_dash.html" />
         <option value="$PROJECT_DIR$/templates/driver_help.html" />
+        <option value="$PROJECT_DIR$/templates/add_location.html" />
+        <option value="$PROJECT_DIR$/templates/add_service_location.html" />
+        <option value="$PROJECT_DIR$/templates/driver_dash.html" />
+        <option value="$PROJECT_DIR$/templates/services.html" />
         <option value="$PROJECT_DIR$/forms.py" />
+        <option value="$PROJECT_DIR$/templates/matatu_report.html" />
+        <option value="$PROJECT_DIR$/templates/routes_report.html" />
+        <option value="$PROJECT_DIR$/templates/execs_report.html" />
+        <option value="$PROJECT_DIR$/templates/locations_report.html" />
+        <option value="$PROJECT_DIR$/templates/driver_reports.html" />
+        <option value="$PROJECT_DIR$/templates/new_matatu.html" />
+        <option value="$PROJECT_DIR$/templates/new_route.html" />
+        <option value="$PROJECT_DIR$/templates/new_exec.html" />
+        <option value="$PROJECT_DIR$/templates/new_driver.html" />
+        <option value="$PROJECT_DIR$/app.py" />
       </list>
     </option>
   </component>
@@ -414,14 +451,14 @@
       <workItem from="1561514676064" duration="719000" />
       <workItem from="1561526684882" duration="1084000" />
       <workItem from="1561544112476" duration="5693000" />
-      <workItem from="1561555022939" duration="1805000" />
+      <workItem from="1561555022939" duration="4037000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="301165000" />
+    <option name="totallyTimeSpent" value="303397000" />
   </component>
-  <component name="TodoView">
+  <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
       <is-autoscroll-to-source value="true" />
     </todo-panel>
@@ -434,21 +471,21 @@
     <frame x="0" y="-1" width="1366" height="742" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.87096775" weight="0.6272727" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.87096775" weight="0.37954545" />
       <window_info id="Structure" order="1" sideWeight="0.12903225" side_tool="true" weight="0.25075758" />
       <window_info id="Favorites" order="2" sideWeight="0.5017241" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32956383" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.12116317" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.1825525" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Docker" order="6" show_stripe_button="false" />
-      <window_info anchor="bottom" id="TODO" order="7" weight="0.3279483" />
+      <window_info anchor="bottom" id="TODO" order="7" weight="0.52342486" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.33764136" />
       <window_info anchor="bottom" id="Database Changes" order="9" weight="0.38933763" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.95153475" />
+      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.048465267" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.8352181" />
       <window_info anchor="bottom" id="Database Console" order="13" weight="0.048387095" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -529,13 +566,6 @@
     <SUITE FILE_PATH="coverage/untitled1$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1561556289921" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/venv/lib/python3.5/site-packages/sqlalchemy/util/langhelpers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="854" selection-start-line="854" selection-end-line="854" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/migrations/versions/17c80d5fc869_.py" />
     <entry file="file://$PROJECT_DIR$/user.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -555,27 +585,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="23" lean-forward="true" selection-start-line="3" selection-start-column="23" selection-end-line="3" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/new_matatu.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" column="14" lean-forward="true" selection-end-line="13" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/add_service_location.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="387">
-          <caret line="71" column="59" lean-forward="true" selection-start-line="71" selection-start-column="59" selection-end-line="71" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/new_route.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="58" selection-start-line="4" selection-start-column="58" selection-end-line="4" selection-end-column="58" />
         </state>
       </provider>
     </entry>
@@ -628,13 +637,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/add_location.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-333">
-          <caret line="141" column="27" selection-start-line="141" selection-start-column="27" selection-end-line="141" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -666,13 +668,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/services.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1335">
-          <caret line="89" column="74" selection-start-line="89" selection-start-column="74" selection-end-line="89" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lipanampesa.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -697,13 +692,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/new_driver.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="54" selection-start-line="3" selection-start-column="54" selection-end-line="3" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/manage_matatu_queue.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -718,31 +706,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="315" column="11" selection-start-line="315" selection-start-column="6" selection-end-line="315" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/new_exec.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="14" lean-forward="true" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/reports.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
           <caret line="2" column="14" lean-forward="true" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/matatu_report.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="11" selection-start-line="1" selection-start-column="11" selection-end-line="1" selection-end-column="11" />
         </state>
       </provider>
     </entry>
@@ -753,13 +720,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/locations_report.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="14" lean-forward="true" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/locations.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -767,31 +727,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/driver_reports.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret lean-forward="true" selection-end-line="2" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/execs_report.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="14" lean-forward="true" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/manage_execs.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
           <caret line="5" column="82" selection-start-line="5" selection-start-column="82" selection-end-line="5" selection-end-column="82" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/routes_report.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="30">
-          <caret line="2" column="11" selection-start-line="2" selection-start-column="11" selection-end-line="2" selection-end-column="11" />
         </state>
       </provider>
     </entry>
@@ -854,13 +793,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/driver_dash.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="46" selection-start-line="5" selection-start-column="46" selection-end-line="5" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/help_user.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="15">
@@ -875,22 +807,127 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app.py">
+    <entry file="file://$PROJECT_DIR$/static/js/jquery-3.3.1.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="1003" column="24" selection-start-line="1003" selection-start-column="17" selection-end-line="1003" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="15">
+          <caret line="752" column="31" selection-start-line="752" selection-start-column="31" selection-end-line="752" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/add_service_location.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="82" column="16" selection-start-line="82" selection-start-column="16" selection-end-line="82" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/add_location.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="73">
+          <caret line="115" column="12" selection-start-line="115" selection-start-column="12" selection-end-line="119" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/driver_dash.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" column="23" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/services.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="94">
+          <caret line="80" column="14" selection-start-line="80" selection-start-column="14" selection-end-line="80" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="56">
+          <caret line="214" column="5" selection-start-line="214" selection-start-column="5" selection-end-line="214" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/forms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="125" column="31" lean-forward="true" selection-start-line="125" selection-start-column="31" selection-end-line="125" selection-end-column="31" />
+        <state relative-caret-position="1020">
+          <caret line="68" column="116" selection-start-line="68" selection-start-column="116" selection-end-line="68" selection-end-column="116" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/matatu_report.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/routes_report.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="4" lean-forward="true" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/execs_report.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/locations_report.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/new_matatu.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="31" lean-forward="true" selection-start-line="2" selection-start-column="31" selection-end-line="2" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/new_route.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="29" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/new_exec.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="19" lean-forward="true" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/new_driver.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="14" lean-forward="true" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/driver_reports.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="152" column="57" selection-start-line="152" selection-start-column="57" selection-end-line="152" selection-end-column="57" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
           </folding>
         </state>
       </provider>

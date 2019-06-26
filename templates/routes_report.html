@@ -1,3 +1,7 @@
 {% extends "routes.html" %}
 {% block menu %}
+    {% if title  %}
+        <h1>ROUTES CURRENTLY REGISTERED ON MATRIPS</h1>
+        <h2>{{ service.name }}</h2>
+    {% endif %}
 {% endblock %}

@@ -1,3 +1,7 @@
 {% extends "manage.html" %}
 {% block menu %}
+    {% if title %}
+        <h1>MATATUS CURRENTLY REGISTERED ON MATRIPS</h1>
+        <h2>{{ service.name }}</h2>
+    {% endif %}
 {% endblock %}
