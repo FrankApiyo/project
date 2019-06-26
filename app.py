@@ -79,6 +79,22 @@ def home():
     return "try /login"
 
 
+@app.route("/help_user")
+def help_user():
+    return render_template("help_user.html")
+
+
+@app.route("/help")
+def help():
+    return render_template("manager_manual.html")
+
+
+@app.route("/driver_help")
+def driver_help():
+    driver = Driver.query.filter_by(id=session["driver_id"]).first()
+    return render_template("driver_help.html", driver=driver)
+
+
 @app.route("/reports")
 def reports():
     service = None
@@ -150,7 +166,7 @@ def driver_logout():
 @app.route("/driver_login", methods=["POST", "GET"])
 def driver_login():
     if current_user.is_authenticated and session["driver_id"]:
-        return redirect(url_for("/driver_dashboard"))
+        return redirect(url_for("driver_dash"))
     else:
         form = DriverLoginForm(request.form)
         if request.method == "GET":
@@ -158,12 +174,16 @@ def driver_login():
         elif request.method == 'POST' and form.validate():
             email = form.email.data
             password = form.password.data
-            user_password = Driver.query.filter_by(email=email).first().password
-            salt = Driver.query.filter_by(email=email).first().salt
+            driver = Driver.query.filter_by(email=email).first()
+            if not driver:
+                return redirect(url_for('driver_login'))
+            else:
+                user_password = driver.password
+            salt = driver.salt
             if user_password and validate_password(password, salt, user_password):
                 user = User(email)
                 login_user(user)
-                ##TODO depending on who logged in redirect to a different account
+                session["driver_id"] = driver.id
                 return redirect(url_for('driver_dash'))
             else:
                 return redirect(url_for('driver_login'))
@@ -175,10 +195,9 @@ def driver_login():
 @app.route("/driver_dashboard")
 @login_required
 def driver_dash():
-    if not session["driver_id"]:
+    if not "driver_id" in session:
         redirect(url_for("driver_login"))
-    driver = Driver.query.first();
-    session["driver_id"] = driver.id
+    driver = Driver.query.filter_by(id=session["driver_id"]).first();
     matatu = Matatu.query.filter_by(driver_id=driver.id).first()
     if matatu:
         return redirect("/manage_matatu_queue/"+matatu.registration)
@@ -564,9 +583,9 @@ def manage_matatu_queue(registration, route_number, location_id, remove):
     # this prevents other users form loging in to the wrong parts of the app
     service = None
     driver = None
-    if session["service_name"]:
+    if "service_name" in session:
         service = Service.query.filter_by(name=session["service_name"]).first()
-    if session["driver_id"]:
+    if "driver_id" in session:
         driver = Driver.query.filter_by(id=session["driver_id"]).first()
         matatu = Matatu.query.filter_by(driver_id=driver.id).first()
         service = Service.query.filter_by(name=matatu.matatu_service).first()
