@@ -6,16 +6,27 @@
             <dl>
                 {{ render_field(form.email) }}
                 {{ render_field(form.id) }}
-                {{ render_field(form.birthday) }}
+                {{ render_field(form.birthday, id="datepicker") }}
                 {{ render_field(form.password) }}
                 {{ render_field(form.password2) }}
                 {{ render_field(form.first_name) }}
                 {{ render_field(form.middle_name) }}
                 {{ render_field(form.last_name) }}
                 {{ render_field(form.position) }}
+                {{ render_field(form.phone) }}
                 {{ form.hidden_tag() }}
             </dl>
-            <p><input type=submit value='add driver'>
+            <p><input type=submit value='add exec'>
         </form>
     </div>
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#datepicker').datepicker({
+                maxDate: new Date()
+            });
+        });
+    </script>
 {% endblock %}

@@ -3,9 +3,9 @@
 {% endblock %}
 {% block body %}
     <div id="seats" class="container">
-        <ul>
+        <ul class="collection">
             {% for seat_number, available_seat in zip(seat_numbers, available_seats) %}
-                <li>
+                <li class="collection-item">
                     {% if available_seat %}
                     <a href="/ticket/{{ seat_number }}">
                         {% else %}

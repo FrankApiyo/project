@@ -19,7 +19,7 @@ class TravelerRegistrationForm(FlaskForm):
                                                                                                          "at least 8 "
                                                                                                          "characters")])
     password2 = PasswordField('password2', validators=[validators.EqualTo('password',message='Passwords must match'), validators.DataRequired()])
-    birthday = DateField("birthday", validators=[validators.DataRequired()])
+    birthday = StringField("birthday", validators=[validators.DataRequired()])
     id = StringField("id", validators=[validators.regexp('[0-9]+', message="ID not valid"),
                                        validators.DataRequired(), validators.length(min=1, max=15, message="ID "
                                                                                                            "number "
@@ -40,7 +40,7 @@ class TravelerRegistrationForm(FlaskForm):
                                                                                        "contain "
                                                                                        "10 "
                                                                                        "digits "
-                                                                                       "in teh"
+                                                                                       "in length"
                                                                                        "")])
     submit = SubmitField('submit')
     #accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
@@ -71,7 +71,7 @@ class ServiceRegistrationForm(FlaskForm):
                                                                                                           "characters")])
     password2 = PasswordField('password2', validators=[validators.EqualTo('password', message='Passwords must match'),
                                                        validators.DataRequired()])
-    birthday = DateField("birthday", validators=[validators.DataRequired()])
+    birthday = StringField("birthday", validators=[validators.DataRequired()])
     id = StringField("id", validators=[validators.regexp('[0-9]+', message="ID not valid"),
                                        validators.DataRequired(), validators.length(min=1, max=15, message="enter a "
                                                                                                            "correct id "

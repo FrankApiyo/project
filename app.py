@@ -59,6 +59,7 @@ from forms import NewRoutePriceForm
 from forms import DriverLoginForm
 
 
+css = "/home/opiyo/PycharmProjects/untitled1/static/css/materialize.css"
 ###helper functions
 def get_user(email):
     traveler = Traveler.query.filter_by(email=email).first()
@@ -107,20 +108,20 @@ def reports():
     rendered = render_template("matatu_report.html", matatus=matatus, title=False, service=service)
 
     #pdf = pdfkit.from_string(rendered, False)
-    pdfkit.from_string(rendered, "one.pdf")
+    pdfkit.from_string(rendered, "one.pdf", css=css)
 
     drivers = service.drivers
     # print(drivers[0].services.all())
     rendered = render_template("driver_reports.html", drivers=drivers, title=False, service=service)
-    pdfkit.from_string(rendered, "two.pdf")
+    pdfkit.from_string(rendered, "two.pdf", css=css)
 
     locations = service.locations
     rendered = render_template("locations_report.html", locations=locations, title=False, service=service)
-    pdfkit.from_string(rendered, "three.pdf")
+    pdfkit.from_string(rendered, "three.pdf", css=css)
 
     execs = service.execs
     rendered = render_template("execs_report.html", execs=execs, title=False, service=service)
-    pdfkit.from_string(rendered, "four.pdf")
+    pdfkit.from_string(rendered, "four.pdf", css=css)
 
     route_prices = service.route_prices.all()
     from_locations = []
@@ -134,9 +135,9 @@ def reports():
     print(route_prices)
     rendered = render_template("routes_report.html", route_price_services=route_prices, from_locations=from_locations,
                                to_locations=to_locations, zip=zip, title=False, service=service)
-    pdfkit.from_string(rendered, "five.pdf")
+    pdfkit.from_string(rendered, "five.pdf", css=css)
 
-    pdf = pdfkit.from_string(rendered, False)
+    #pdf = pdfkit.from_string(rendered, False)
 
     pdfs = ['one.pdf', 'two.pdf', 'three.pdf', 'four.pdf', "five.pdf"]
 
@@ -289,7 +290,7 @@ def routes_report():
     rendered = render_template("routes_report.html", route_price_services=route_prices, from_locations=from_locations,
                            to_locations=to_locations, zip=zip, title=True, service=service)
 
-    pdf = pdfkit.from_string(rendered, False)
+    pdf = pdfkit.from_string(rendered, False, css=css)
 
     response = make_response(pdf)
     response.headers["Content-Type"] = "application/pdf"
@@ -363,7 +364,7 @@ def location_report():
     locations = service.locations
     rendered = render_template("locations_report.html", locations=locations,  title=True, service=service)
 
-    pdf = pdfkit.from_string(rendered, False)
+    pdf = pdfkit.from_string(rendered, False, css=css)
 
     response = make_response(pdf)
     response.headers["Content-Type"] = "application/pdf"
@@ -417,6 +418,9 @@ def new_exec():
         phone = form.phone.data
 
 
+        print("\n\n\ndo we get here\n\n\n")
+
+
         # TODO add a way to inform user about the following failures
         # TODO add try catch block around the data request operations from the database and inform the user of failures
         if not pw1 == pw2:
@@ -429,6 +433,7 @@ def new_exec():
         if exec:
             #TODO ADD FLASH TELLING THE USER THAT A DRIVER is already registered with that email
             return render_template("new_exec.html", form=form)
+        birthday = datetime.datetime.strptime(birthday, "%b %d, %Y")
         exec = Exec(birthday, position, password, first_name, middle_name, last_name, salt, email, id_num, phone)
         db.session.add(exec)
         exec.services.append(service)
@@ -455,7 +460,7 @@ def execs_report():
     execs = service.execs
     rendered = render_template("execs_report.html", execs=execs,  title=True, service=service)
 
-    pdf = pdfkit.from_string(rendered, False)
+    pdf = pdfkit.from_string(rendered, False, css=css)
 
     response = make_response(pdf)
     response.headers["Content-Type"] = "application/pdf"
@@ -503,6 +508,7 @@ def new_driver():
         pw1 = form.password.data
         pw2 = form.password2.data
         birthday = form.birthday.data
+        print('birthday')
         first_name = form.first_name.data
         middle_name = form.middle_name.data
         last_name = form.last_name.data
@@ -520,6 +526,7 @@ def new_driver():
         if driver:
             #TODO ADD FLASH TELLING THE USER THAT A DRIVER is already registered with that email
             return render_template("new_driver.html", form=form)
+        birthday = datetime.datetime.strptime(birthday, "%b %d, %Y")
         driver = Driver(id_num, birthday, password, first_name, middle_name, last_name, salt, email, phone)
         db.session.add(driver)
         driver.services.append(service)
@@ -548,7 +555,7 @@ def driver_reports():
     # print(drivers[0].services.all())
     rendered = render_template("driver_reports.html", drivers=drivers,  title=True, service=service)
 
-    pdf = pdfkit.from_string(rendered, False)
+    pdf = pdfkit.from_string(rendered, False, css=css)
 
     response = make_response(pdf)
     response.headers["Content-Type"] = "application/pdf"
@@ -811,7 +818,7 @@ def matatu_report():
     matatus = service.matatus.all()
     rendered = render_template("matatu_report.html", matatus=matatus,  title=True, service=service)
 
-    pdf = pdfkit.from_string(rendered, False)
+    pdf = pdfkit.from_string(rendered, False, css=css)
 
     response = make_response(pdf)
     response.headers["Content-Type"] = "application/pdf"
@@ -873,14 +880,14 @@ def register_manager_and_service():
 
         session["service_name"] = service_name
         service = Service(service_name)
+        birthday = datetime.datetime.strptime(birthday, "%b %d, %Y")
         exec = Exec(birthday, exec_position, password, first_name, middle_name, last_name, salt, email, id_num, phone)
         service.execs.append(exec)
         db.session.add(service)
         db.session.commit()
         user = User(email)
         login_user(user)
-
-        return redirect(url_for("matrips_manager_login"))
+        return redirect(url_for("manage"))
 
     else:
         return render_template("register.html", form=form)
@@ -1283,6 +1290,7 @@ def register_traveler():
         user = Traveler.query.filter_by(email=email).first()
         if user:
             return "user already registered with that email"
+        birthday = datetime.datetime.strptime(birthday, "%b %d, %Y")
         traveler = Traveler(id_num, birthday, password, first_name, middle_name, last_name, salt, email, phone)
         db.session.add(traveler)
         db.session.commit()
