@@ -1,4 +1,13 @@
-{% extends "maintemplate.html" %}
+{% extends "maintemplate2.html" %}
+{% block style %}
+    {{ super() }}
+    <style type="text/css">
+        #profile{
+            float: right;
+            padding-right: 1%;
+        }
+    </style>
+{% endblock %}
 {% block menu %}
     <nav>
         <ul class="nav-wrapper">
@@ -10,6 +19,7 @@
             <li class="tab col s3"><a href="{{url_for('reports') }}">Reports</a></li>
             <li class="tab col s3"><a href={{ url_for("help") }}>help</a></li>
             <li class="tab col s3"><a href="/manager_logout">Logout</a></li>
+            <!--li id="profile">test</li-->
         </ul>
     </nav>
     {% block sub_tabs %}

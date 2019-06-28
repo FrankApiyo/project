@@ -9,6 +9,8 @@
 {% block body %}
     <div class="row">
         <ul class="collection">
+            {% block listheader %}
+            {% endblock %}
             {% for exec in execs %}
                 <li class="collection-item">
                     <a href="#">

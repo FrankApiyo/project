@@ -9,6 +9,8 @@
 {% block body %}
     <div class="row">
         <ul class="collection">
+        {% block listheader %}
+        {% endblock %}
             {% for route_price_service, from_location, to_location in zip(route_price_services, from_locations, to_locations) %}
                 <li class="collection-item">
                     <a href="#">

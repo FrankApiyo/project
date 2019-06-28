@@ -1,7 +1,7 @@
 {% extends "manage_execs.html" %}
 {% block menu %}
-    {% if title  %}
-        <h1>EXECS CURRENTLY REGISTERED ON MATRIPS</h1>
-        <h2>{{ service.name }}</h2>
-    {% endif %}
+{% endblock %}
+ {% block listheader %}
+        <p class="collection-header">EXECS CURRENTLY REGISTERED ON MATRIPS</p>
+        <p class="collection-header">{{ service.name }}</p>
 {% endblock %}

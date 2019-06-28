@@ -139,7 +139,7 @@ def reports():
 
     #pdf = pdfkit.from_string(rendered, False)
 
-    pdfs = ['one.pdf', 'two.pdf', 'three.pdf', 'four.pdf', "five.pdf"]
+    pdfs = ['zero.pdf', 'one.pdf', 'two.pdf', 'three.pdf', 'four.pdf', "five.pdf"]
 
     merger = PdfFileMerger()
 
