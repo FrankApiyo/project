@@ -630,6 +630,7 @@ def manage_matatu_queue(registration, route_number, location_id, remove):
             to_towns = []
             for route_price in service.route_prices:
                 route = route_price.route
+                print(route.from_town_id)
                 if route.from_town_id == location.id:
                     routes_from_location.append(route)
                     to_towns.append(Location.query.filter_by(id=route.to_town_id).first())

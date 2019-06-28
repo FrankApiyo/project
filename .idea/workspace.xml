@@ -2,22 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="72693825-717d-4e8c-83ef-df47eafec2d2" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/maintemplate2.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/five.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/five.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/four.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/four.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/one.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/one.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/result.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/result.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/driver_reports.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/driver_reports.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/execs_report.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/execs_report.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/locations_report.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/locations_report.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/maintemplate.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/maintemplate.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/manage.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/manage.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/manage_execs.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/manage_execs.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/matatu_report.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/matatu_report.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/routes.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/routes.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/routes_report.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/routes_report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/new_driver.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/new_driver.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/new_exec.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/new_exec.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/register_service.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/register_service.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/three.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/three.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/two.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/two.pdf" afterDir="false" />
     </list>
@@ -52,8 +46,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="366" column="53" lean-forward="true" selection-start-line="366" selection-start-column="53" selection-end-line="366" selection-end-column="53" />
+            <state relative-caret-position="192">
+              <caret line="632" column="41" lean-forward="true" selection-start-line="632" selection-start-column="41" selection-end-line="632" selection-end-column="41" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -62,28 +56,37 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/maintemplate.html">
+        <entry file="file://$PROJECT_DIR$/templates/register.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="21" column="16" lean-forward="true" selection-start-line="21" selection-start-column="16" selection-end-line="21" selection-end-column="16" />
+            <state relative-caret-position="269">
+              <caret line="27" column="16" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="30" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/maintemplate2.html">
+        <entry file="file://$PROJECT_DIR$/templates/register_service.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
+            <state relative-caret-position="254">
+              <caret line="28" column="36" selection-start-line="28" selection-start-column="36" selection-end-line="28" selection-end-column="36" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/manage.py">
+        <entry file="file://$PROJECT_DIR$/templates/new_driver.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="92" selection-start-line="8" selection-start-column="92" selection-end-line="8" selection-end-column="92" />
+            <state relative-caret-position="269">
+              <caret line="27" column="30" selection-start-line="27" selection-start-column="30" selection-end-line="27" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/templates/new_exec.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="179">
+              <caret line="22" column="18" lean-forward="true" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -93,15 +96,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="75">
               <caret line="5" column="59" selection-start-line="5" selection-start-column="59" selection-end-line="5" selection-end-column="59" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/locations_report.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="29" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -133,11 +127,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/manage.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="25" selection-start-column="25" selection-end-column="25" />
+            <state relative-caret-position="135">
+              <caret line="9" column="14" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -155,7 +149,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>routes</find>
       <find>reports</find>
       <find>login</find>
       <find>main</find>
@@ -185,6 +178,7 @@
       <find>help</find>
       <find>manage</find>
       <find>report</find>
+      <find>manage_ma</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -220,10 +214,6 @@
         <option value="$PROJECT_DIR$/templates/_formhelper.html" />
         <option value="$PROJECT_DIR$/models.py" />
         <option value="$PROJECT_DIR$/forms.py" />
-        <option value="$PROJECT_DIR$/templates/register.html" />
-        <option value="$PROJECT_DIR$/templates/register_service.html" />
-        <option value="$PROJECT_DIR$/templates/new_exec.html" />
-        <option value="$PROJECT_DIR$/templates/new_driver.html" />
         <option value="$PROJECT_DIR$/templates/login.html" />
         <option value="$PROJECT_DIR$/templates/driver_login.html" />
         <option value="$PROJECT_DIR$/templates/manager_login.html" />
@@ -242,8 +232,12 @@
         <option value="$PROJECT_DIR$/templates/matatu_report.html" />
         <option value="$PROJECT_DIR$/templates/maintemplate.html" />
         <option value="$PROJECT_DIR$/templates/maintemplate2.html" />
-        <option value="$PROJECT_DIR$/app.py" />
         <option value="$PROJECT_DIR$/templates/manage.html" />
+        <option value="$PROJECT_DIR$/app.py" />
+        <option value="$PROJECT_DIR$/templates/register.html" />
+        <option value="$PROJECT_DIR$/templates/register_service.html" />
+        <option value="$PROJECT_DIR$/templates/new_driver.html" />
+        <option value="$PROJECT_DIR$/templates/new_exec.html" />
       </list>
     </option>
   </component>
@@ -470,12 +464,12 @@
       <workItem from="1561601667139" duration="630000" />
       <workItem from="1561602702317" duration="3007000" />
       <workItem from="1561613309969" duration="1715000" />
-      <workItem from="1561698103189" duration="4879000" />
+      <workItem from="1561698103189" duration="6853000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="318920000" />
+    <option name="totallyTimeSpent" value="320894000" />
   </component>
   <component name="TodoView" selected-index="3">
     <todo-panel id="selected-file">
@@ -490,12 +484,12 @@
     <frame x="0" y="-1" width="1366" height="742" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.87096775" visible="true" weight="0.24166666" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.87096775" visible="true" weight="0.37045455" />
       <window_info id="Structure" order="1" sideWeight="0.12903225" side_tool="true" weight="0.25075758" />
       <window_info id="Favorites" order="2" sideWeight="0.5017241" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32956383" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.15185784" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.26171243" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -504,7 +498,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.33764136" />
       <window_info anchor="bottom" id="Database Changes" order="9" weight="0.38933763" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.95" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.822294" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.8352181" />
       <window_info anchor="bottom" id="Database Console" order="13" weight="0.048387095" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -755,27 +749,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/register.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="13" selection-start-line="25" selection-start-column="40" selection-end-line="27" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/register_service.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" column="13" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/new_exec.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="28" column="13" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/forms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="45">
@@ -783,13 +756,6 @@
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/new_driver.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="14" selection-start-line="20" selection-start-column="14" selection-end-line="20" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -929,16 +895,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="366" column="53" lean-forward="true" selection-start-line="366" selection-start-column="53" selection-end-line="366" selection-end-column="53" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/maintemplate.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -948,8 +904,46 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/manage.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="25" selection-start-column="25" selection-end-column="25" />
+        <state relative-caret-position="135">
+          <caret line="9" column="14" selection-start-line="9" selection-start-column="14" selection-end-line="9" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="632" column="41" lean-forward="true" selection-start-line="632" selection-start-column="41" selection-end-line="632" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/register.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="27" column="16" selection-start-line="27" selection-start-column="16" selection-end-line="27" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/register_service.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="28" column="36" selection-start-line="28" selection-start-column="36" selection-end-line="28" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/new_driver.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="27" column="30" selection-start-line="27" selection-start-column="30" selection-end-line="27" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/new_exec.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="22" column="18" lean-forward="true" selection-start-line="22" selection-start-column="18" selection-end-line="22" selection-end-column="18" />
         </state>
       </provider>
     </entry>
